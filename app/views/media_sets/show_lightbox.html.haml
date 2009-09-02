@@ -1,0 +1,41 @@
+#left
+  %h1 
+    Leuchtpult Kollektion
+    %i= @media_set.caption
+    -if @enable_ordering
+      ordnen
+
+  - if @enable_ordering
+    - form_tag(media_set_path(@media_set), :method => :get) do
+      = hidden_field_tag 'style', 'lightbox'
+      = hidden_field_tag 'size', @size
+      = submit_tag('Bilder ordnen beenden')
+
+  #media_list
+    %p= will_paginate @media if @paginate
+    =render :partial => "media/images/slide_#{@size}", :locals => {:member_media_set => @media_set, :composing_media_set => @composing_media_set}, :collection => @media
+    =sortable_element 'media_list', :tag => 'div', :url => update_positions_media_set_path(@media_set), :constraint => false if @enable_ordering
+    %p.clear= will_paginate @media if @paginate
+
+  - if @enable_ordering
+    - form_tag(media_set_path(@media_set), :method => :get) do
+      = hidden_field_tag 'style', 'lightbox'
+      = hidden_field_tag 'size', @size
+      = submit_tag('Bilder ordnen beenden')
+
+#right
+  %ul
+    -if not @enable_ordering
+      %li= per_page_select(@media_set, @per_page, :size => @size, :style => 'lightbox')
+    -if not @enable_ordering and current_user.is_owner_of?(@media_set)
+      %li= link_to('Bilder ordnen', order_media_set_path(@media_set, :style => 'lightbox', :size => 'small'))
+      %br
+    -if not @enable_ordering
+      %li= link_to('Ansicht "normal"', media_set_path(@media_set))
+      %li= link_to('Ansicht "Leuchtpult klein"', media_set_path(@media_set, :style => 'lightbox', :size => 'small'))
+      %li= link_to('Ansicht "Leuchtpult gross"', media_set_path(@media_set, :style => 'lightbox', :size => 'big'))
+      %br
+    -if @composing_media_set
+      %li= link_to 'Aktuelle Auswahl als neue Kollektion speichern', edit_media_set_path(@composing_media_set)
+
+  =render :partial => 'media_sets/collection_box', :object => @composing_media_set if @composing_media_set

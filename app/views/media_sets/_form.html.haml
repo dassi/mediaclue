@@ -1,0 +1,41 @@
+%p
+  = error_messages_for 'media_set'
+
+#media_set_edit
+  %p
+    %label{:for => 'name'} Name
+    %br
+    = text_field :media_set, 'name', :class => 'mandatory'
+  %p
+    %label{:for => 'tags'} 
+      Schlagworte
+      %span.explanation für diese Kollektion
+    %br
+    - ms_dom_id = dom_id(@media_set)
+    = text_field :media_set, 'tag_names', :class => 'media_tags mandatory', :id => ms_dom_id, :onfocus => "open_tag_list('#{ms_dom_id}');"
+    %div{:id => "tag_link_list_#{ms_dom_id}", :style => 'display: none', :class => 'slide_in'}
+      = close_tag_link_list(ms_dom_id)
+      Fach-Schlagworte
+      %br
+      = subjects_link_list(ms_dom_id)
+      %br
+      Top-Schlagworte
+      %br
+      = top_tags_link_list(ms_dom_id, {:limit => 30})
+  %p
+    %label{:for => 'desc'} Beschreibung
+    %br
+    = text_area :media_set, 'desc', :rows => '10'
+  - field_set_tag 'Schnell-Zuweisungen für alle Medien' do
+    %span.explanation Diese Einstellungen werden beim Speichern für alle Medien dieser Kollektion übernommen, können nachträglich aber auch pro Medium abgeändert werden.
+    %p
+      %label{:for => 'source'} 
+        Quelle/Copyright 
+      %br
+      = select_tag 'media_set[source]', options_from_collection_for_select([['', nil]].concat(Medium::SOURCE_SELECTIONS), :last, :first, nil), :class => 'media_source'
+    %p
+      %label{:for => 'source'} 
+        Sichtbar für
+      %br
+      = select_tag 'media_set[viewers]', options_from_collection_for_select([['', nil]].concat(options_for_viewer), :last, :first, nil), :class => 'media_source'
+  

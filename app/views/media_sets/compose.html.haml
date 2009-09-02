@@ -1,0 +1,13 @@
+#left
+  %h1= @title
+  - if @tags
+    %p
+      Suchkriterien:
+      = @tags.empty? ? 'keine' : @tags.join(' ')
+  %p= will_paginate @media
+  .media
+    =render :partial => 'media/list_item', :locals => {:composing_media_set => current_user.composing_media_set, :size => :small}, :collection => @media
+  %p= will_paginate @media
+
+#right
+  =render :partial => 'media_sets/collection_box', :object => current_user.composing_media_set

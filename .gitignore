@@ -1,0 +1,27 @@
+# config/
+config/database.yml
+config/ferret_server.yml
+config/deploy*
+
+# log/
+log
+
+# tmp/
+tmp/*
+
+# db
+db/*.sqlite3
+
+# media_storage/
+media_storage/**/*
+       
+public/m/*
+
+.DS_Store
+
+doc/app
+     
+# Ferret-Index
+index
+
+test

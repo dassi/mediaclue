@@ -1,0 +1,21 @@
+%h1 Meine Kollektionen
+
+%h2 Vollständig definierte Kollektionen
+-if current_user.defined_media_sets.empty?
+  [keine]
+-else
+%table.properties_table= render :partial => 'list_item', :collection => current_user.defined_media_sets
+
+%h2
+  Noch unvollständig definierte Kollektionen
+  %span.explanation (Diesen fehlen noch notwendige Informationen wie Copyright, Schlagworte etc. Bitte ergänzen!)
+
+-if current_user.media_sets_to_define.empty?
+  [keine]
+-else
+  %table.properties_table= render :partial => 'list_item', :collection => current_user.media_sets_to_define
+
+%h2 
+  Automatische Kollektionen 
+  %span.explanation  (Werden vom System generisch erstellt)
+%table.properties_table= render :partial => 'list_item', :collection => [current_user.owner_media_set, current_user.search_result_media_set, current_user.composing_media_set, current_user.uploading_media_set]

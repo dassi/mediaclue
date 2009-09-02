@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<player width="326" height="50" background="background.jpg" imagePath="/player/darksite_pro/" mediaPath="">
+	
+	<info x="80" y="3" width="213" height="18" overflow="scroll" show="true" />
+
+	<slider>	
+		<progress show="true">
+			<bar x="9" y="31" width="309" height="1" image="" progress="progressbar_p.jpg" show="true" />
+			<slider x="9" y="27" width="8" height="8" image="slider_progress.jpg" hover="slider_progress_hover.jpg" show="true" />
+		</progress>
+	</slider>
+
+	<buttons>
+		<start x="2" y="2" image="play.jpg" hover="play_hover.jpg" show="true" />		
+		<halt x="2" y="2" image="pause.jpg" hover="pause_hover.jpg" show="true" />
+		<next x="22" y="2" image="forward.jpg" hover="forward_hover.jpg" show="true" />
+		<last x="42" y="2" image="backward.jpg" hover="backward_hover.jpg" show="true" />
+
+		<mute x="302" y="2" image="mute.jpg" hover="mute_hover.jpg" show="true" />
+		<unmute x="302" y="2" image="unmute.jpg" hover="unmute_hover.jpg" show="true" />
+	</buttons>
+
+	<settings>
+		<font size="9" family="Verdana" color="7C766F" />
+		<scrolling interval="100" step="2" mode="reverse" />
+
+		<loadingProcess show="false" showTrackName="true" />
+
+		<streaming value="true" />
+		<autoload value="false" />
+		<autostart value="false" />
+
+		<repeatAll value="false" />
+		<repeat value="false" />
+		<shuffle value="false" onStart="false" />
+
+		<autostartNext value="true" />
+		<autoloadNext value="true" />
+
+		<ID3Names value="false" />
+
+		<skipTrack stopAtLast="true" stopAtZero="true"/>
+	</settings>
+
+</player>

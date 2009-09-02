@@ -1,0 +1,22 @@
+%h1
+  Kollektion
+  %i= @media_set.caption
+  bearbeiten
+%span.explanation{:style => 'float:right'}
+  Pflichtfelder sind 
+  = text_field_tag :explanation, 'gelb', :size => 4, :class => 'mandatory', :readonly => true
+  hinterlegt
+%h3 Angaben zur Kollektion
+-form_for(@media_set) do |f|
+  = render :partial => 'form'
+  %br
+  = submit_tag 'Alles speichern', :name => "confirm"
+  = submit_tag "Abbrechen", :name => "cancel"
+  #media_set_items_edit
+    - unless @media.empty?
+      = render :partial => 'form_list'
+      %br
+      = submit_tag 'Alles speichern', :name => "confirm"
+      = submit_tag "Abbrechen", :name => "cancel"
+
+

@@ -1,0 +1,66 @@
+== Lizenz (GPL)
+
+Mediaclue, webbasierte Mediendatenbank
+Copyright (C) 2009 Andreas Brodbeck, mindclue GmbH
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+== Very short English comment
+
+Mediaclue is a digital assets management application. So far, all comments and application texts are in german. This will be the case until eventually someone will pick up the task to use the localization features of Rails and translate mediaclue.
+
+== mediaclue Mediendatenbank
+
+Die mediaclue Mediendatenbank verwaltet digitale Medien. Sie wurde entwickelt von der mindclue gmbh (www.mindclue.ch), in Zusammenarbeit mit dem Gymnasium Hohe Promenade, Zürich.
+
+== Kontakt
+
+Andreas Brodbeck, mindclue GmbH
+andreas.brodbeck@mindclue.ch
+
+Website: www.mediaclue.ch
+
+== Voraussetzungen
+
+=== Server
+
+Rails-fähiger Server, zum Beispiel Linux-Server mit Apache und Passenger-Modul.
+
+=== Verwendete plugins
+
+* acts_as_authenticated
+* authorization
+* acts_as_state_machine
+* has_many_polymorphs
+* attachment_fu
+
+
+=== Benötigte gems
+
+* rubyzip
+* image_science
+* mime-types
+* uuidtools
+* acts_as_ferret
+* haml
+* rspec-rails
+* ruport
+
+== Installation
+
+* Datei database.yml kopieren von database.yml.template und anpassen
+* Datenbanken erstellen (z.B. MySQL Datenbank mit Namen "mediaclue_development")
+* Migrationen durchführen: rake db:migrate SUPRESS_EARLY_DB_CONNECTION=yes
+* Admin-Test-User anlegen mit: rake mediaclue:sample_data:load_admin

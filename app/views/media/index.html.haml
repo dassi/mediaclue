@@ -1,0 +1,43 @@
+#left
+  %h1 Nach Medien suchen
+  %p.limited Hier können Sie nach den Medien suchen, auf denen Sie Leseberechtigung haben. Gesucht wird in Titel, Beschreibung und Schlagworten von Medien und Kollektionen.
+
+  -form_tag(search_media_path, :method => :get, :name => 'search_form') do
+    Volltextsuche:
+    %br
+    #search_panel
+      = text_field_tag 'search_fulltext', params[:search_fulltext], :style => 'width:85%;height:18px'
+      = submit_tag("Suchen", :style => 'width:75px')
+    %br
+    .slide_in
+      Fach-Schlagworte
+      %br
+      = subjects_link_list('search_fulltext')
+      %br
+      Top-Schlagworte
+      %br
+      = top_tags_link_list('search_fulltext', {:limit => 30})
+
+  Beispiele für die Suchsyntax:
+  %ul
+    %li
+      %pre Geschichte Napoleon
+      Mehrwort-Suche. Findet Medien mit zwingendem Vorkommen beider Wörter "Geschichte" und "Napoleon".
+    %li
+      %pre "national geographic magazin"
+      Satzsuche. Findet die exakte Wortfolge "National Geographic Magazin".
+    %li
+      %pre Eiger OR Mönch
+      Oder-Verknüpfung. Findet alle Medien die entweder "Eiger" oder "Mönch" enthalten.
+    %li
+      %pre Strauss -Johann
+      Ausschluss. Findet alle Medien die "Strauss" enthalten, nicht aber "Johann".
+    %li
+      %pre afrik*
+      Mehrbuchstaben-Platzhalterzeichen. Findet Medien mit "afrikanisch" oder "Afrika" etc.
+    %li
+      %pre ?euer
+      Einzelbuchstaben-Platzhalterzeichen. Findet Medien mit "Feuer" oder "teuer" etc., nicht aber "Steuer".
+
+%script
+  document.search_form.search_fulltext.focus()

@@ -1,0 +1,70 @@
+#left
+  %h1 
+    Kollektion
+    %i= @media_set.caption
+    = "ordnen" if @enable_ordering 
+
+  -if @enable_ordering
+    %p
+      Ordnen Sie die Medien durch Drag & Drop.
+      =button_to 'Medien ordnen beenden', media_set_path(@media_set), :method => :get
+  -elsif @media_set.defined? or @media_set.defining?
+    %table.properties_table
+      =table_row ['Eigenschaft', 'Wert'], 'th', [200, 340]
+      =table_row ['Schlagworte', formatted_tag_list(@media_set)]
+      =table_row ['Besitzer', @media_set.owner_name]
+      =table_row ['Erstellt am', @media_set.created_at.to_formatted_s(:german)]
+      =table_row ['Zuletzt bearbeitet am', @media_set.updated_at.to_formatted_s(:german)]
+
+    %h2 Beschreibung
+    .media_set_desc= formatted_desc(@media_set)
+  
+  - if not @media.empty?
+    %p= will_paginate @media if @paginate
+    #media_list.media
+      =render :partial => 'media/list_item', :locals => {:member_media_set => @media_set, :composing_media_set => @composing_media_set, :size => :small}, :collection => @media
+    =sortable_element 'media_list', :tag => 'div', :url => update_positions_media_set_path(@media_set) if @enable_ordering
+    %p= will_paginate @media if @paginate
+  - else
+    %p Keine Medien
+
+  - if @enable_ordering
+    = button_to 'Medien ordnen beenden', media_set_path(@media_set), :method => :get
+
+
+#right
+  %ul
+    %li= per_page_select(@media_set, @per_page)
+    -if current_user.is_owner_of?(@media_set)
+      -if @media_set.defined? or @media_set.defining?
+        %li= link_to 'Bearbeiten', edit_media_set_path(@media_set) 
+        %li= link_to 'Löschen', media_set_path(@media_set), :confirm => 'Sind Sie sicher? Die Kollektion wird gelöscht. Die enthaltenen Medien werden jedoch nicht gelöscht.', :method => :delete
+      -elsif @media_set.search_result?
+        %li= link_to 'Suchresultat speichern', edit_media_set_path(@media_set)
+      -elsif @media_set.composing? or @media_set.uploading?
+        %li= link_to 'Als neue Kollektion speichern', edit_media_set_path(@media_set)
+
+      -if not @enable_ordering
+        %li= link_to 'Medien ordnen', order_media_set_path(@media_set)
+
+      %br
+      -if @media_set.defined? or @media_set.defining?
+        %li= link_to 'Weitere Medien in diese Kollektion hochladen', uploader_media_set_path(@media_set) 
+        %li= link_to 'Diese Kollektion zur aktuellen Auswahl machen', set_collection_media_set_path(@media_set) 
+
+    %br
+    %li= link_to 'Alle Medien als ZIP-File herunterladen', formatted_media_set_path(@media_set, :zip)
+    %li= link_to 'Bilder als PDF-Diashow herunterladen', formatted_media_set_path(@media_set, :pdf)
+
+    %br
+    %li= link_to 'Bilder in Ansicht "Leuchtpult klein"', media_set_path(@media_set, :style => 'lightbox', :size => 'small')
+    %li= link_to 'Bilder in Ansicht "Leuchtpult gross"', media_set_path(@media_set, :style => 'lightbox', :size => 'big')
+
+  %br
+
+  -if @composing_media_set and !@media_set.composing?
+    %ul
+      %li= link_to 'Aktuelle Auswahl speichern', edit_media_set_path(@composing_media_set)
+    =render :partial => 'media_sets/collection_box', :object => @composing_media_set if @composing_media_set
+
+

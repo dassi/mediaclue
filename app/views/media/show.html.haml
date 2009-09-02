@@ -1,0 +1,31 @@
+#left
+
+  %h1= @medium.name
+  
+  %table.properties_table
+    =table_row ['Eigenschaft', 'Wert'], 'th', [200, 590]
+    =table_row ['Schlagworte', formatted_tag_list(@medium)]
+    =table_row ['Quelle/Copyright', @medium.formatted_source ]
+    =table_row ['Sichtbar für', @medium.viewer_names]
+    =table_row ['Originaler Dateiname', @medium.original_filename]
+    =table_row ['Abmessungen', @medium.dimensions] if @medium.respond_to? :dimensions
+    =table_row ['Format', @medium.format]
+    =table_row ['Grösse', @medium.filesize]
+    =table_row ['Erstellt am', @medium.created_at.to_formatted_s(:german)]
+    =table_row ['Zuletzt bearbeitet am', @medium.updated_at.to_formatted_s(:german)]
+    =table_row ['Enthalten in Kollektionen', @medium.defined_media_sets.collect {|ms| link_to(ms.name, ms) }.join(', ') ]
+
+  %h2 Beschreibung
+  .media_desc_detail= formatted_desc(@medium)
+  .medium_detail= render :partial => "media/#{@medium.template_path}/fullview", :object => @medium
+
+#right{:style => "width:100px"}  
+  %ul
+    %li= backlink
+    -if current_user.is_owner?(@medium)
+      %li= link_to 'Bearbeiten', edit_medium_path(@medium)
+      %li= link_to 'Löschen', medium_path(@medium), :confirm => 'Sind Sie sicher? Das Medium wird aus der Mediendatenbank gelöscht und auch aus allen Mediensets entfernt! Dieser Vorgang kann nicht rückgängig gemacht werden.', :method => :delete
+    %li= medium_download_link(@medium)
+    
+
+

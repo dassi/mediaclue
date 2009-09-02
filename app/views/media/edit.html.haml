@@ -1,0 +1,12 @@
+%h1
+  = "#{@medium.type_display_name} \"#{@medium.name}\" bearbeiten"
+  %span.explanation{:style => 'float:right'}
+    Pflichtfelder sind 
+    = text_field_tag :explanation, 'gelb', :size => 4, :class => 'mandatory', :readonly => true
+    hinterlegt
+
+-form_for(:medium, @medium, :url => medium_path(@medium), :html => {:method => :put}) do |f|
+  %p
+    = render :partial => 'form', :object => @medium
+    = submit_tag 'Speichern'
+    = link_to 'Abbrechen', medium_path(@medium)

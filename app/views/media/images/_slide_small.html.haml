@@ -1,0 +1,18 @@
+-height = slide_small.thumbnails.detect{|thumb| thumb.thumbnail == 'small'} ? slide_small.thumbnails.detect{|thumb| thumb.thumbnail == 'small'}.height : 170
+-margin_top = (170 - height) / 2
+
+- css_class = 'draggable' if @enable_ordering
+.media_lightbox_small{:id => "medium_#{slide_small.id}", :class => css_class}
+  =spiffy_top 'slide'
+  .slidefg
+    -if @enable_ordering
+      =medium_image_tag(slide_small, :small, :style => "margin-top:#{margin_top}px")
+    -else
+      =link_to medium_image_tag(slide_small, :small, :style => "margin-top:#{margin_top}px", :onmouseover => "showtrail('#{formatted_medium_url(:id => slide_small, :format => slide_small.ext, :size => :medium)}','#{escape_javascript(slide_small.name)}','#{escape_javascript(slide_small.desc ? slide_small.desc.ellipsis(150) : nil)}','1',351,1);", :onmouseout => "hidetrail();"), medium_path(slide_small)
+      
+  =spiffy_bottom 'slide'
+  -unless @enable_ordering
+    .remove_button
+      =medium_download_button(slide_small)
+      =medium_add_to_collection_button(composing_media_set, slide_small)
+      =medium_remove_from_set_button(member_media_set, slide_small) if defined?(member_media_set)

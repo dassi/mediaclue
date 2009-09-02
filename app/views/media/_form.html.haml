@@ -1,0 +1,52 @@
+%p
+  =error_messages_for 'medium', :object => form
+
+.media_detailed{ :id => "medium_#{form.id}" }
+  =spiffy_top
+
+  .mediumfg
+    .medium_preview_form.left
+      =render :partial => "media/#{form.template_path}/preview", :object => form
+
+    .media_info_form.left
+      -fields_for("media_set[media_attributes][]", form) do |media_form|
+        .edit_media_name
+          Name
+          %br
+          =media_form.text_field :name, :class => 'media_name, mandatory'
+
+        .edit_media_desc
+          Beschreibung
+          %br
+          =media_form.text_area :desc, :class => 'media_desc'
+
+        .edit_media_tags
+          %p
+            Schlagworte
+            %span.explanation zusätzlich für dieses Medium
+            %br
+            - m_dom_id = dom_id(form)
+            =media_form.text_field :tag_names, :class => 'media_tags', :id => m_dom_id, :onfocus => "open_tag_list('#{m_dom_id}');"
+          %div{:id => "tag_link_list_#{m_dom_id}", :style => 'display: none', :class => 'slide_in'}
+            = close_tag_link_list(m_dom_id)
+            Fach-Schlagworte
+            %br
+            = subjects_link_list(m_dom_id)
+            %br
+            Top-Schlagworte
+            %br
+            = top_tags_link_list(m_dom_id, {:limit => 30})
+
+        .edit_media_source
+          Quelle/Copyright
+          %br
+          =media_form.select :source, Medium::SOURCE_SELECTIONS, :class => 'media_source'
+
+        -if current_user.is_owner? form
+          .edit_media_viewers
+            Sichtbar für
+            %br
+            = media_form.select :viewers, options_for_viewer
+    .clear
+
+  =spiffy_bottom

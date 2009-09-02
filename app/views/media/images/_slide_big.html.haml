@@ -1,0 +1,10 @@
+.media_lightbox_big{:id => "medium_#{slide_big.id}"}
+  =spiffy_top 'slide'
+  .slidefg
+    =link_to medium_image_tag(slide_big, :medium, :style => "margin-top:#{(380 - slide_big.thumbnails.detect{|thumb| thumb.thumbnail == 'medium'}.height) / 2}px"), medium_path(slide_big)
+  =spiffy_bottom 'slide'
+  .remove_button
+    =medium_download_button(slide_big)
+    =medium_add_to_collection_button(composing_media_set, slide_big)
+    =medium_remove_from_set_button(member_media_set, slide_big) if defined?(member_media_set)
+

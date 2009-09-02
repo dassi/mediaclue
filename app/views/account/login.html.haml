@@ -1,0 +1,18 @@
+%h1 Anmeldung
+%p Melden Sie sich hier an:
+%p
+-form_tag do
+  %p
+    %label{:for => 'login'} 
+    Benutzername
+    %br
+    =text_field_tag 'login'
+
+  %p
+    %label{:for => 'password'}
+    Passwort
+    %br
+    =password_field_tag 'password'
+
+  %p
+    =submit_tag 'Anmelden'

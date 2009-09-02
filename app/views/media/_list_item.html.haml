@@ -1,0 +1,23 @@
+- css_class = 'draggable' if @enable_ordering
+.media_detailed{ :id => "medium_#{list_item.id}", :class => css_class }
+  =spiffy_top
+  .mediumfg
+    .medium_preview.left
+      =render :partial => "media/#{list_item.template_path}/preview", :object => list_item, :locals => {:show_trail => !@enable_ordering}
+    .media_info.left
+      .media_name_row
+        -if @enable_ordering
+          =list_item.name
+        -else
+          .media_name
+            =link_to list_item.name, medium_path(list_item)
+          .media_actions
+            =medium_download_button(list_item)
+            =medium_add_to_collection_button(composing_media_set, list_item)
+            =medium_remove_from_set_button(member_media_set, list_item) if defined?(member_media_set) and not member_media_set.owning?
+          .clear
+      -unless @enable_ordering
+        .media_tags= list_item.tags
+        .media_desc{:style => 'max-height:300px'}= escape_newline list_item.desc
+    .clear
+  =spiffy_bottom

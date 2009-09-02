@@ -1,0 +1,97 @@
+=#javascript_tag "function appletInitialized( applet ) { setAuthenticityToken('#{@authenticity_token}');}"
+
+#left{:style => 'width:550px'} 
+  %h1
+    Medien hochladen
+    - if @media_set.defined?
+      in Kollektion
+      =h @media_set.caption
+
+  %p Medien können über das Java Plugin "JumpLoader" hochgeladen werden. Klicken Sie auf das untenstehende Symbol um den JumpLoader in einem neuen Fenster zu öffnen.
+  -if @media_set.defined?
+    %p Nachdem Sie weitere Medien in die Kollektion hochgeladen haben, klicken Sie auf "Kollektion [..] anzeigen" und nehmen Sie allenfalls die nötigen Definitionen für die neuen Medien vor.
+  -elsif @media_set.uploading?
+    %p Nachdem Sie die Medien hochgeladen haben, klicken Sie auf "Nächster Schritt: Kollektion definieren" und nehmen Sie die nötigen Definitionen vor.
+
+  %p
+
+  -#=button_to_function 'JumpLoader starten', open_window_js_code("/media_sets/#{@media_set.id}/uploader_window")
+
+  -#%object{ :codebase => "#{public_url}/applets/", :java_codebase => "#{public_url}/applets/", :archive => 'jumploader_z.jar', :classid => 'java:jmaster.jumploader.app.JumpLoaderApplet.class', :id => 'jumpLoaderApplet', :type => 'application/x-java-applet', :width => 300, :height => 100}
+  -#%object{ :codebase => "#{public_url}/applets/", :archive => 'jumploader_z.jar', :classid => 'java:jmaster.jumploader.app.JumpLoaderApplet.class', :id => 'jumpLoaderApplet', :type => 'application/x-java-applet', :width => 300, :height => 100}
+  -#%object{ :archive => 'jumploader_z.jar', :classid => 'java:jmaster.jumploader.app.JumpLoaderApplet.class', :id => 'jumpLoaderApplet', :type => 'application/x-java-applet', :width => 300, :height => 100}
+  %object{ :id => 'jumpLoaderApplet', :classid => 'java:jmaster.jumploader.app.JumpLoaderApplet.class', :type => 'application/x-java-applet', :width => 300, :height => 75}
+    %param{:name => 'codebase', :value => "#{public_url}/applets/" }/
+    %param{:name => 'archive', :value => 'messages_de.zip,jumploader_z-2_8_10.jar' }/
+    %param{:name => 'mayscript', :value => 'true' }/
+
+    %param{:name => 'ac_mode', :value => 'framed' }/
+    %param{:name => 'ac_fireAppletInitialized', :value => 'true' }/
+    %param{:name => 'ac_fireUploaderFileStatusChanged', :value => 'true' }/
+    -#%param{:name => 'ac_fireUploaderStatusChanged', :value => 'true' }/
+
+    -#%param{:name => 'ac_properties', :value => "mainView.programView.width=1500;mainView.programView.height=800;mainView.programView.fileListView.height=10" }/
+    -#%param{:name => 'vc_uiDefaults', :value => "mainView.programView.width=1500;mainView.programView.height=800" }/
+    -#%param{:name => 'vc_guiProperties', :value => "mainView.width=800;mainView.height=800" }/
+    
+    %param{:name => 'uc_urlEncodeParameters', :value => 'true' }/    
+    %param{:name => 'uc_uploadUrl', :value => "#{public_url}#{formatted_upload_media_set_path(@media_set, :js)}" }/
+    %param{:name => 'uc_fileParameterName', :value => 'medium[uploaded_data]' }/
+    %param{:name => 'uc_imageEditorEnabled', :value => 'true' }/
+    %param{:name => 'uc_partitionLength', :value => 1024**3 }/
+    %param{:name => 'uc_directoriesEnabled', :value => 'true' }/
+    %param{:name => 'uc_fileNamePolicy', :value => 'name' }/
+
+    -pattern = "^.+\.(#{@allowed_upload_extensions.collect {|e| ["(#{e.to_s})", "(#{e.to_s.upcase})"] }.flatten.join('|')})$"
+    %param{:name => "uc_fileNamePattern", :value => pattern }/
+    %param{:name => "vc_fileNamePattern", :value => pattern }/
+    %param{:name => 'vc_lookAndFeel', :value => "system" }/
+    %param{:name => 'vc_mainViewFileTreeViewWidthPercent', :value => "33" }/
+    -#%param{:name => 'vc_mainViewLogoEnabled', :value => false }/
+
+    -#%param{:name => 'gc_loggingLevel', :value => "DEBUG" }/
+
+    
+
+  %p 
+    %em Hinweise zu JumpLoader:
+
+  %h2 Zulässige Dateiformate
+  %p Zur Zeit können Sie Medien in den folgenden Formaten hochladen:
+  %ul
+    %li Bilder: GIF, PNG, JPEG, TIFF
+    %li Audio-Clips: MP3
+    %li Dokumente: ZIP, PDF, DOC, XLS, PPT
+
+  %h2 Einen ganzen Ordner hochladen
+  Ziehen Sie einen Ordner aus dem Baum in den Upload-Bereich ("Dateien hier her ziehen"). Beachten Sie, dass dabei alle Dateien im Ordner zulässige Formate haben müssen.
+  %p Oder:  
+  %ol
+    %li Wählen Sie im Baum den Ordner aus, dessen Inhalt Sie heraufladen möchten. Im oberen Bereich werden die Dateien angezeigt (es werden nur die mit zulässigem Dateiformat angezeigt).
+    %li Klicken Sie auf das erste Bild im oberen Bereich.
+    %li Drücken Sie "Apfel-A" ("Control-A" unter Windows) um alle Dateien auszuwählen, und ziehen Sie mit der Maus alle Medien in den Upload-Bereich ("Dateien hier her ziehen")
+    %li Klicken Sie auf den Upload-Knopf (grosser grüner Pfeil unten).
+
+  %h2 Spezifische Auswahl von Medien
+  %ol
+    %li Öffnen Sie im Baum links einen Ordner mit Medien.
+    %li Selektieren Sie mit der Maus das erste Bild.
+    %li Drücken Sie die Shift-Taste und klicken Sie auf das fünfte Bild. Die Medien 2 bis 5 werden zusätzlich selektiert.
+    %li Drücken Sie die Ctrl-Taste und klicken Sie auf das dritte Bild. Dieses wird wieder aus der Selektion ausgeschlossen.
+    %li Klicken Sie auf das erste Bild, halten Sie die Maustaste gedrückt und ziehen Sie die Medien in den Upload-Bereich ("Dateien hier her ziehen").
+    %li Klicken Sie auf den Upload-Knopf (grosser grüner Pfeil unten).
+
+  %h2 Bilder bearbeiten
+  %p Bilder, die Sie zum Hochladen ausgewählt haben, können Sie vor dem Hochladen noch bearbeiten. Klicken Sie dazu auf das Pinsel-Symbol auf dem Bild.
+
+#right
+  %ul
+    -if @media_set.defined?
+      %li= link_to "Kollektion #{@media_set.caption} anzeigen", media_set_path(@media_set) 
+      =render :partial => 'media_sets/collection_box'
+    -elsif @media_set.uploading?
+      %li= link_to "Nächster Schritt: Kollektion definieren", edit_media_set_path(@media_set) 
+      =render :partial => 'media_sets/collection_box', :object => @media_set
+
+
+

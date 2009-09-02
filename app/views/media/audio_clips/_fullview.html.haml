@@ -1,0 +1,8 @@
+%h3 Audio Clip
+%object{:type => "application/x-shockwave-flash", :data => "#{public_url}/player/zanmantou-1_6.swf", :height => "50", :width => "326"}
+  %param{:name => "movie", :value => "#{public_url}/player/zanmantou-1_6.swf"}/
+  %param{:name => "allowScriptAccess", :value => "sameDomain"}/
+  %param{:name => "quality", :value => "best"}/
+  %param{:name => "scale", :value => "noscale"}/
+  %param{:name => "salign", :value => "lt"}/
+  %param{:name => "FlashVars", :value => "config=#{public_url}/player/darksite_pro/config.xml&tracklist=#{public_url}/player/tracklist.xml&tracks=#{fullview.public_filename}~#{fullview.name}"}/
