@@ -97,6 +97,7 @@ class MediaSet < ActiveRecord::Base
     @tag_names ||= tags.to_s
   end
   
+  # Setter für nested Form-Parameter für die enthaltenen Medien-Objekte
   def media_attributes=(media_attributes)
     collectables.each do |media|
       attributes = media_attributes[media.id.to_s] if media_attributes

@@ -83,7 +83,7 @@ class MediaSetsController < ApplicationController
 
     @media = @media_set.collectables_for_user_as_owner(current_user)
     
-    permit "owner of :media_set" do    
+    permit "owner of :media_set" do
       respond_to do |format|
         
         # "vererbe" einige am media_set formular setzbare Parameter an die anhängigen Medien 
@@ -94,7 +94,7 @@ class MediaSetsController < ApplicationController
         if @media_set.update_attributes(params[:media_set])
           # Dem Medienset neu den Status "defined" verleihen
           @media_set.store! unless @media_set.defined?
-          flash[:notice] = 'Kollektion erfolgreich gepeichert.'
+          flash[:notice] = 'Kollektion erfolgreich gespeichert.'
           format.html { 
             redirect_to(@media_set) 
           }
