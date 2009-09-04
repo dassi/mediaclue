@@ -36,7 +36,8 @@ Website: www.mediaclue.ch
 
 === Server
 
-Rails-fähiger Server, zum Beispiel Linux-Server mit Apache und Passenger-Modul.
+* Rails-fähiger Server, zum Beispiel Linux-Server mit Apache und Passenger-Modul.
+* Ruby 1.8.6 (siehe unten, es gibt Probleme mit 1.8.7)
 
 === Verwendete plugins
 
@@ -66,3 +67,9 @@ Rails-fähiger Server, zum Beispiel Linux-Server mit Apache und Passenger-Modul.
 * Migrationen durchführen: rake db:migrate SUPRESS_EARLY_DB_CONNECTION=yes
 * Admin-Test-User anlegen mit: rake mediaclue:sample_data:load_admin
 * Ordner media_storage erzeugen und link in /public/m/ anpassen
+
+== Bekannte Probleme (Known Bugs)
+
+* has_many_polymorphs hat vermutlich Probleme mit Ruby 1.8.7.
+  Die polymorphe Assoziation "collectables" in MediaSet geht nicht korrekt, weil irgendetwas mit den ID nicht richtig von der Datenbank eingelesen wird. (Ohne Probleme getestet auf Ruby 1.8.6)
+  
