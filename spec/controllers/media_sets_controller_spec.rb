@@ -15,7 +15,7 @@ describe MediaSetsController, "GET 'update'" do
   end
 
   def do_update
-    put 'update', 
+    put 'update', :id => @media_set.id,
       :media_set => { :name => "meinset163", :tag_names => "qqqq", 
                       :desc => "asdlkfj2", 
                       # :media_attributes => { 
@@ -35,8 +35,8 @@ describe MediaSetsController, "GET 'update'" do
   end
 
   it "should render :edit again if validation failed" do
-    @medium.stub!(:errors).and_return([])
-    @current_user.stub!(:uploading_media_set).and_return(MediaSet.create)
+    @media_set.stub!(:update_attributes).and_return(false)
+    @current_user.stub!(:uploading_media_set).and_return(mock_media_set)
     do_update
     response.should_not be_redirect
     response.should render_template(:edit)
