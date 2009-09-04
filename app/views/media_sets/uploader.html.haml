@@ -35,7 +35,7 @@
     -#%param{:name => 'vc_guiProperties', :value => "mainView.width=800;mainView.height=800" }/
     
     %param{:name => 'uc_urlEncodeParameters', :value => 'true' }/    
-    %param{:name => 'uc_uploadUrl', :value => "#{public_url}#{formatted_upload_media_set_path(@media_set, :js)}" }/
+    %param{:name => 'uc_uploadUrl', :value => "#{public_url}#{upload_media_set_path(@media_set, :format => :js)}" }/
     %param{:name => 'uc_fileParameterName', :value => 'medium[uploaded_data]' }/
     %param{:name => 'uc_imageEditorEnabled', :value => 'true' }/
     %param{:name => 'uc_partitionLength', :value => 1024**3 }/

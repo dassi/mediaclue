@@ -13,11 +13,7 @@ class ApplicationController < ActionController::Base
   # TODO: Ist das wirklich noch nötig als before_filter?! Siehe auch environment.rb
   before_filter { require_dependency 'tag' }
 
-
-  # See ActionController::RequestForgeryProtection for details
-  # Uncomment the :secret if you're not using the cookie session store
-  protect_from_forgery :secret => '2e58d2512dab7db2d9ef5c84eae514b2'
-  
+  protect_from_forgery
  
 
 end

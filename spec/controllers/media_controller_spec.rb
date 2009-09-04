@@ -32,7 +32,7 @@ describe MediaController, "GET 'index'" do
   
   before :each do
     logged_in_user
-    @current_user.stub!(:uploading_media_set).and_return(MediaSet.new)
+    @current_user.stub!(:uploading_media_set).and_return(mock_media_set)
   end
   
   it "should be successful" do

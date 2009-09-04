@@ -78,3 +78,11 @@ end
 def render_layout(expected)
   RenderLayout.new(expected)
 end
+
+def mock_media_set(attributes = {})
+  
+  # attributes.reverse_merge!()
+  
+  mock = mock_model(MediaSet, attributes)
+  mock
+end

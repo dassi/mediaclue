@@ -53,8 +53,8 @@
         %li= link_to 'Diese Kollektion zur aktuellen Auswahl machen', set_collection_media_set_path(@media_set) 
 
     %br
-    %li= link_to 'Alle Medien als ZIP-File herunterladen', formatted_media_set_path(@media_set, :zip)
-    %li= link_to 'Bilder als PDF-Diashow herunterladen', formatted_media_set_path(@media_set, :pdf)
+    %li= link_to 'Alle Medien als ZIP-File herunterladen', media_set_path(@media_set, :format => :zip)
+    %li= link_to 'Bilder als PDF-Diashow herunterladen', media_set_path(@media_set, :format => :pdf)
 
     %br
     %li= link_to 'Bilder in Ansicht "Leuchtpult klein"', media_set_path(@media_set, :style => 'lightbox', :size => 'small')
