@@ -138,7 +138,7 @@ class MediaSetsController < ApplicationController
   # POST /media_sets/1/upload.js
   # Medium aus Uploader in ein bestimmtes Set heraufladen
   def upload    
-    @media_set = MediaSet.find params[:id]
+    @media_set = MediaSet.find(params[:id])
     permit "owner of :media_set" do
       uploaded_file = params[:medium][:uploaded_data]
       
@@ -148,14 +148,18 @@ class MediaSetsController < ApplicationController
         uploaded_file.content_type = mime_types.first.content_type unless mime_types.empty?
       end
 
-      medium_class = Medium.class_by_content_type uploaded_file.content_type    
-      if medium_class       
+      # Medium-Klasse anhand des MIME-Typs der hochgeladenen Datei ausfindig machen
+      # OPTIMIZE: Refactoring in eine Factory-Methode von Medium, z.B. Medium.create_by_mime_type(mime_type, *create_args)
+      medium_class = Medium.class_by_content_type(uploaded_file.content_type)
+      if medium_class
         # mit der Option "urlEncodeParameters => true" des Jumploaders wird der Filename urlencoded gesendet, 
         # damit werden Probleme mit der UTF-Codierung umgangen (Umlaute werden zu "\357\277\275", dem "lost in translation"-Zeichen von UTF-8).
         # Daher muss des Filename wieder urldecoded werden
         filename = CGI.unescape uploaded_file.original_filename
-        @medium = medium_class.create params[:medium].merge(:name => filename, :original_filename => filename)
-        @media_set.send(medium_class.to_s.tableize) << @medium
+        @medium = medium_class.create(params[:medium].merge(:name => filename, :original_filename => filename))
+
+        # viel zu kompliziert: @media_set.send(medium_class.to_s.tableize) << @medium, einfacher:
+        @media_set.collectables << @medium
 
         # Medium dem aktuellen User in der Rolle "owner" hinzufügen
         current_user.is_owner_of @medium        
