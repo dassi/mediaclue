@@ -2,14 +2,22 @@
 vendor/plugins/attachment_fu: 
   squashed: true
   url: git://github.com/technoweenie/attachment_fu.git
+  branch: master
   type: git
   revision: 9d754014744b039d82e3e55b3cc7f7c35c16ab08
-  branch: master
   remote: braid/vendor/plugins/attachment-fu
 vendor/plugins/will_paginate: 
   squashed: true
   url: git://github.com/mislav/will_paginate.git
+  branch: master
   type: git
   revision: f161d99c0cd4517b4954db214e49ba606ec70277
-  branch: master
   remote: braid/vendor/plugins/will-paginate
+vendor/plugins/has_many_polymorphs: 
+  squashed: true
+  url: git://github.com/fauna/has_many_polymorphs.git
+  branch: master
+  lock: 104665587138345bb0ef799065d175f3513ea166
+  type: git
+  revision: 104665587138345bb0ef799065d175f3513ea166
+  remote: braid/vendor/plugins/has-many-polymorphs
