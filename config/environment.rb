@@ -55,7 +55,8 @@ require File.join(File.dirname(__FILE__), 'constants')
 require File.join(File.dirname(__FILE__), 'boot')
 
 # early gems
-gem 'acts_as_ferret', '=0.4.3' # Version 0.4.4 ist kaputt
+ACTS_AS_FERRET_VERSION = '=0.4.3'  # Version 0.4.4 ist kaputt, vermutlich
+gem 'acts_as_ferret', ACTS_AS_FERRET_VERSION
 require 'acts_as_ferret'
 
 Rails::Initializer.run do |config|
@@ -74,7 +75,7 @@ Rails::Initializer.run do |config|
   # config.gem "hpricot", :version => '0.6', :source => "http://code.whytheluckystiff.net"
   # config.gem "aws-s3", :lib => "aws/s3"
   config.gem 'ferret', :version => '>=0.11.6'
-  config.gem 'acts_as_ferret', :version => '>=0.4.3'
+  config.gem 'acts_as_ferret', :version => ACTS_AS_FERRET_VERSION
 
   # Only load the plugins named here, in the order given. By default, all plugins
   # in vendor/plugins are loaded in alphabetical order.
