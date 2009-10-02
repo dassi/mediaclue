@@ -25,3 +25,4 @@ doc/app
 index
 
 test
+spec/fixtures/**
