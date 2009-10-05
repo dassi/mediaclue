@@ -2,8 +2,8 @@
 %div{:id => div_id}
 
 :javascript
-  var so = new SWFObject('/mediaplayer/player.swf','ply','150','20','9','#ffffff');
-  so.addParam('allowfullscreen','false');
+  var so = new SWFObject('/mediaplayer/player.swf','ply','150','100','9','#ffffff');
+  so.addParam('allowfullscreen','true');
   so.addParam('allowscriptaccess','always');
   so.addParam('wmode','opaque');
   so.addVariable('file','#{preview.public_filename}');

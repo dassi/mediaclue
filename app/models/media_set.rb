@@ -8,7 +8,7 @@ class MediaSet < ActiveRecord::Base
 
   belongs_to :user
   
-  has_many_polymorphs :collectables, :from => [:images, :documents, :audio_clips],
+  has_many_polymorphs :collectables, :from => [:images, :documents, :audio_clips, :video_clips],
                                      :through => :media_set_memberships,
                                      :order => 'media_set_memberships.position'
 

@@ -3,8 +3,8 @@ class VideoClip < Medium
 
   has_attachment :content_type => CONTENT_TYPES,
                  :storage => :file_system,
-                 :path_prefix => MEDIA_STORAGE_PATH_PREFIX
-                 # :max_size => 200.megabytes
+                 :path_prefix => MEDIA_STORAGE_PATH_PREFIX,
+                 :max_size => 1000.megabytes
 
   validates_as_attachment
  

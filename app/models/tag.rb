@@ -22,7 +22,7 @@ class Tag < ActiveRecord::Base
 
   # Set up the polymorphic relationship.
   has_many_polymorphs :taggables,
-    :from => [:images, :documents, :audio_clips, :media_sets],
+    :from => [:images, :documents, :audio_clips, :media_sets, :video_clips],
     :through => :taggings,
     :dependent => :destroy,
     :skip_duplicates => false,
