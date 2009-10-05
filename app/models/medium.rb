@@ -6,9 +6,10 @@ class Medium < ActiveRecord::Base
   
   cattr_reader :per_page
   attr_writer :tag_names
+
   
   validate :validate_new_tag_names
-  validates_presence_of :name, :message => 'Name ist zwingend erforderlich!', :if => Proc.new { |medium| medium.parent_id.nil? }
+  validates_presence_of :name, :message => 'Name ist zwingend erforderlich!'
 #  validates_presence_of :tags, :message => 'Mindestens ein Schlagwort ist zwingend erforderlich!'  
   
   acts_as_authorizable
