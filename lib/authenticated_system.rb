@@ -48,8 +48,11 @@ module AuthenticatedSystem
     #   skip_before_filter :login_required
     #
     def login_required
-      username, passwd = get_auth_data
-      self.current_user ||= User.authenticate(username, passwd) || :false if username && passwd
+      logger.info('request: ' + request.inspect)
+      if not self.current_user
+        username, passwd = get_auth_data
+        self.current_user = User.authenticate(username, passwd) || :false if username && passwd
+      end
       logged_in? && authorized? ? true : access_denied
     end
     
