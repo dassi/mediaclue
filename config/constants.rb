@@ -34,3 +34,5 @@ SUBJECT_SELECTIONS = [
 'Sport', 
 'Theater'
 ]
+
+JUMPLOADER_VERSION = [2, 12, 8]
