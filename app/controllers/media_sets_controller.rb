@@ -2,9 +2,6 @@ require 'mime/types'
 
 class MediaSetsController < ApplicationController
 
-  # Für Uploads von JumpUploader deaktivieren, da setAuthenticityToken('#{@authenticity_token}') in Safari nicht funktioniert
-  skip_before_filter :verify_authenticity_token, :only => :upload
-
   MEDIA_SET_STYLES = ['lightbox']
   
   # GET /media_sets
@@ -128,7 +125,7 @@ class MediaSetsController < ApplicationController
     @media_set = MediaSet.find(params[:id])
     permit "owner of :media_set" do    
       @allowed_upload_extensions = Medium.all_media_file_extensions
-      # @authenticity_token = authenticity_token_from_cookie_session
+      @authenticity_token = form_authenticity_token
     end
   end
   
