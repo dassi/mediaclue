@@ -38,7 +38,7 @@ class Medium < ActiveRecord::Base
 #    self.send :subclasses
 #    Object.subclasses_of(self.class)
     # TODO: Hm, hm, geht das nicht eleganter?
-    [Image, AudioClip, Document]
+    [Image, AudioClip, Document, VideoClip]
   end
   
   def self.class_by_content_type(content_type)
@@ -53,7 +53,7 @@ class Medium < ActiveRecord::Base
   def self.all_media_content_types   
     self.sub_classes.collect { |medium_class| medium_class::CONTENT_TYPES }.flatten.compact.uniq
   end
-  
+
   def template_path
     self.class.to_s.tableize
   end

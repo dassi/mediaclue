@@ -76,6 +76,7 @@ Rails::Initializer.run do |config|
   # config.gem "aws-s3", :lib => "aws/s3"
   config.gem 'ferret', :version => '>=0.11.6'
   config.gem 'acts_as_ferret', :version => ACTS_AS_FERRET_VERSION
+  config.gem 'mime-types', :version => '~>1.16', :lib => 'mime/types'
 
   # Only load the plugins named here, in the order given. By default, all plugins
   # in vendor/plugins are loaded in alphabetical order.
