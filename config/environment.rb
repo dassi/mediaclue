@@ -24,20 +24,12 @@
 # ENV['RAILS_ENV'] ||= 'production'
 
 # ATTENTION: UGLY HACK
-# Some preloading plugins force to load model classes and try to connect to the database
-# RUNNING_FROM_RAKE = defined?(Rake)
 # Auf der Shell kann folgende Env-Variable gesetzt werden, damit man nicht in den Deadlock reinläuft, wonach has_many_polymorphs
 # und anderes viel zu früh auf die DB zugreifft. Zum Beispiel:
 # > rake db:migrate SUPRESS_EARLY_DB_CONNECTION=yes
 SUPRESS_EARLY_DB_CONNECTION = ENV['SUPRESS_EARLY_DB_CONNECTION'] || false
 
-# Hack für RubyInline. Dieses braucht ein "sicheres" Verzeichnis (zumindest bei mir lokal, wenn man es via Locomotive startet und deshalb kein HOME-Verzeichnis hat.)
-rubyinline_dir = '/tmp/inlinedir'
-Dir::mkdir(rubyinline_dir, 0700) unless File::directory?(rubyinline_dir)
-ENV['INLINEDIR'] = rubyinline_dir
-
 # Specifies gem version of Rails to use when vendor/rails is not present
-# RAILS_GEM_VERSION = '2.0.2' unless defined? RAILS_GEM_VERSION
 RAILS_GEM_VERSION = '2.3.4' unless defined? RAILS_GEM_VERSION
                          
 ###################################################################################################

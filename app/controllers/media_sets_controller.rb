@@ -6,7 +6,7 @@ class MediaSetsController < ApplicationController
   # protect_from_forgery :except => :upload, :secret => '2e58d2512dab7db2d9ef5c84eae514b2'
 
   skip_before_filter :verify_authenticity_token, :only => :upload
-  
+
   MEDIA_SET_STYLES = ['lightbox']
   
   # GET /media_sets
@@ -139,6 +139,8 @@ class MediaSetsController < ApplicationController
   # Medium aus Uploader in ein bestimmtes Set heraufladen
   def upload    
     @media_set = MediaSet.find(params[:id])
+    
+    # Sicherheitsabfrage: Nur der Besitzer des MediaSets kann darin hochladen
     permit "owner of :media_set" do
       uploaded_file = params[:medium][:uploaded_data]
       
@@ -156,9 +158,11 @@ class MediaSetsController < ApplicationController
         # damit werden Probleme mit der UTF-Codierung umgangen (Umlaute werden zu "\357\277\275", dem "lost in translation"-Zeichen von UTF-8).
         # Daher muss des Filename wieder urldecoded werden
         filename = CGI.unescape uploaded_file.original_filename
-        @medium = medium_class.create(params[:medium].merge(:name => filename, :original_filename => filename))
 
-        # viel zu kompliziert: @media_set.send(medium_class.to_s.tableize) << @medium, einfacher:
+        # TODO: braucht es hier "params[:medium]"? Kommen da überhaupt Daten? Das ist evt. ein Sicherheitsloch!
+        @medium = medium_class.create(params[:medium].merge(:name => filename, :original_filename => filename)) 
+
+        # Medium dem MediaSet hinzufügen
         @media_set.collectables << @medium
 
         # Medium dem aktuellen User in der Rolle "owner" hinzufügen

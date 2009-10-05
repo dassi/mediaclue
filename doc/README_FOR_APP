@@ -62,6 +62,7 @@ Website: www.mediaclue.ch
 
 == Installation
 
+* In config/initializers/session_store.rb den secret-Key abändern auf eine neue Zufallsreihe. (Nicht erforderlich aber aus Sicherheitsgründen empfohlen)
 * Datei database.yml kopieren von database.yml.template und anpassen
 * Datenbanken erstellen (z.B. MySQL Datenbank mit Namen "mediaclue_development")
 * Migrationen durchführen: rake db:migrate SUPRESS_EARLY_DB_CONNECTION=yes
@@ -72,4 +73,7 @@ Website: www.mediaclue.ch
 
 * has_many_polymorphs hat vermutlich Probleme mit Ruby 1.8.7.
   Die polymorphe Assoziation "collectables" in MediaSet geht nicht korrekt, weil irgendetwas mit den ID nicht richtig von der Datenbank eingelesen wird. (Ohne Probleme getestet auf Ruby 1.8.6)
-  
+
+== TODO
+
+* Konstante LOCAL_DEVELOPMENT zuverlässiger setzen (environment.rb)
