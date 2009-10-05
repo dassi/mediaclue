@@ -3,7 +3,7 @@
   =spiffy_top
   .mediumfg
     .medium_preview.left
-      =render :partial => "media/#{list_item.template_path}/preview", :object => list_item, :locals => {:show_trail => !@enable_ordering}
+      =render :partial => "media/#{list_item.template_path}/preview", :object => list_item, :locals => {:small_preview => !@enable_ordering}
     .media_info.left
       .media_name_row
         -if @enable_ordering

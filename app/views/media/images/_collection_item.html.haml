@@ -1,3 +1,4 @@
-.collection_thumb{:id => "collection_medium_#{collection_item.id}"}
+.collection_thumb{:id => "collection_medium_#{collection_item.id}", :title => collection_item.name}
   =medium_remove_from_collection_button media_set, collection_item, :div_prefix => 'collection'
+  %br
   =medium_image_tag(collection_item, :thumbnail)

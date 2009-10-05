@@ -7,13 +7,15 @@ function uploaderFileStatusChanged( uploader, file )
   }
 }
 
-function setAuthenticityToken(authenticity_token)
+function setAuthenticityToken(applet, authenticity_token)
 {
-  setPostAttribute("authenticity_token", authenticity_token);
+  setPostAttribute("authenticity_token", authenticity_token, applet);
 }
 
-function setPostAttribute(attributeName, value) {
-  var uploader = document.jumpLoaderApplet.getUploader();
+function setPostAttribute(attributeName, value, uploader) {
+  if (uploader === undefined || uploader === null) {
+    uploader = document.jumpLoaderApplet.getUploader();
+  }
   var attrSet = uploader.getAttributeSet();
   var attr = attrSet.createStringAttribute(attributeName, value);
   attr.setSendToServer(true);

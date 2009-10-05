@@ -160,7 +160,9 @@ class MediaSetsController < ApplicationController
         @medium = medium_class.new
         @medium.is_importing_metadata = (params[:importMetadata] == '1')
         @medium.attributes = params[:medium].merge(:name => filename, :original_filename => filename)
-        @medium.save
+        @medium.save!
+        
+        # TODO: Exceptions oder Fehler beim Uploaden an JumpLoader melden, ober per Ajax einblenden.
 
         # Medium dem MediaSet hinzufügen
         @media_set.collectables << @medium

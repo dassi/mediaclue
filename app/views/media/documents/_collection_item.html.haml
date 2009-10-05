@@ -1,4 +1,7 @@
-.collection_file{:id => "collection_medium_#{collection_item.id}"}
+.collection_file{:id => "collection_medium_#{collection_item.id}", :title => collection_item.name}
   =medium_remove_from_collection_button media_set, collection_item, :div_prefix => 'collection'
+  %br
+  [DOKUMENT]
+  %br
   =h collection_item.name
 

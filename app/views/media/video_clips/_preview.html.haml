@@ -1,8 +1,11 @@
 - div_id = "mediaplayer#{preview.id}"
+- small_preview ||= false
+- width = small_preview ? 150 : 350                              
+- height = small_preview ? 130 : 300
 %div{:id => div_id}
 
 :javascript
-  var so = new SWFObject('/mediaplayer/player.swf','ply','150','100','9','#ffffff');
+  var so = new SWFObject('/mediaplayer/player.swf','ply','#{width}','#{height}','9','#ffffff');
   so.addParam('allowfullscreen','true');
   so.addParam('allowscriptaccess','always');
   so.addParam('wmode','opaque');
