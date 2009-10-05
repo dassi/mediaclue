@@ -333,7 +333,8 @@ module Technoweenie # :nodoc:
           return nil if file_data.size == 0
           self.content_type = file_data.content_type
           # Andreas Brodbeck (mindclue): Wir erzeugen eine UUID als Filenamen, besser als den originalen Filenamen
-          #Original: self.filename     = file_data.original_filename if respond_to?(:filename)
+          # Original: self.filename     = file_data.original_filename if respond_to?(:filename)
+          # TODO? Muss hier unten im else ebenfalls die UUID gesetzt werden?!
           extension = File.extname(file_data.original_filename)
           self.filename = UUID.random_create.to_s + extension
         else
