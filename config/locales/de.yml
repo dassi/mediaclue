@@ -121,6 +121,7 @@ de:
         inclusion: "ist kein gültiger Wert"
         exclusion: "ist nicht verfügbar"
         invalid: "ist nicht gültig"
+        record_invalid: "Datensatz ist nicht gültig"
         confirmation: "stimmt nicht mit der Bestätigung überein"
         accepted: "muss akzeptiert werden"
         empty: "muss ausgefüllt werden"
