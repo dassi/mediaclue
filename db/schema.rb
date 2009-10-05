@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091002075328) do
+ActiveRecord::Schema.define(:version => 20091005083433) do
 
   create_table "image_thumbnails", :force => true do |t|
     t.integer  "size"
@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(:version => 20091002075328) do
     t.string   "original_filename"
     t.boolean  "is_public"
     t.string   "source"
+    t.text     "meta_data"
   end
 
   create_table "media_set_memberships", :force => true do |t|

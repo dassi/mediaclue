@@ -18,6 +18,12 @@
   %h2 Beschreibung
   .media_desc_detail= formatted_desc(@medium)
   .medium_detail= render :partial => "media/#{@medium.template_path}/fullview", :object => @medium
+  
+  - if FEATURE_METADATA
+    - if not @medium.meta_data.blank?
+      %h2 Meta-Daten
+      =simple_format @medium.meta_data
+  
 
 #right{:style => "width:100px"}  
   %ul

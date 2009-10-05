@@ -1,12 +1,14 @@
 class Medium < ActiveRecord::Base
 
-  acts_as_ferret :remote => true, :fields => [:name, :desc, :tag_names]
+  acts_as_ferret :remote => true, :fields => [:name, :desc, :tag_names, :meta_data]
 
   @@per_page = 20
   
   cattr_reader :per_page
   attr_writer :tag_names
-
+  
+  # Flag, ob wir Metadaten extrahieren beim Speichern
+  attr_accessor :is_importing_metadata 
   
   validate :validate_new_tag_names
   validates_presence_of :name, :message => 'Name ist zwingend erforderlich!'
@@ -16,6 +18,7 @@ class Medium < ActiveRecord::Base
   
   # after_create :set_default_viewer
   after_save :save_new_tags
+  before_create :import_meta_data if FEATURE_METADATA
   
   # Auswahl für Quelle/Copytright
   SOURCE_SELECTIONS = [
@@ -25,6 +28,35 @@ class Medium < ActiveRecord::Base
     ['Schulcopyright (offiziell für Schulzwecke lizensiert)', 'school'],
     ['Frei (Creative Commons Licence)', 'free']
   ]
+
+  protected #######################################################################################
+
+  def initialize(*args)
+    super
+    
+    @is_importing_metadata ||= true
+    
+  end
+  
+  def save_new_tags
+    self.tag_with(@tag_names) if @tag_names
+  end
+
+  def validate_new_tag_names
+    Medium.parse_tags(@tag_names).each { |name| 
+      errors.add :medium_tag_names, (Tag::TAG_ERROR_TEXT % name) unless Tag.new(:name => name).tag_name_valid?
+    }
+  end
+  
+  def import_meta_data
+    # Hinweis: Evt. muss hier mit self.full_filename gearbeitet werden, aber zu creation-Zeitpunkt gibt es dieses File noch nicht.
+    # attachment_fu kopiert es erst nach dem save dorthin. Bis dahin ist es in temp_path
+    if self.is_importing_metadata
+      self.meta_data = MiniExiftool.new(self.temp_path).to_yaml
+    end
+  end
+  
+  public ##########################################################################################
   
   def self.find_with_ferret_for_user(query, user)
     all_found_media = self.find_with_ferret(query)
@@ -145,6 +177,7 @@ class Medium < ActiveRecord::Base
   # TODO: entfernen, weil scheinbar nicht verwendet
   # True, falls ein Attribut dieses Objekts von den Daten params abweicht
   def attr_changes?(params)
+    raise 'sollte nicht aufgerufen werden?!'
 #    p=params.reject {|k,v| !['name', 'desc'].include? k }
     params.each do |key, value|
       # Sichtbarkeit "nur Besitzer" ist so realisiert, dass das Medium keine Viewers besitzt.
@@ -166,16 +199,5 @@ class Medium < ActiveRecord::Base
     @tag_names ||= tags.to_s
   end
 
-  private #####################################################################
-  
-  def save_new_tags
-    self.tag_with(@tag_names) if @tag_names
-  end
-
-  def validate_new_tag_names
-    Medium.parse_tags(@tag_names).each { |name| 
-      errors.add :medium_tag_names, (Tag::TAG_ERROR_TEXT % name) unless Tag.new(:name => name).tag_name_valid?
-    }
-  end
   
 end

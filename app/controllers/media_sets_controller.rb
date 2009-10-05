@@ -3,8 +3,6 @@ require 'mime/types'
 class MediaSetsController < ApplicationController
 
   # Für Uploads von JumpUploader deaktivieren, da setAuthenticityToken('#{@authenticity_token}') in Safari nicht funktioniert
-  # protect_from_forgery :except => :upload, :secret => '2e58d2512dab7db2d9ef5c84eae514b2'
-
   skip_before_filter :verify_authenticity_token, :only => :upload
 
   MEDIA_SET_STYLES = ['lightbox']
@@ -21,6 +19,8 @@ class MediaSetsController < ApplicationController
   # GET /media_sets/1.xml
   def show
     @media_set = MediaSet.find params[:id]
+
+# TODO: Wieso ist dies deaktiviert?
 #    permit "viewer of :media_set" do
       session[:per_page] = params[:per_page] if params[:per_page]
       @per_page = session[:per_page] || 20
@@ -159,8 +159,11 @@ class MediaSetsController < ApplicationController
         # Daher muss des Filename wieder urldecoded werden
         filename = CGI.unescape uploaded_file.original_filename
 
-        # TODO: braucht es hier "params[:medium]"? Kommen da überhaupt Daten? Das ist evt. ein Sicherheitsloch!
-        @medium = medium_class.create(params[:medium].merge(:name => filename, :original_filename => filename)) 
+        # TODO: Mass-assignment Sicherheitsloch prüfen! Mit attr_protected oder ähnlich
+        @medium = medium_class.new
+        @medium.is_importing_metadata = (params[:importMetadata] == '1')
+        @medium.attributes = params[:medium].merge(:name => filename, :original_filename => filename)
+        @medium.save
 
         # Medium dem MediaSet hinzufügen
         @media_set.collectables << @medium

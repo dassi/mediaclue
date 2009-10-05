@@ -68,6 +68,13 @@
 
   -#%param{:name => 'gc_loggingLevel', :value => "DEBUG" }/
 
+- if FEATURE_METADATA
+  :javascript
+    setPostAttributeSendMetadata("importMetadata", true);
+  = check_box_tag 'metadata_import', '1', true, :onclick => 'setPostAttribute("importMetadata", this.checked ? this.value : null)'
+  Metadaten (EXIF etc.) importieren
+
+
 -if @media_set.defined?
   %h2 Hochgeladene Dateien:
   = render :partial => 'media_sets/collection_box'

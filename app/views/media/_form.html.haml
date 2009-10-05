@@ -47,6 +47,12 @@
             Sichtbar für
             %br
             = media_form.select :viewers, options_for_viewer
+        
+        - if FEATURE_METADATA
+          - unless form.meta_data.blank?
+            Meta-Daten
+            .edit_media_meta_data
+              =simple_format form.meta_data
     .clear
 
   =spiffy_bottom

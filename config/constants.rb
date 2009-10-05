@@ -39,3 +39,6 @@ SUBJECT_SELECTIONS = [
 ]
 
 JUMPLOADER_VERSION = [2, 12, 8]
+
+# Meta-Daten extrahieren und darstellen?
+FEATURE_METADATA = true

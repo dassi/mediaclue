@@ -59,7 +59,8 @@ Website: www.mediaclue.ch
 * haml
 * rspec-rails
 * ruport
-
+* mini_exiftool (Exiftool selbst muss auch installiert sein, siehe http://www.sno.phy.queensu.ca/~phil/exiftool/)
+                                                                                              
 == Installation
 
 * In config/initializers/session_store.rb den secret-Key abändern auf eine neue Zufallsreihe. (Nicht erforderlich aber aus Sicherheitsgründen empfohlen)

@@ -17,7 +17,13 @@ class Image < Medium
                                 }
 
 	validates_as_attachment
+	
 
+  protected #######################################################################################
+
+  
+  public ##########################################################################################
+  
   # Fake für attachment_fu (Blödes Ding!). An manchen Orten im Code prüft attachment_fu auf das Vorhandensein von parent_id.
   # Und: Methode aus attachment_fu überschreiben, weil die nicht zuverlässig arbeiten, mit Verwendung von thumbnail_class-Option
   # und zwei getrennten DB-Tabellen
@@ -34,10 +40,6 @@ class Image < Medium
     "Bild"
   end
 
-  def import_exif_data
-    
-  end
-  
   def tiff?
     content_type == 'image/tiff'
   end

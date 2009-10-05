@@ -3,6 +3,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe Medium do
   before(:each) do
     @medium = Medium.new
+    @medium.stub!(:temp_path).and_return('/tmp/blablabla.txt')
   end
 
   it "should be valid with a name" do
@@ -12,6 +13,28 @@ describe Medium do
 
   it "should not be valid without a name" do
     @medium.should_not be_valid
+  end
+  
+  it 'should do importing meta data if option is_importing_metadata is set' do
+    exiftool_mock = mock(MiniExiftool)
+    exiftool_mock.should_receive(:to_yaml).and_return('xyz: blabla')
+    MiniExiftool.should_receive(:new).and_return(exiftool_mock)
+    
+    @medium.is_importing_metadata = true
+    @medium.should_receive(:meta_data=)
+    
+    @medium.stub!(:valid?).and_return(true)
+    @medium.save!
+  end
+
+  it 'should not import meta data if option is_importing_metadata is not set' do
+    MiniExiftool.should_not_receive(:new)
+    
+    @medium.is_importing_metadata = false
+    @medium.should_not_receive(:meta_data=)
+    
+    @medium.stub!(:valid?).and_return(true)
+    @medium.save!
   end
 
 end

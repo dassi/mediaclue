@@ -9,8 +9,12 @@ function uploaderFileStatusChanged( uploader, file )
 
 function setAuthenticityToken(authenticity_token)
 {
+  setPostAttribute("authenticity_token", authenticity_token);
+}
+
+function setPostAttribute(attributeName, value) {
   var uploader = document.jumpLoaderApplet.getUploader();
   var attrSet = uploader.getAttributeSet();
-  var attr = attrSet.createAttribute('authenticity_token', authenticity_token);
-  attr.setSendToServer( true );
+  var attr = attrSet.createStringAttribute(attributeName, value);
+  attr.setSendToServer(true);
 }
