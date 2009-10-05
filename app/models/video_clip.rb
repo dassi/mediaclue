@@ -1,5 +1,5 @@
 class VideoClip < Medium
-  CONTENT_TYPES = ['video/quicktime', 'video/x-flv']
+  CONTENT_TYPES = ['video/quicktime', 'video/x-flv', 'video/mpeg']
 
   has_attachment :content_type => CONTENT_TYPES,
                  :storage => :file_system,
