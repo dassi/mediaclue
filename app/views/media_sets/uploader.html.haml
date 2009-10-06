@@ -52,7 +52,7 @@
 
 %object{ :id => 'jumpLoaderApplet', :classid => 'java:jmaster.jumploader.app.JumpLoaderApplet.class', :type => 'application/x-java-applet', :width => '100%', :height => 440}
   %param{:name => 'codebase', :value => "#{public_url}/applets/" }/
-  %param{:name => 'archive', :value => "messages_de.zip,#{jar_file}" }/
+  %param{:name => 'archive', :value => "#{JUMPLOADER_TRANSLATIONS_ZIP},#{jar_file}" }/
   %param{:name => 'mayscript', :value => 'true' }/
 
   %param{:name => 'ac_mode', :value => 'embedded' }/
@@ -68,13 +68,24 @@
   %param{:name => 'uc_imageRotateEnabled', :value => 'true' }/
   %param{:name => 'uc_partitionLength', :value => 1024**3 }/
   %param{:name => 'uc_directoriesEnabled', :value => 'true' }/
-  %param{:name => 'uc_fileNamePolicy', :value => 'name' }/
-  -#%param{:name => 'uc_sendImageMetadata', :value => 'true' }/
-  -#%param{:name => 'uc_mimeTypePattern', :value => '' }/
-
-  -pattern = "^.+\.(#{@allowed_upload_extensions.collect {|e| ["(#{e.to_s})", "(#{e.to_s.upcase})"] }.flatten.join('|')})$"
+  %param{:name => 'uc_fileNamePolicy', :value => 'name' }/                                                                                                                 
+  
+  -# Man könnte die Option useJMimeMagic verwenden, dieses detektiert allerdings sehr unvollständig.
+  -# Z.B. habe ich MP3 Files und M4A Files die als content/unknown gelten! Fazit: Option zur Zeit nicht brauchbar
+  -# mime_pattern = '^' + Medium.all_media_content_types.collect { |mt| "(#{Regexp::escape(mt)})" }.join('|') + '$'
+  -#%param{:name => "uc_mimeTypePattern", :value => mime_pattern }/    
+  -#%param{:name => "uc_useJMimeMagic", :value => 'true' }/
+  
+  -# Filetyp-Filter anhand Dateiendung:
+  - pattern = "^.+\.(#{@allowed_upload_extensions.collect {|e| ["(#{e.to_s})", "(#{e.to_s.upcase})"] }.flatten.join('|')})$"
   %param{:name => "uc_fileNamePattern", :value => pattern }/
   %param{:name => "vc_fileNamePattern", :value => pattern }/
+  
+  - if MAX_FILE_SIZE
+    %param{:name => 'uc_maxFileLength', :value => MAX_FILE_SIZE }/
+
+  -#%param{:name => 'uc_sendImageMetadata', :value => 'true' }/
+
   %param{:name => 'vc_lookAndFeel', :value => 'system' }/           
   %param{:name => 'vc_uploadViewStartUploadButtonText', :value => '1. Dateien hochladen...' }/
   %param{:name => 'vc_uploadViewStopUploadButtonText', :value => 'Abbrechen' }/
@@ -82,7 +93,8 @@
   -#%param{:name => 'vc_mainViewFileTreeViewWidthPercent', :value => "33" }/
   -#%param{:name => 'vc_fileBrowserInitialLocation', :value => 'home' }/
 
-  -#%param{:name => 'gc_loggingLevel', :value => "DEBUG" }/
+  - if LOCAL_DEVELOPMENT
+    %param{:name => 'gc_loggingLevel', :value => "DEBUG" }/
 
 - if FEATURE_METADATA
   = check_box_tag 'metadata_import', '1', true, :onclick => 'setPostAttribute("importMetadata", this.checked ? this.value : null)'

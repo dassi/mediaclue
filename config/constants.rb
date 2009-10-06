@@ -42,3 +42,7 @@ JUMPLOADER_VERSION = [2, 12, 8]
 
 # Meta-Daten extrahieren und darstellen?
 FEATURE_METADATA = true
+
+# Global gültige Beschränkung der Dateigrösse
+# = nil, falls keine Beschränkung
+MAX_FILE_SIZE = 8 * (1024**2) # = 8MB

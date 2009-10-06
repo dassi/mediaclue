@@ -1,4 +1,3 @@
-require 'zip/zip'
 require 'ruport'
 
 # Collection von Medium-Objekten.

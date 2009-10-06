@@ -70,6 +70,7 @@ Rails::Initializer.run do |config|
   config.gem 'acts_as_ferret', :version => ACTS_AS_FERRET_VERSION
   config.gem 'mime-types', :version => '~>1.16', :lib => 'mime/types'
   config.gem 'mini_exiftool', :version => '~>1.0.1'
+  config.gem 'rubyzip', :lib => 'zip/zip', :version => '~>0.9.1'
 
   # Only load the plugins named here, in the order given. By default, all plugins
   # in vendor/plugins are loaded in alphabetical order.

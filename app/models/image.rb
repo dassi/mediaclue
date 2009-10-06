@@ -6,7 +6,7 @@ class Image < Medium
                  :path_prefix => MEDIA_STORAGE_PATH_PREFIX,
                  # Warum fix beschränken? Speicherplatz ist billig und Bild-Qualität ist entscheidend
                  # OPTIMIZE: In eine System-Einstellung auslagern
-                 :max_size => 100.megabytes,
+                 :max_size => [100.megabytes, MAX_FILE_SIZE].compact.min,
                  # :resize_to => '3000x3000>',
                  :thumbnail_class => 'ImageThumbnail',
                  :thumbnails => { :thumbnail => '85x85>',

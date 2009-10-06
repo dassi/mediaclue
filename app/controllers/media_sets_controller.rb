@@ -145,6 +145,16 @@ class MediaSetsController < ApplicationController
       if uploaded_file.content_type == 'content/unknown'
         mime_types = MIME::Types.type_for(uploaded_file.original_filename)
         uploaded_file.content_type = mime_types.first.content_type unless mime_types.empty?
+
+        if uploaded_file.is_a?(Tempfile) # Könnte auch StringIO sein
+          # TODO: Plattform-Unabhägigkeit?!
+          mime_type = `file --brief --mime #{uploaded_file.path}`.strip
+          # logger.info "Detektiere MIME-Typ via file-Befehl: #{mime_type}"
+          uploaded_file.content_type = mime_type
+        end
+
+        # Evt. auch mit gem http://ruby-filemagic.rubyforge.org/, welches aber eine compilierung benötigt, mit Abhängigkeiten,
+        # die auf Servern evt. nicht gegeben ist.
       end
 
       # Medium-Klasse anhand des MIME-Typs der hochgeladenen Datei ausfindig machen
@@ -176,6 +186,8 @@ class MediaSetsController < ApplicationController
         current_user.owner_media_set.collectables << @medium
       else
         logger.error "Keine Medium Klasse gefunden für content_type '#{uploaded_file.content_type}'!"
+        render :nothing => true, :status => :bad_request
+        return
       end
 
 

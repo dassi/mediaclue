@@ -78,9 +78,17 @@ class Medium < ActiveRecord::Base
     self.sub_classes.each { |sub_class| return sub_class if sub_class::CONTENT_TYPES.include? content_type }
     nil
   end
+
+  # Liefert weitere erlaubte Dateiendungen. Für den Fall das die MIME-Library nicht ganz aktuell ist.
+  # Default-Implementation. Soll in Subklassen überschrieben werden.
+  def self.additional_file_extensions
+    []
+  end
   
   def self.all_media_file_extensions
-    self.all_media_content_types.collect { |t| MIME::Types[t].first.extensions }.flatten.compact.uniq
+    extensions = self.all_media_content_types.collect { |t| MIME::Types[t].first.extensions }.flatten
+    extensions << self.sub_classes.collect(&:additional_file_extensions)
+    extensions.compact.uniq
   end
   
   def self.all_media_content_types   
@@ -191,6 +199,7 @@ class Medium < ActiveRecord::Base
     false
   end
 
+  # TODO: In Klassenmethod refactorn
   def type_display_name
     "Medium"
   end

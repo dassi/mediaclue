@@ -4,7 +4,7 @@ class Document < Medium
   has_attachment :content_type => CONTENT_TYPES,
                  :storage => :file_system,
                  :path_prefix => MEDIA_STORAGE_PATH_PREFIX,
-                 :max_size => 500.megabytes
+                 :max_size => [500.megabytes, MAX_FILE_SIZE].compact.min
                
   validates_as_attachment
 
