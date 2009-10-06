@@ -144,17 +144,24 @@ class MediaSetsController < ApplicationController
       # Falls MIME-Typ nicht durch JumpLoader schon gesetzt wurde, dann diesen serverseitig herausfinden und setzen
       if uploaded_file.content_type == 'content/unknown'
         mime_types = MIME::Types.type_for(uploaded_file.original_filename)
-        uploaded_file.content_type = mime_types.first.content_type unless mime_types.empty?
 
-        if uploaded_file.is_a?(Tempfile) # Könnte auch StringIO sein
-          # TODO: Plattform-Unabhägigkeit?!
-          mime_type = `file --brief --mime #{uploaded_file.path}`.strip
-          # logger.info "Detektiere MIME-Typ via file-Befehl: #{mime_type}"
-          uploaded_file.content_type = mime_type
+        if mime_types.empty?
+          # Wir probieren es via file-Befehl auf der Shell
+          if uploaded_file.is_a?(Tempfile) # Könnte auch StringIO sein
+            # TODO: Plattform-Unabhägigkeit?!
+            mime_type = `file --brief --mime #{uploaded_file.path}`.strip
+            uploaded_file.content_type = mime_type
+            logger.info "MIME-Typ detektiert durch file-Befehl: #{uploaded_file.content_type}"
+          end
+        else
+          uploaded_file.content_type = mime_types.first.content_type 
+          logger.info "MIME-Typ detektiert durch mime-types gem: #{uploaded_file.content_type}"
         end
 
         # Evt. auch mit gem http://ruby-filemagic.rubyforge.org/, welches aber eine compilierung benötigt, mit Abhängigkeiten,
         # die auf Servern evt. nicht gegeben ist.
+      else
+        logger.info "MIME-Typ detektiert durch Webserver: #{uploaded_file.content_type}"
       end
 
       # Medium-Klasse anhand des MIME-Typs der hochgeladenen Datei ausfindig machen
