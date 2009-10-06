@@ -62,14 +62,14 @@ describe MediaController, "GET 'search'" do
   it "should redirect to media set, if found media" do
     Medium.should_receive(:find_with_ferret_for_user).and_return([@medium])
     MediaSet.should_receive(:find_media_with_ferret_for_user).and_return([@medium])
-    get :search, :search_fulltext => 'something with hits'
+    get :search, :search_fulltext => 'something with hits', :media_types => ['Medium', 'AudioClip', 'VideoClip'] # "Medium" nur für Tests sinnvoll!
     response.should be_redirect
   end
 
   it "should stay on search page, if nothing found" do
     Medium.should_receive(:find_with_ferret_for_user).and_return([])
     MediaSet.should_receive(:find_media_with_ferret_for_user).and_return([])
-    get :search, :search_fulltext => 'something with no hits'
+    get :search, :search_fulltext => 'something with no hits', :media_types => ['AudioClip', 'VideoClip']
     response.should_not be_redirect
   end
 

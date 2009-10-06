@@ -58,8 +58,8 @@ class Medium < ActiveRecord::Base
   
   public ##########################################################################################
   
-  def self.find_with_ferret_for_user(query, user)
-    all_found_media = self.find_with_ferret(query)
+  def self.find_with_ferret_for_user(query, user, options = {}, find_options = {})
+    all_found_media = self.find_with_ferret(query, options, find_options)
     
     # Rechte prüfen, auf jedem gefundenen Medium
     viewable_media = all_found_media.select { |m| user.is_viewer_of?(m) or user.is_owner_of?(m) }
@@ -204,10 +204,15 @@ class Medium < ActiveRecord::Base
     false
   end
 
-  # TODO: In Klassenmethod refactorn
-  def type_display_name
+  def self.type_display_name
     "Medium"
   end
+  
+  # Convenience-Methode auf Instanz
+  def type_display_name
+    self.class.type_display_name
+  end
+  
 
   def tag_names
     @tag_names ||= tags.to_s

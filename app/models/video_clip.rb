@@ -8,7 +8,7 @@ class VideoClip < Medium
 
   validates_as_attachment
  
-  def type_display_name
+  def self.type_display_name
     "Video Clip"
   end
   

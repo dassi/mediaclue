@@ -36,7 +36,7 @@ class Image < Medium
     "#{width}x#{height}"
   end
   
-  def type_display_name
+  def self.type_display_name
     "Bild"
   end
 

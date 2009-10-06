@@ -166,6 +166,18 @@ class MediaController < ApplicationController
     else
       found_media = []
     end
+    
+    # Allenfalls nur bestimmte Medientypen berücksichtigen
+    # TODO: Dies ist besser (oder zusätzlich) in find_with_ferret_for_user und find_media_with_ferret_for_user, siehe oben.
+    # Es war aber nicht ganz trivial, auf den ersten Blick, deshalb hier an zentraler Stelle sichergestellt:
+    if params[:media_types] and params[:media_types].any?
+      klasses = params[:media_types].collect(&:constantize).to_set
+
+      # Filtern, falls nicht alle angewählt sind
+      if Medium.sub_classes.to_set != klasses
+        found_media.reject! { |m| not klasses.any? { |klass| m.instance_of?(klass) }}
+      end
+    end
 
     if found_media.any?
       # Gefundene Medien in das Suchresultat-Set abspeichern

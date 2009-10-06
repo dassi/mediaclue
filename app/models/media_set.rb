@@ -136,18 +136,19 @@ class MediaSet < ActiveRecord::Base
     filename
   end
   
-  def self.find_by_fulltext(fulltext)
-    like_condition = "LIKE '%#{fulltext}%'"
-    self.find :all, :conditions => "( (media_sets.name #{like_condition}) OR (media_sets.desc #{like_condition}))"
-  end
+  # Obsolete: Wir suchen nur via ferret-Engine
+  # def self.find_by_fulltext(fulltext)
+  #   like_condition = "LIKE '%#{fulltext}%'"
+  #   self.find :all, :conditions => "( (media_sets.name #{like_condition}) OR (media_sets.desc #{like_condition}))"
+  # end
+  # 
+  # def self.find_media_ids_by_fulltext(fulltext)
+  #   media_sets = find_by_fulltext(fulltext)
+  #   media_sets.collect { |media_set| media_set.collectables.collect{ |media| media.id } }.flatten.uniq
+  # end                                           
   
-  def self.find_media_ids_by_fulltext(fulltext)
-    media_sets = find_by_fulltext(fulltext)
-    media_sets.collect { |media_set| media_set.collectables.collect{ |media| media.id } }.flatten.uniq
-  end                                           
-  
-  def self.find_media_with_ferret_for_user(query, user)
-    all_found_media_sets = self.find_with_ferret(query)
+  def self.find_media_with_ferret_for_user(query, user, options = {}, find_options = {})
+    all_found_media_sets = self.find_with_ferret(query, options, find_options)
     
     all_found_media = all_found_media_sets.collect(&:collectables).flatten.uniq
     

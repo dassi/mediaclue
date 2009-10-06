@@ -3,6 +3,13 @@
   %p.limited Hier können Sie nach den Medien suchen, auf denen Sie Leseberechtigung haben. Gesucht wird in Titel, Beschreibung und Schlagworten von Medien und Kollektionen.
 
   -form_tag(search_media_path, :method => :get, :name => 'search_form') do
+    Suche nach:
+    %br
+    - for media_class in Medium.sub_classes
+      = check_box_tag 'media_types[]', media_class.to_s, true
+      = media_class.type_display_name
+      %br
+    %br  
     Volltextsuche:
     %br
     #search_panel
@@ -18,7 +25,7 @@
       %br
       = top_tags_link_list('search_fulltext', {:limit => 30})
 
-  Beispiele für die Suchsyntax:
+  %p Beispiele für die Suchsyntax:
   %ul
     %li
       %pre Geschichte Napoleon
