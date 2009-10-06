@@ -205,9 +205,12 @@ describe MediaSetsController, "parameter inheritance" do
     inherited_params[:media_set][:media_attributes][:'2'][:viewers].should eql("inherited value")
   end
 
-  it "should inherit subject tags from media_set to medias" do
+  it "should inherit subject tags from media_set to medias, if option is set to 'subjects'" do
     tags_from_media_set =  'tags for, media_set; "Bildnerisches Gestalten" Chemie'
     @params[:media_set][:tag_names] = tags_from_media_set
+
+    @params[:inherit_tags] = 'subjects'
+
     tags_for_media_one =  'tags for media one'
     tags_for_media_two =  'tags for media two'
     @params[:media_set][:media_attributes][:'1'][:tag_names] = tags_for_media_one
@@ -220,6 +223,40 @@ describe MediaSetsController, "parameter inheritance" do
     inherited_params[:media_set][:media_attributes][:'2'][:tag_names].should include(tags_for_media_two)
     inherited_params[:media_set][:media_attributes][:'2'][:tag_names].should include('Bildnerisches Gestalten')
     inherited_params[:media_set][:media_attributes][:'2'][:tag_names].should include('Chemie')
+  end
+
+  it "should inherit all tags from media_set to medias, if option is set to 'all'" do
+    tags_from_media_set =  'tags for, media_set; "Bildnerisches Gestalten" Chemie'
+    @params[:media_set][:tag_names] = tags_from_media_set
+
+    @params[:inherit_tags] = 'all'
+
+    tags_for_media_one =  'tags for media one'
+    tags_for_media_two =  'tags for media two'
+    @params[:media_set][:media_attributes][:'1'][:tag_names] = tags_for_media_one
+    @params[:media_set][:media_attributes][:'2'][:tag_names] = tags_for_media_two
+    inherited_params = controller.send(:inherit_media_params_from_media_set)
+
+    inherited_params[:media_set][:media_attributes][:'1'][:tag_names].should include(tags_for_media_one)
+    inherited_params[:media_set][:media_attributes][:'1'][:tag_names].should include(tags_from_media_set)
+    inherited_params[:media_set][:media_attributes][:'2'][:tag_names].should include(tags_for_media_two)
+    inherited_params[:media_set][:media_attributes][:'2'][:tag_names].should include(tags_from_media_set)
+  end
+
+  it "should inherit no tags from media_set to medias, if option is set to 'none'" do
+    tags_from_media_set =  'tags for, media_set; "Bildnerisches Gestalten" Chemie'
+    @params[:media_set][:tag_names] = tags_from_media_set
+
+    @params[:inherit_tags] = 'none'
+
+    tags_for_media_one =  'tags for media one'
+    tags_for_media_two =  'tags for media two'
+    @params[:media_set][:media_attributes][:'1'][:tag_names] = tags_for_media_one
+    @params[:media_set][:media_attributes][:'2'][:tag_names] = tags_for_media_two
+    inherited_params = controller.send(:inherit_media_params_from_media_set)
+
+    inherited_params[:media_set][:media_attributes][:'1'][:tag_names].should == tags_for_media_one
+    inherited_params[:media_set][:media_attributes][:'2'][:tag_names].should == tags_for_media_two
   end
 
 end

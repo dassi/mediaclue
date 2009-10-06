@@ -97,10 +97,13 @@ class MediaSet < ActiveRecord::Base
   end
   
   # Setter für nested Form-Parameter für die enthaltenen Medien-Objekte
+  # TODO: Evt. mit neuem Rails 2.3 nested forms (accepts_nested_attributes) vereinfachen!
   def media_attributes=(media_attributes)
-    collectables.each do |media|
-      attributes = media_attributes[media.id.to_s] if media_attributes
-      media.attributes = attributes if attributes
+    if media_attributes and media_attributes.any?
+      collectables.each do |media|
+        attributes = media_attributes[media.id.to_s]
+        media.attributes = attributes if attributes
+      end
     end
   end
   

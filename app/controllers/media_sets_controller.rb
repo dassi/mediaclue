@@ -88,6 +88,7 @@ class MediaSetsController < ApplicationController
         
         # mass assignment von media_set parametern enthält nested parameter media_attributes zum update der 
         # in collectables enthaltenen medien. Dies geschieht z.Zt. _ohne_ Prüfung von permissions, da attacks unwahrscheinlich sind !
+        # TODO: Ebendiese Rechte prüfen!
         if @media_set.update_attributes(params[:media_set])
           # Dem Medienset neu den Status "defined" verleihen
           @media_set.store! unless @media_set.defined?
@@ -286,27 +287,25 @@ class MediaSetsController < ApplicationController
     media_set_tag_names = media_set_params[:tag_names]
 
     media_attributes.each do |k, m| 
-      # wenn case block einkommentiert, dann überschreiben nur bei ungesetzen Werten
-      # case m[:source]
-      # when nil, '', 'unknown'
-        m[:source] = media_set_source if not media_set_source.blank?
-      # end
-      # wenn case block einkommentiert, dann überschreiben nur bei ungesetzen Werten
-      # case m[:viewers]
-      # when nil, ''
-        m[:viewers] = media_set_viewers if not media_set_viewers.blank?
-      # end
-                                               
+      m[:source] = media_set_source if not media_set_source.blank?
+      m[:viewers] = media_set_viewers if not media_set_viewers.blank?
                                                
       if not media_set_tag_names.blank?
-        SUBJECT_SELECTIONS.each do |subject|
-          if subject.include?(' ')
-            tag_name = '"' + subject + '"'
-          else
-            tag_name = subject
+        case params[:inherit_tags]
+        when 'none'
+          # nichts weiter tun
+        when 'subjects'
+          SUBJECT_SELECTIONS.each do |subject|
+            if subject.include?(' ')
+              tag_name = '"' + subject + '"'
+            else
+              tag_name = subject
+            end
+            m[:tag_names] << (' ' + tag_name) if media_set_tag_names.include?(tag_name)
           end
-
-          m[:tag_names] << (' ' + tag_name) if media_set_tag_names.include?(tag_name)
+          
+        when 'all'
+          m[:tag_names] << media_set_tag_names
         end
       end
       

@@ -32,10 +32,21 @@
       %label{:for => 'source'} 
         Quelle/Copyright 
       %br
-      = select_tag 'media_set[source]', options_from_collection_for_select([['', nil]].concat(Medium::SOURCE_SELECTIONS), :last, :first, nil), :class => 'media_source'
+      = select_tag 'media_set[source]', options_from_collection_for_select([['', nil]].concat(Medium::SOURCE_SELECTIONS), :last, :first, nil)
     %p
       %label{:for => 'source'} 
         Sichtbar für
       %br
-      = select_tag 'media_set[viewers]', options_from_collection_for_select([['', nil]].concat(options_for_viewer), :last, :first, nil), :class => 'media_source'
+      = select_tag 'media_set[viewers]', options_from_collection_for_select([['', nil]].concat(options_for_viewer), :last, :first, nil)
+    %p
+      Schlagworte kopieren aus der Kollektion:
+      %br
+      = radio_button_tag('inherit_tags', 'none')
+      Keine
+      &nbsp;&nbsp;
+      = radio_button_tag('inherit_tags', 'subjects', true)
+      Nur Fach-Schlagworte
+      &nbsp;&nbsp;
+      = radio_button_tag('inherit_tags', 'all')
+      Alle Schlagworte
   

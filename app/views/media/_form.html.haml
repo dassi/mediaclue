@@ -40,7 +40,7 @@
         .edit_media_source
           Quelle/Copyright
           %br
-          =media_form.select :source, Medium::SOURCE_SELECTIONS, :class => 'media_source'
+          =media_form.select :source, Medium::SOURCE_SELECTIONS
 
         -if current_user.is_owner? form
           .edit_media_viewers
