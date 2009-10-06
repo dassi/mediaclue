@@ -10,7 +10,7 @@
     =table_row ['Originaler Dateiname', @medium.original_filename]
     =table_row ['Abmessungen', @medium.dimensions] if @medium.respond_to? :dimensions
     =table_row ['Format', @medium.format]
-    =table_row ['Grösse', @medium.filesize]
+    =table_row ['Grösse', number_to_human_size(@medium.size, :precision => 2)]
     =table_row ['Erstellt am', @medium.created_at.to_formatted_s(:german)]
     =table_row ['Zuletzt bearbeitet am', @medium.updated_at.to_formatted_s(:german)]
     =table_row ['Enthalten in Kollektionen', @medium.defined_media_sets.collect {|ms| link_to(ms.name, ms) }.join(', ') ]
