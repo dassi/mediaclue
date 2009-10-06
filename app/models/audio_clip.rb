@@ -15,7 +15,7 @@ class AudioClip < Medium
   # Liefert weitere erlaubte Dateiendungen. 
   def self.additional_file_extensions
     # M4A wird von der MIME-Library nicht richtig erkannt
-    ['m4a']
+    {'audio/mp4' => ['m4a']}
   end
     
 

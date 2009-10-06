@@ -80,19 +80,28 @@ class Medium < ActiveRecord::Base
   end
 
   # Liefert weitere erlaubte Dateiendungen. Für den Fall das die MIME-Library nicht ganz aktuell ist.
-  # Default-Implementation. Soll in Subklassen überschrieben werden.
+  # Default-Implementation. Soll in Subklassen überschrieben werden. Soll einen Hash liefern nach Muster:
+  # {mime_typ => [ext, ...]}
   def self.additional_file_extensions
-    []
+    {}
   end
   
-  def self.all_media_file_extensions
-    extensions = self.all_media_content_types.collect { |t| MIME::Types[t].first.extensions }.flatten
-    extensions << self.sub_classes.collect(&:additional_file_extensions)
+  def self.file_extensions
+    extensions = self.allowed_content_types.collect { |t| MIME::Types[t].first.extensions }.flatten
+    extensions.concat(self.additional_file_extensions.values.flatten)
     extensions.compact.uniq
   end
   
+  def self.all_media_file_extensions
+    self.sub_classes.collect { |medium_class| medium_class.file_extensions }.flatten.compact.uniq
+  end
+  
+  def self.allowed_content_types
+    self.const_get(:CONTENT_TYPES)
+  end
+
   def self.all_media_content_types   
-    self.sub_classes.collect { |medium_class| medium_class::CONTENT_TYPES }.flatten.compact.uniq
+    self.sub_classes.collect { |medium_class| medium_class.allowed_content_types }.flatten.compact.uniq
   end
 
   def template_path
@@ -101,10 +110,6 @@ class Medium < ActiveRecord::Base
   
   def format
     content_type.split('/').last.upcase    
-  end
-  
-  def filesize
-    "#{size / 1024} kB"
   end
   
   # Liefert einen aussagekräftigeren Filenamen als der GUID-basierte Filenamen auf dem Speichermedium
@@ -208,5 +213,8 @@ class Medium < ActiveRecord::Base
     @tag_names ||= tags.to_s
   end
 
+  # def original_file_extension
+  #   File.extension(original_filename)
+  # end
   
 end

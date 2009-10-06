@@ -1,5 +1,3 @@
-require 'mime/types'
-
 class MediaController < ApplicationController
   
 #  permit ""
@@ -31,10 +29,9 @@ class MediaController < ApplicationController
         format.html { render :action => 'show' }
 
         # Formate aus MIME-Type des Mediums erzeugen (für Download wichtig. Bilder werden beim Anzeigen ansonsten direkt via public-URL angezeigt)
-        mime_types = MIME::Types[@medium.content_type]
-        mime_types.first.extensions.each do |ext|
-          format.send(ext) { send_file @medium.full_filename(params[:size]), :type => @medium.content_type, :disposition => 'attachment', :filename => @medium.original_filename }
-        end unless mime_types.empty?
+        @medium.class.file_extensions.each do |ext|
+          format.send(ext) { send_file @medium.full_filename(params[:size]), :type => @medium.content_type, :disposition => 'attachment', :filename => @medium.pretty_filename }
+        end
       end
     end
   end

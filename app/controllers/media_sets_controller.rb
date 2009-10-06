@@ -1,5 +1,3 @@
-require 'mime/types'
-
 class MediaSetsController < ApplicationController
 
   MEDIA_SET_STYLES = ['lightbox']
