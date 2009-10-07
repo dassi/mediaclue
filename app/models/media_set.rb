@@ -1,5 +1,3 @@
-require 'ruport'
-
 # Collection von Medium-Objekten.
 class MediaSet < ActiveRecord::Base
 
@@ -12,8 +10,7 @@ class MediaSet < ActiveRecord::Base
                                      :order => 'media_set_memberships.position'
 
   validates_associated :collectables, :message => "Mindestens ein enthaltenes Medium ist ungültig"
-  validates_presence_of :name, :message => 'Name einer Kollektion ist zwingend erforderlich!', :on => :update
-#  validates_presence_of :tags, :message => 'Mindestens ein Schlagwort ist zwingend erforderlich!'
+  validates_presence_of :name, :on => :update
 
   after_save :save_collectables, :save_new_tags
 

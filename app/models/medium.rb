@@ -2,27 +2,26 @@ class Medium < ActiveRecord::Base
 
   acts_as_ferret :remote => true, :fields => [:name, :desc, :tag_names, :meta_data]
 
+  # Pagination, Anzahl pro Seite
   @@per_page = 20
-  
   cattr_reader :per_page
+
   attr_writer :tag_names
   
   # Flag, ob wir Metadaten extrahieren beim Speichern
   attr_accessor :is_importing_metadata 
   
+  # Validierungen
   validate :validate_new_tag_names
-  validates_presence_of :name, :message => 'Name ist zwingend erforderlich!'
-#  validates_presence_of :tags, :message => 'Mindestens ein Schlagwort ist zwingend erforderlich!'  
+  validates_presence_of :name
   
   acts_as_authorizable
   
-  # after_create :set_default_viewer
   after_save :save_new_tags
   before_create :import_meta_data if FEATURE_METADATA
   
   # Auswahl für Quelle/Copytright
   SOURCE_SELECTIONS = [
-    # ['', nil],
     ['Unbekannt', 'unknown'],
     ['Netzklau (nur für persönlichen Gebrauch)', 'personal'],
     ['Schulcopyright (offiziell für Schulzwecke lizensiert)', 'school'],
@@ -180,29 +179,6 @@ class Medium < ActiveRecord::Base
     result = 'nur Besitzer' if result.empty?
     result
   end  
-  
-  # # Setzt die Default User Gruppe (die Gruppe Lehrer als Viewer dieses Mediums)
-  # def set_default_viewer
-  #   group = UserGroup.find(DEFAULT_GROUP_ID)
-  #   accepts_role 'viewer', group if group   
-  # end
-  
-  # TODO: entfernen, weil scheinbar nicht verwendet
-  # True, falls ein Attribut dieses Objekts von den Daten params abweicht
-  def attr_changes?(params)
-    raise 'sollte nicht aufgerufen werden?!'
-#    p=params.reject {|k,v| !['name', 'desc'].include? k }
-    params.each do |key, value|
-      # Sichtbarkeit "nur Besitzer" ist so realisiert, dass das Medium keine Viewers besitzt.
-      if key == 'viewers'        
-        return true if viewers.nil? and value != 'owner'
-      else        
-        return true if self.send(key) != value
-      end
-    end
-    
-    false
-  end
 
   def self.type_display_name
     "Medium"
