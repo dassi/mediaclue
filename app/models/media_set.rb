@@ -7,17 +7,23 @@ class MediaSet < ActiveRecord::Base
 
   belongs_to :owner, :class_name => "User", :foreign_key => "owner_id"
   
-  # has_many_polymorphs :collectables, :from => [:images, :documents, :audio_clips, :video_clips],
-  #                                    :through => :media_set_memberships,
-  #                                    :order => 'media_set_memberships.position'
-
-  has_many :media_set_memberships, :order => 'media_set_memberships.position'
-  has_many :media, :through => :media_set_memberships do
+  has_many :media_set_memberships
+  has_many :media, :through => :media_set_memberships, :order => 'media_set_memberships.position ASC' do
     def images
-      find(:all, :conditions => ['media.type = ?', Image])
+      find(:all, :conditions => ['media.type = ?', 'Image'])
     end
     
-    # TODO weitere...
+    def audio_clips
+      find(:all, :conditions => ['media.type = ?', 'AudioClip'])
+    end
+    
+    def video_clips
+      find(:all, :conditions => ['media.type = ?', 'VideoClip'])
+    end
+    
+    def documents
+      find(:all, :conditions => ['media.type = ?', 'Document'])
+    end
   end
 
   validates_associated :media, :message => "Mindestens ein enthaltenes Medium ist ungültig"
@@ -87,7 +93,7 @@ class MediaSet < ActiveRecord::Base
   end
   
   def owner_name
-    owner.full_name
+    owner.try(:full_name)
   end 
   
   def caption
@@ -220,6 +226,22 @@ class MediaSet < ActiveRecord::Base
   def can_edit?(user)
     # TODO
     true
+  end
+  
+  def images
+    media.images
+  end
+  
+  def video_clips
+    media.video_clips
+  end
+  
+  def audio_clips
+    media.audio_clips
+  end
+  
+  def documents
+    media.documents
   end
   
   private #####################################################################

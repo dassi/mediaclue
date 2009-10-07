@@ -22,15 +22,19 @@ module ApplicationHelper
   end
   
   def formatted_tag_list(tagged_model)
-    tagged_model.tag_list.empty? ? content_tag('em', '[keine]') : tagged_model.tag_list
+    tagged_model.tag_list.empty? ? no_data_text : tagged_model.tag_list
   end
   
   def formatted_desc(desc_model)
     if desc_model.desc and !desc_model.desc.empty?
       escape_newline(desc_model.desc)
     else
-      content_tag('em', '[keine]')
+      no_data_text
     end
+  end
+  
+  def no_data_text
+    content_tag('em', '[keine]')
   end
   
   def options_for_viewer

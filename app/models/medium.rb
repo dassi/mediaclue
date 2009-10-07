@@ -139,12 +139,12 @@ class Medium < ActiveRecord::Base
   # Quelle in verständlichem Text
   def formatted_source
     source_selection = Medium::SOURCE_SELECTIONS.find {|s| s.last == self.source }
-    (source_selection || ['keine Angabe']).first 
+    source_selection.try(:first)
   end
   
   # Name des Besitzers
   def owner_name
-    owner.full_name
+    owner.try(:full_name)
   end
   
   # Liste aller MediaSets mit den Status defined

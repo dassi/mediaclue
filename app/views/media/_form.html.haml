@@ -42,7 +42,7 @@
           %br
           =media_form.select :source, Medium::SOURCE_SELECTIONS
 
-        -if current_user.is_owner? form
+        -if current_user.is_owner_of?(form)
           .edit_media_viewers
             Sichtbar für
             %br

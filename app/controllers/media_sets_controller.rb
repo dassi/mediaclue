@@ -265,8 +265,10 @@ class MediaSetsController < ApplicationController
     @media_set = MediaSet.find params[:id]
     permit :edit, @media_set do
       params[:media_list].each_with_index do |id, position|     
-        membership = @media_set.media_set_memberships.find_by_collectable_id id
-        membership.update_attributes! :position => position + 1
+        membership = @media_set.media_set_memberships.find_by_medium_id(id)
+        membership.position = position
+        membership.save!
+        # möglich wäre direkt auch dies, aber JavaScript sendet für jedes Element einen Wert. membership.insert_at(position+1)
       end
       render :nothing => true
     end

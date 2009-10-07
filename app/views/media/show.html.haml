@@ -5,7 +5,8 @@
   %table.properties_table
     =table_row ['Eigenschaft', 'Wert'], 'th', [200, 590]
     =table_row ['Schlagworte', formatted_tag_list(@medium)]
-    =table_row ['Quelle/Copyright', @medium.formatted_source ]
+    =table_row ['Besitzer', @medium.owner_name || no_data_text]
+    =table_row ['Quelle/Copyright', @medium.formatted_source || no_data_text]
     =table_row ['Sichtbar für', @medium.viewer_names]
     =table_row ['Originaler Dateiname', @medium.original_filename]
     =table_row ['Abmessungen', @medium.dimensions] if @medium.respond_to? :dimensions
@@ -28,7 +29,7 @@
 #right{:style => "width:100px"}  
   %ul
     %li= backlink
-    -if current_user.is_owner?(@medium)
+    -if current_user.is_owner_of?(@medium)
       %li= link_to 'Bearbeiten', edit_medium_path(@medium)
       %li= link_to 'Löschen', medium_path(@medium), :confirm => 'Sind Sie sicher? Das Medium wird aus der Mediendatenbank gelöscht und auch aus allen Mediensets entfernt! Dieser Vorgang kann nicht rückgängig gemacht werden.', :method => :delete
     %li= medium_download_link(@medium)

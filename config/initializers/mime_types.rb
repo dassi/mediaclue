@@ -7,7 +7,7 @@ unless SUPRESS_EARLY_DB_CONNECTION
       mime_types = MIME::Types[content_type]
 
       if mime_types.any?
-        extensions = mime_types.first.extensions
+        extensions = mime_types.first.extensions.dup # Sehr wichtig dup! Sonst zerstören wir unten den Original-Array... (typisch ruby!)
 
         # Hole allfällige zusätzliche Dateiendungen zu diesem MIME-Typ
         if media_class.additional_file_extensions[content_type]

@@ -45,4 +45,4 @@ FEATURE_METADATA = true
 
 # Global gültige Beschränkung der Dateigrösse
 # = nil, falls keine Beschränkung
-MAX_FILE_SIZE = 8 * (1024**2) # = 8MB
+MAX_FILE_SIZE = nil # Zum Beispiel 8 * (1024**2)  => 8MB

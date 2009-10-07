@@ -2,7 +2,7 @@
 
 %h2 Vollständig definierte Kollektionen
 -if current_user.defined_media_sets.empty?
-  [keine]
+  = no_data_text
 -else
 %table.properties_table= render :partial => 'list_item', :collection => current_user.defined_media_sets
 
@@ -11,7 +11,7 @@
   %span.explanation (Diesen fehlen noch notwendige Informationen wie Copyright, Schlagworte etc. Bitte ergänzen!)
 
 -if current_user.media_sets_to_define.empty?
-  [keine]
+  = no_data_text
 -else
   %table.properties_table= render :partial => 'list_item', :collection => current_user.media_sets_to_define
 

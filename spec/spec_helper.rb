@@ -51,7 +51,6 @@ end
 
 def logged_in_user
     @current_user = mock_model(User)
-    @current_user.stub!(:is_owner?).and_return(:true)
     @current_user.stub!(:is_owner_of?).and_return(:true)
     @current_user.stub!(:full_name).and_return('Ed Min')
     controller.stub!(:login_required).and_return(:true)
