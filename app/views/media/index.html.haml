@@ -4,11 +4,17 @@
 
   -form_tag(search_media_path, :method => :get, :name => 'search_form') do
     Suche nach:
-    %br
-    - for media_class in Medium.sub_classes
-      = check_box_tag 'media_types[]', media_class.to_s, true
-      = media_class.type_display_name
-      %br
+    .clear
+    .left
+      .left
+        - for media_class in Medium.sub_classes
+          = check_box_tag 'media_types[]', media_class.to_s, true
+          = media_class.type_display_name
+          %br
+      .left
+        = check_box_tag 'my_media_only', '1', params[:my_media_only] || false
+        Nur in eigenen Medien suchen
+    .clear
     %br  
     Volltextsuche:
     %br

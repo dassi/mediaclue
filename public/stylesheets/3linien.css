@@ -247,23 +247,6 @@ ul {
   text-decoration: none;
 }
 
-.fltrt {
-  float: right;
-  margin-left: 8px;
-}
-
-.fltlft {
-  float: left;
-  margin-right: 8px;
-}
-
-.clearfloat {
-  clear: both;
-  height: 0;
-  font-size: 1px;
-  line-height: 0px;
-}
-
 /* Pachtes für Orginiladesign */
 
 

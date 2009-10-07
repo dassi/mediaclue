@@ -16,7 +16,7 @@
     #container
       #header
 
-        .fltlft
+        .left
           = link_to(image_tag('logo.png', :width => 137, :height => 75), root_url)
           %span{:class => "title"}
             = PROJECT_NAME
@@ -44,8 +44,8 @@
         #flash{:class => "error"}= flash[:error]
       #hauptinhalt
         = yield
-        %br{:class => "clearfloat"}
-      %br{:class => "clearfloat"}
+        %br{:class => "clear"}
+      %br{:class => "clear"}
       #footer
         %p
           mediaclue wurde entwickelt von: <a href="http://www.kshp.ch" target="_blank">Gymnasium Hohe Promenade</a> &amp; <a href="http://www.mindclue.ch" target="_blank">mindclue gmbh</a>

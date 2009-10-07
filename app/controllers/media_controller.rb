@@ -160,8 +160,16 @@ class MediaController < ApplicationController
   def search
 
     if not params[:search_fulltext].blank?
-      media = Medium.find_with_ferret_for_user(params[:search_fulltext], current_user)
-      media_from_sets = MediaSet.find_media_with_ferret_for_user(params[:search_fulltext], current_user)
+      
+      find_options = {}
+      ferret_options = {}
+      
+      if params[:my_media_only] == '1'
+        find_options[:conditions] = ['owner_id = ?', current_user.id]
+      end
+        
+      media = Medium.find_with_ferret_for_user(params[:search_fulltext], current_user, ferret_options, find_options)
+      media_from_sets = MediaSet.find_media_with_ferret_for_user(params[:search_fulltext], current_user, ferret_options, find_options)
       found_media = (media + media_from_sets).uniq
     else
       found_media = []
