@@ -6,6 +6,8 @@ class ApplicationController < ActionController::Base
 
   include AuthenticatedSystem
   before_filter :login_required
+  
+  include Authorization::ControllerMethods
 
   # Hack, damit die Klasse Tag sicher geladen wird um das Klassen-lade-problem zu lösen. Siehe auch:
   # http://rubyforge.org/forum/message.php?msg_id=26687

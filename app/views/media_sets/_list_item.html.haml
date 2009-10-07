@@ -1,7 +1,7 @@
 %tr.media_set_list
   %td{:style => 'width:400px'}
     %strong= link_to list_item.caption, media_set_path(list_item)
-    ="(#{list_item.collectables.count} Medien)"
+    ="(#{list_item.media.count} Medien)"
   %td= "&nbsp;&rsaquo;&nbsp;#{link_to 'ZIP', media_set_path(list_item, :format => :zip)}"
   %td= "&nbsp;&rsaquo;&nbsp;#{link_to 'PDF', media_set_path(list_item, :format => :pdf)}"
 

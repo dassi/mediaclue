@@ -1,5 +1,7 @@
 class Medium < ActiveRecord::Base
-
+    
+  include Authorization::ModelMethods
+  
   acts_as_ferret :remote => true, :fields => [:name, :desc, :tag_names, :meta_data]
 
   # Pagination, Anzahl pro Seite
@@ -10,12 +12,19 @@ class Medium < ActiveRecord::Base
   
   # Flag, ob wir Metadaten extrahieren beim Speichern
   attr_accessor :is_importing_metadata 
+
+  has_many :media_set_memberships
+  has_many :media_sets, :through => :media_set_memberships
+                                                 
+  has_many :group_permissions
+  has_many :read_permitted_groups, :through => :group_permissions, :source => :group, :conditions => {:group_permissions => {:read => true}}
+  has_many :write_permitted_groups, :through => :group_permissions, :source => :group, :conditions => {:group_permissions => {:write => true}}
+
+  belongs_to :owner, :class_name => "User", :foreign_key => "owner_id"
   
   # Validierungen
   validate :validate_new_tag_names
   validates_presence_of :name
-  
-  acts_as_authorizable
   
   after_save :save_new_tags
   before_create :import_meta_data if FEATURE_METADATA
@@ -61,7 +70,7 @@ class Medium < ActiveRecord::Base
     all_found_media = self.find_with_ferret(query, options, find_options)
     
     # Rechte prüfen, auf jedem gefundenen Medium
-    viewable_media = all_found_media.select { |m| user.is_viewer_of?(m) or user.is_owner_of?(m) }
+    viewable_media = all_found_media.select { |m| user.can_view?(m) or user.is_owner_of?(m) }
     
     viewable_media
   end
@@ -135,7 +144,7 @@ class Medium < ActiveRecord::Base
   
   # Name des Besitzers
   def owner_name
-    has_owner.first.full_name
+    owner.full_name
   end
   
   # Liste aller MediaSets mit den Status defined
@@ -146,38 +155,43 @@ class Medium < ActiveRecord::Base
   # Viewers von Form
   # TODO: Es tönt hier nach Mehrzahl "viewers", ist es aber nicht. So machen, dass es mehrere sein können!
   def viewers=(allowed_viewers)
-#    is_public = false
-    
-    # Alle "viewer" Rollen entfernen
-    has_viewers.each { |viewer| accepts_no_role 'viewer', viewer }
-    
-    case allowed_viewers[0,5]
-#    when 'owner'
-      # Alle Viewer-Rollen entfernen
-#      has_viewers.each { |viewer| accepts_no_role 'viewer', viewer }
-      
-#    when 'other'
-#      is_public = true
-      
-    when 'group'
-      group_id = allowed_viewers.split('-').last
-      group = UserGroup.find(group_id)
-      accepts_role 'viewer', group if group
-    end
-    
-    nil
+
+# TODO
+
+# #    is_public = false
+#     
+#     # Alle "viewer" Rollen entfernen
+#     has_viewers.each { |viewer| accepts_no_role 'viewer', viewer }
+#     
+#     case allowed_viewers[0,5]
+# #    when 'owner'
+#       # Alle Viewer-Rollen entfernen
+# #      has_viewers.each { |viewer| accepts_no_role 'viewer', viewer }
+#       
+# #    when 'other'
+# #      is_public = true
+#       
+#     when 'group'
+#       group_id = allowed_viewers.split('-').last
+#       group = UserGroup.find(group_id)
+#       accepts_role 'viewer', group if group
+#     end
+#     
+#     nil
   end
     
   # Viewers für Form
   def viewers
-    has_viewers.collect { |v| v.is_a?(UserGroup) ? "group-#{v.id}" : "owner" }.first
+    # TODO umschreiben nach read_permitted_groups
+    # has_viewers.collect { |v| v.is_a?(UserGroup) ? "group-#{v.id}" : "owner" }.first
   end
 
   # Namen berechtigten Viewers (Besitzer, Gruppen, oder alle)
   def viewer_names
-    result = has_viewers.collect { |viewer| (viewer.is_a?(UserGroup) ? 'Gruppe ' : '') + viewer.full_name.titlecase }.join(', ')
-    result = 'nur Besitzer' if result.empty?
-    result
+    # TODO umschreiben mit read_permitted_groups etc.
+    # result = has_viewers.collect { |viewer| (viewer.is_a?(UserGroup) ? 'Gruppe ' : '') + viewer.full_name.titlecase }.join(', ')
+    # result = 'nur Besitzer' if result.empty?
+    # result
   end  
 
   def self.type_display_name
@@ -197,5 +211,15 @@ class Medium < ActiveRecord::Base
   # def original_file_extension
   #   File.extension(original_filename)
   # end
+  
+  def can_view?(user)
+    # TODO
+    true
+  end
+
+  def can_edit?(user)
+    # TODO
+    true
+  end
   
 end

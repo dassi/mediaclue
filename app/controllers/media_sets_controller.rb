@@ -15,14 +15,17 @@ class MediaSetsController < ApplicationController
   def show
     @media_set = MediaSet.find params[:id]
 
-# TODO: Wieso ist dies deaktiviert?
-#    permit "viewer of :media_set" do
+    permit :view, @media_set do
       session[:per_page] = params[:per_page] if params[:per_page]
       @per_page = session[:per_page] || 20
-      collectables_method = params[:style] == 'lightbox' ? :images_for_user_as_viewer : :collectables_for_user_as_viewer
-      @media = @media_set.send(collectables_method, current_user).paginate :page => params[:page], :per_page => @per_page
-#      @media = @media_set.collectables_for_user_as_viewer(current_user).paginate :page => params[:page], :per_page => @per_page
+      if params[:style] == 'lightbox'
+        @media = @media_set.images_for_user_as_viewer(current_user)
+      else
+        @media = @media_set.media_for_user_as_viewer(current_user)
+      end
 
+      @media = @media.paginate :page => params[:page], :per_page => @per_page
+      
       @paginate = true
       @size = params[:size] || 'small'
       @composing_media_set = current_user.composing_media_set
@@ -30,23 +33,23 @@ class MediaSetsController < ApplicationController
       render_block = nil    
       render_block = lambda {render :action => "show_#{params[:style]}"} if params[:style] and MEDIA_SET_STYLES.include?(params[:style])
 
-      if @composing_media_set.nil? or (@composing_media_set and permit? "owner of :composing_media_set") 
+      if @composing_media_set.nil? or (@composing_media_set and permit?(:edit, @composing_media_set)) 
         respond_to do |format|
           format.html(&render_block)
           format.zip  { send_file @media_set.to_zip_for_user(current_user), :type => 'application/zip', :disposition => 'attachment' }
           format.pdf  { send_file @media_set.to_pdf_for_user(current_user), :type => 'application/pdf', :disposition => 'attachment' }
         end
       end
-#    end
+    end
   end
   
 
   # GET /media_sets/1/edit
   def edit
     @media_set = MediaSet.find params[:id]
-    permit "owner of :media_set" do    
-      @media_set.define! unless @media_set.collectables.empty?
-      @media = @media_set.collectables_for_user_as_owner(current_user)
+    permit :edit, @media_set do
+      @media_set.define! unless @media_set.media.empty?
+      @media = @media_set.media_for_user_as_owner(current_user)
       @user_groups = UserGroup.find :all
     end
   end
@@ -54,7 +57,7 @@ class MediaSetsController < ApplicationController
   # POST /media_sets
   # POST /media_sets.xml
   def create
-    @media_set = MediaSet.new params[:media_set]
+    @media_set = MediaSet.new(params[:media_set])
     
     respond_to do |format|
       if @media_set.save
@@ -76,16 +79,16 @@ class MediaSetsController < ApplicationController
       return
     end
 
-    @media = @media_set.collectables_for_user_as_owner(current_user)
+    @media = @media_set.media_for_user_as_owner(current_user)
     
-    permit "owner of :media_set" do
+    permit :edit, @media_set do
       respond_to do |format|
         
         # "vererbe" einige am media_set formular setzbare Parameter an die anhängigen Medien 
         params = inherit_media_params_from_media_set
         
         # mass assignment von media_set parametern enthält nested parameter media_attributes zum update der 
-        # in collectables enthaltenen medien. Dies geschieht z.Zt. _ohne_ Prüfung von permissions, da attacks unwahrscheinlich sind !
+        # in media enthaltenen medien. Dies geschieht z.Zt. _ohne_ Prüfung von permissions, da attacks unwahrscheinlich sind !
         # TODO: Ebendiese Rechte prüfen!
         if @media_set.update_attributes(params[:media_set])
           # Dem Medienset neu den Status "defined" verleihen
@@ -108,7 +111,7 @@ class MediaSetsController < ApplicationController
   # DELETE /media_sets/1.xml
   def destroy
     @media_set = MediaSet.find params[:id]
-    permit "owner of :media_set" do    
+    permit :edit, @media_set do
       @media_set.destroy
 
       respond_to do |format|
@@ -122,7 +125,7 @@ class MediaSetsController < ApplicationController
   # Lädt den Uploader im Browser und bereitet ihn für den Upload von Medien in ein bestimmtes Set vor
   def uploader
     @media_set = MediaSet.find(params[:id])
-    permit "owner of :media_set" do    
+    permit :edit, @media_set do
       @allowed_upload_extensions = Medium.all_media_file_extensions
       @authenticity_token = form_authenticity_token
     end
@@ -137,7 +140,7 @@ class MediaSetsController < ApplicationController
     @media_set = MediaSet.find(params[:id])
     
     # Sicherheitsabfrage: Nur der Besitzer des MediaSets kann darin hochladen
-    permit "owner of :media_set" do
+    permit :edit, @media_set do
       uploaded_file = params[:medium][:uploaded_data]
       
       # Falls MIME-Typ nicht durch JumpLoader schon gesetzt wurde, dann diesen serverseitig herausfinden und setzen
@@ -176,20 +179,22 @@ class MediaSetsController < ApplicationController
         @medium = medium_class.new
         @medium.is_importing_metadata = (params[:importMetadata] == '1')
         @medium.attributes = params[:medium].merge(:name => filename, :original_filename => filename)
+
+        # Medium dem aktuellen User in der Rolle "owner" hinzufügen
+        @medium.owner = current_user
+
+        # Speichern
         @medium.save!
         
         # TODO: Exceptions oder Fehler beim Uploaden an JumpLoader melden, ober per Ajax einblenden.
 
         # Medium dem MediaSet hinzufügen
-        @media_set.collectables << @medium
-
-        # Medium dem aktuellen User in der Rolle "owner" hinzufügen
-        current_user.is_owner_of @medium        
+        @media_set.media << @medium
 
         # Das Medium dem owner media set des users zuordnen
         # TODO: Das hier alleine reicht nicht aus auf die Dauer. Was passiert mit Medien deren Owner verändert wird? Etc. Hier braucht es ein
         # besseres Konzept, wie man die Kollektion "Meine Medien" immer auf dem neusten Stand halten kann
-        current_user.owner_media_set.collectables << @medium
+        current_user.owner_media_set.media << @medium
       else
         logger.error "Keine Medium Klasse gefunden für content_type '#{uploaded_file.content_type}'!"
         render :nothing => true, :status => :bad_request
@@ -207,8 +212,8 @@ class MediaSetsController < ApplicationController
   
   def set_collection
     @media_set = MediaSet.find params[:id]
-    permit "owner of :media_set" do
-      if current_user.composing_media_set.collectables.empty?
+    permit :edit, @media_set do
+      if current_user.composing_media_set.media.empty?
         current_user.composing_media_set.destroy
       else
         current_user.composing_media_set.define! 
@@ -229,7 +234,7 @@ class MediaSetsController < ApplicationController
   def compose
     @title = 'Neue Kollektion zusammenstellen'
     @media_set = MediaSet.find params[:id]
-    permit "owner of :media_set" do
+    permit :edit, @media_set do
       @media = @media_set.images
     end
   end
@@ -237,10 +242,12 @@ class MediaSetsController < ApplicationController
   
   def order
     @media_set = MediaSet.find params[:id]
-    permit "owner of :media_set" do
-      collectables_method = params[:style] == 'lightbox' ? :images_for_user_as_viewer : :collectables_for_user_as_viewer
-      @media = @media_set.send(collectables_method, current_user)      
-#      @media = @media_set.collectables_for_user_as_viewer(current_user)
+    permit :edit, @media_set do
+      if params[:style] == 'lightbox'
+        @media = @media_set.images_for_user_as_viewer(current_user)
+      else
+        @media = @media_set.media_for_user_as_viewer(current_user)
+      end
       @enable_ordering = true
       
       action = params[:style] ? "show_#{params[:style]}" : 'show'
@@ -256,7 +263,7 @@ class MediaSetsController < ApplicationController
   
   def update_positions
     @media_set = MediaSet.find params[:id]
-    permit "owner of :media_set" do
+    permit :edit, @media_set do
       params[:media_list].each_with_index do |id, position|     
         membership = @media_set.media_set_memberships.find_by_collectable_id id
         membership.update_attributes! :position => position + 1

@@ -9,7 +9,16 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091005083433) do
+ActiveRecord::Schema.define(:version => 20091007080506) do
+
+  create_table "group_permissions", :force => true do |t|
+    t.integer  "group_id"
+    t.integer  "medium_id"
+    t.boolean  "read",       :default => false
+    t.boolean  "write",      :default => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "image_thumbnails", :force => true do |t|
     t.integer  "size"
@@ -39,11 +48,11 @@ ActiveRecord::Schema.define(:version => 20091005083433) do
     t.boolean  "is_public"
     t.string   "source"
     t.text     "meta_data"
+    t.integer  "owner_id"
   end
 
   create_table "media_set_memberships", :force => true do |t|
-    t.integer  "collectable_id"
-    t.string   "collectable_type"
+    t.integer  "medium_id"
     t.integer  "media_set_id"
     t.integer  "position"
     t.datetime "created_at"
@@ -54,29 +63,7 @@ ActiveRecord::Schema.define(:version => 20091005083433) do
     t.string   "name"
     t.text     "desc"
     t.string   "state"
-    t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "roles", :force => true do |t|
-    t.string   "name",              :limit => 40
-    t.string   "authorizable_type", :limit => 30
-    t.integer  "authorizable_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "roles_user_groups", :id => false, :force => true do |t|
-    t.integer  "user_group_id"
-    t.integer  "role_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "roles_users", :id => false, :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "role_id"
+    t.integer  "owner_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

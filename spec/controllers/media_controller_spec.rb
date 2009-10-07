@@ -7,6 +7,7 @@ describe MediaController, "POST 'update'" do
     permit_everything
     @medium = mock_model(Medium, :id => 1)
     @medium.stub!(:tag_with)
+    @medium.stub!(:permit?).and_return(true)
     Medium.stub!(:find).and_return(@medium)
   end
   

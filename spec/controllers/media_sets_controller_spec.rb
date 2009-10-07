@@ -10,7 +10,7 @@ describe MediaSetsController, "GET 'update'" do
     @media_set = MediaSet.create
     MediaSet.stub!(:find).and_return(@media_set)
     @medium = Image.new
-    @media_set.stub!(:collectables_for_user_as_owner).and_return([@medium])
+    @media_set.stub!(:media_for_user_as_owner).and_return([@medium])
     @medium.stub!(:public_filename).and_return('Bild1')
   end
 

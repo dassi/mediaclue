@@ -1,31 +1,40 @@
 # Collection von Medium-Objekten.
 class MediaSet < ActiveRecord::Base
 
+  include Authorization::ModelMethods
+  
   acts_as_ferret :remote => true, :fields => [:name, :desc, :tag_names]
 
-  belongs_to :user
+  belongs_to :owner, :class_name => "User", :foreign_key => "owner_id"
   
-  has_many_polymorphs :collectables, :from => [:images, :documents, :audio_clips, :video_clips],
-                                     :through => :media_set_memberships,
-                                     :order => 'media_set_memberships.position'
+  # has_many_polymorphs :collectables, :from => [:images, :documents, :audio_clips, :video_clips],
+  #                                    :through => :media_set_memberships,
+  #                                    :order => 'media_set_memberships.position'
 
-  validates_associated :collectables, :message => "Mindestens ein enthaltenes Medium ist ungültig"
+  has_many :media_set_memberships, :order => 'media_set_memberships.position'
+  has_many :media, :through => :media_set_memberships do
+    def images
+      find(:all, :conditions => ['media.type = ?', Image])
+    end
+    
+    # TODO weitere...
+  end
+
+  validates_associated :media, :message => "Mindestens ein enthaltenes Medium ist ungültig"
   validates_presence_of :name, :on => :update
 
-  after_save :save_collectables, :save_new_tags
+  after_save :save_media, :save_new_tags
 
   attr_writer :tag_names
   
   def validate_on_update
-    if self.collectables.empty?
+    if self.media.empty?
       errors.add nil, 'Die Kollektion enthält keine Medien.'
     end
 
     validate_new_tag_names
   end
                                   
-  acts_as_authorizable
-
   # TODO: Diese state machine ist evt. nicht ganz die richtige Wahl für den Zweck.
 
   acts_as_state_machine :initial => :created
@@ -66,19 +75,19 @@ class MediaSet < ActiveRecord::Base
   end
   
   def images_for_user_as_viewer(user)
-    self.images.reject { |medium| !(user.is_viewer_of?(medium) or user.is_owner_of?(medium)) }
+    self.media.images.reject { |medium| !(user.can_view?(medium)) }
   end
   
-  def collectables_for_user_as_viewer(user)
-    self.collectables.reject { |medium| !(user.is_viewer_of?(medium) or user.is_owner_of?(medium)) }    
+  def media_for_user_as_viewer(user)
+    self.media.reject { |medium| !(user.can_view?(medium)) }
   end
   
-  def collectables_for_user_as_owner(user)    
-    self.collectables.reject { |medium| !user.is_owner_of?(medium) }    
+  def media_for_user_as_owner(user)    
+    self.media.reject { |medium| !user.is_owner_of?(medium) }
   end
   
   def owner_name
-    has_owner.first.full_name
+    owner.full_name
   end 
   
   def caption
@@ -97,9 +106,9 @@ class MediaSet < ActiveRecord::Base
   # TODO: Evt. mit neuem Rails 2.3 nested forms (accepts_nested_attributes) vereinfachen!
   def media_attributes=(media_attributes)
     if media_attributes and media_attributes.any?
-      collectables.each do |media|
-        attributes = media_attributes[media.id.to_s]
-        media.attributes = attributes if attributes
+      media.each do |medium|
+        attributes = media_attributes[medium.id.to_s]
+        medium.attributes = attributes if attributes
       end
     end
   end
@@ -110,7 +119,7 @@ class MediaSet < ActiveRecord::Base
 
     File.delete filename if File.exists? filename
     Zip::ZipFile.open(filename, Zip::ZipFile::CREATE) do |zipfile|
-      self.collectables_for_user_as_viewer(user).each_with_index do |medium, idx|
+      self.media_for_user_as_viewer(user).each_with_index do |medium, idx|
         filename_parts = [idx.to_s.rjust(3,'0')]
         
         zipfile.add "#{idx.to_s.rjust(3,'0')}_#{medium.pretty_filename}", medium.full_filename
@@ -133,30 +142,20 @@ class MediaSet < ActiveRecord::Base
     filename
   end
   
-  # Obsolete: Wir suchen nur via ferret-Engine
-  # def self.find_by_fulltext(fulltext)
-  #   like_condition = "LIKE '%#{fulltext}%'"
-  #   self.find :all, :conditions => "( (media_sets.name #{like_condition}) OR (media_sets.desc #{like_condition}))"
-  # end
-  # 
-  # def self.find_media_ids_by_fulltext(fulltext)
-  #   media_sets = find_by_fulltext(fulltext)
-  #   media_sets.collect { |media_set| media_set.collectables.collect{ |media| media.id } }.flatten.uniq
-  # end                                           
-  
   def self.find_media_with_ferret_for_user(query, user, options = {}, find_options = {})
     all_found_media_sets = self.find_with_ferret(query, options, find_options)
     
-    all_found_media = all_found_media_sets.collect(&:collectables).flatten.uniq
+    all_found_media = all_found_media_sets.collect(&:media).flatten.uniq
     
     # Rechte prüfen, auf jedem gefundenen Medium
-    viewable_media = all_found_media.select { |m| user.is_viewer_of?(m) or user.is_owner_of?(m) }
+    viewable_media = all_found_media.select { |m| user.can_view?(m) or user.is_owner_of?(m) }
     
     viewable_media
   end
   
   
   # Ruport Renderer, die eine Diashow der Medien des MediaSets als PDF erzeugt
+  # TODO: Auslagern ein besseren Ort
   class PdfSlideShowController < Ruport::Controller
     stage :slide_show
     required_option :filename, :media_set, :images
@@ -212,12 +211,24 @@ class MediaSet < ActiveRecord::Base
       end
     end      
   end  
+
+  def can_view?(user)
+    # TODO
+    true
+  end
+
+  def can_edit?(user)
+    # TODO
+    true
+  end
   
   private #####################################################################
   
-  def save_collectables
-    collectables.each do |collectable|
-      collectable.save(false)
+  # TODO: Warum brauchts das hier?! Mitunter verlangsamt das extrem das Speichern eines Sets, weil attachment_fu alle Bilder-Thumbnails nochmals erzeugt!!!
+  # Evt. auch ein Fall für neues Feature von Rails 2.3, welches assoziationen mitspeichern kann? Auf jedenfall evt. auch smarter machen und nur geänderte speichern
+  def save_media
+    media.each do |medium|
+      medium.save(false)
     end
   end
 

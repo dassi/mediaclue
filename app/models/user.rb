@@ -1,12 +1,14 @@
 require 'digest/sha1'
 
 class User < ActiveRecord::Base
+
+  include Authorization::UserMethods
+
+  has_many :media_sets, :foreign_key => "owner_id"
+  
   has_many :user_group_memberships
   has_many :user_groups, :through => :user_group_memberships
 
-  # Dies ist der User-Model des Rollen-systems (plugin authorizable)
-  acts_as_authorized_user
-  
   # Virtual attribute for the unencrypted password
   attr_accessor :password
 
@@ -100,25 +102,11 @@ class User < ActiveRecord::Base
     singleton_media_set :owning, 'own!', 'Meine Medien'
   end
 
-  
-  # Eigene Implementation von has_role?. (has_role? aus dem authorization plugin wird aber noch verwendet)
-  alias :original_has_role? :has_role?
-  def has_role?(role, authorizable_object = nil)
-    # Falls Rolle 'viewer', dann nicht auf User selbst nach dieser Rolle suchen, sondern in allen Gruppen, 
-    # in der dieser User drin ist nach dieser Rolle suchen, denn ein User erhält die Viewer-Rolle von den 
-    # Gruppen in den er drin ist "vererbt".
-    if role == 'viewer'
-      user_groups.each do |group|
-        return true if group.has_role? role, authorizable_object
-      end
-      return false
-    else
-      original_has_role? role, authorizable_object
-    end
+  def is_owner_of?(object)
+    object.owner == self
   end
-
-
-protected
+  
+  protected #######################################################################################
 
   # Liefert die "Singleton-Instanz" eines MediaSets dieses Users mit einem bestimmten State
   def singleton_media_set(state, event, name = nil)
@@ -126,9 +114,8 @@ protected
     
     # Erzeugen, falls inexistent
     if media_sets.empty?
-      media_set = MediaSet.create!
+      media_set = MediaSet.create!(:owner => self)
       media_set.send event
-      self.is_owner_of media_set
     else
       media_set = media_sets.first
     end    
@@ -142,7 +129,7 @@ protected
   
   # Liefert die MediaSets dieses Users eines bestimmten states
   def media_sets_of_state(state)
-    self.is_owner_of_what MediaSet, :conditions => {:state => state.to_s}
+    self.media_sets.find(:all, :conditions => {:state => state.to_s})
   end
     
   # before filter

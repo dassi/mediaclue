@@ -39,7 +39,14 @@ Spec::Runner.configure do |config|
 end
 
 def permit_everything
-    controller.should_receive(:has_permission?).and_return(true)
+    # controller.should_receive(:permit?).and_return(true)
+    
+    Medium.send(:define_method, :can_view?) do true; end
+    Medium.send(:define_method, :can_edit?) do true; end
+      
+    MediaSet.send(:define_method, :can_view?) do true; end
+    MediaSet.send(:define_method, :can_edit?) do true; end
+      
 end
 
 def logged_in_user

@@ -23,7 +23,7 @@ end
 describe MediaSet, "and update validations" do
   before(:each) do
     @media_set = MediaSet.create!(:name => name)
-    @media_set.collectables.stub!(:empty?).and_return(false)
+    @media_set.media.stub!(:empty?).and_return(false)
     
   end
 

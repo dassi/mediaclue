@@ -42,7 +42,6 @@ Website: www.mediaclue.ch
 === Verwendete plugins
 
 * acts_as_authenticated
-* authorization
 * acts_as_state_machine
 * has_many_polymorphs
 * attachment_fu

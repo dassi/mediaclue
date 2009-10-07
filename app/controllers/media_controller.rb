@@ -1,6 +1,5 @@
 class MediaController < ApplicationController
   
-#  permit ""
   
   # GET /media
   # GET /media.xml
@@ -10,7 +9,7 @@ class MediaController < ApplicationController
 #      format.xml  { render :xml => @media }
     end
   end
-  
+
   
   # GET /media/1
   # GET /media/1.png?size=medium
@@ -19,7 +18,8 @@ class MediaController < ApplicationController
   # GET /media/1.jpg?size=medium
   def show    
     @medium = Medium.find params[:id]
-    permit "owner of :medium or viewer of :medium" do
+    permit :view, @medium do
+    # permit "owner of :medium or viewer of :medium" do
       if params[:format]
         params[:format].downcase!
   #      params[:size] ||= :small if @medium.is_a? Image
@@ -49,7 +49,7 @@ class MediaController < ApplicationController
   # GET /media/1/edit
   def edit
     @medium = Medium.find params[:id]
-    permit "owner of :medium" do
+    permit :edit, @medium do
       @tag_string  = @medium.tag_names
       @user_groups = UserGroup.find :all    
     end
@@ -75,7 +75,7 @@ class MediaController < ApplicationController
   # PUT /media/1.xml
   def update
     @medium = Medium.find params[:id]
-    permit "owner of :medium" do
+    permit :edit, @medium do
       if @medium
         medium_params = params[:media_set][:media_attributes][params[:id]]
 
@@ -98,7 +98,7 @@ class MediaController < ApplicationController
   # DELETE /media/1.xml
   def destroy
     @medium = Medium.find params[:id]
-    permit "owner of :medium" do
+    permit :edit, @medium do
       @medium.destroy
 
       respond_to do |format|
@@ -112,7 +112,7 @@ class MediaController < ApplicationController
   def add
     @media_set = MediaSet.find params[:media_set_id]
     @medium = Medium.find params[:id]
-    permit "(owner of :media_set) and (owner of :medium or viewer of :medium)" do
+    permit :edit, @media_set do
       unless @media_set.images.include? @medium
         @media_set.images << @medium
 
@@ -135,7 +135,7 @@ class MediaController < ApplicationController
     @media_set = MediaSet.find params[:media_set_id]
     @medium = Medium.find params[:id]
 #    permit "(owner of :media_set) and (owner of :medium or viewer of :medium)" do
-    permit "owner of :media_set" do
+    permit :edit, @media_set do
       collection_method = @medium.template_path
 
       if @media_set and !@media_set.owning? and @medium and @media_set.send(collection_method).include? @medium
@@ -182,8 +182,8 @@ class MediaController < ApplicationController
     if found_media.any?
       # Gefundene Medien in das Suchresultat-Set abspeichern
       media_set = current_user.search_result_media_set
-      media_set.collectables.clear
-      media_set.collectables << found_media
+      media_set.media_set_memberships.clear
+      media_set.media << found_media
     
       # Composing MediaSet des Users in Session merken
       session[:composing_media_set_id] = current_user.composing_media_set.id
