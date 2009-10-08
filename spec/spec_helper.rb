@@ -50,9 +50,8 @@ def permit_everything
 end
 
 def logged_in_user
-    @current_user = mock_model(User)
+    @current_user = mock_user
     @current_user.stub!(:is_owner_of?).and_return(:true)
-    @current_user.stub!(:full_name).and_return('Ed Min')
     controller.stub!(:login_required).and_return(:true)
     controller.stub!(:current_user).and_return(@current_user)  
     User.should_receive(:find_by_id).any_number_of_times.and_return(@current_user)
@@ -87,8 +86,52 @@ end
 
 def mock_media_set(attributes = {})
   
-  # attributes.reverse_merge!()
+  attributes.reverse_merge!(:media_set_memberships => [],
+                            :media => [])
   
   mock = mock_model(MediaSet, attributes)
+  mock
+end
+
+def mock_medium(attributes = {})
+
+  attributes.reverse_merge!(:permit? => true)
+  
+  mock = mock_model(Medium, attributes)
+  mock
+end
+
+def mock_search_query(attributes = {})
+  attributes.reverse_merge!(:ferret_query => 'something to search',
+                            :images? => true,
+                            :video_clips? => true,
+                            :audio_clips? => true,
+                            :documents? => true,
+                            :my_media_only? => false,
+                            :name => 'Search query XY',
+                            :media_type? => true,
+                            :all_media_types? => true)
+                            
+  
+  mock = mock_model(SearchQuery, attributes)
+  
+  mock.stub!(:ferret_query=)
+  mock.stub!(:images=)
+  mock.stub!(:audio_clips=)
+  mock.stub!(:video_clips=)
+  mock.stub!(:documents=)
+  mock.stub!(:my_media_only=)
+  mock.stub!(:save!)
+  
+  mock
+end
+
+def mock_user(attributes = {})
+  attributes.reverse_merge!(:get_or_create_last_search_query => mock_search_query,
+                            :last_search_query => mock_search_query,
+                            :search_queries => [],
+                            :full_name => 'Ed Min')
+  
+  mock = mock_model(User, attributes)
   mock
 end

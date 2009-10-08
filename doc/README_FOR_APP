@@ -71,9 +71,6 @@ Website: www.mediaclue.ch
 
 == Bekannte Probleme (Known Bugs)
 
-* has_many_polymorphs hat vermutlich Probleme mit Ruby 1.8.7.
-  Die polymorphe Assoziation "collectables" in MediaSet geht nicht korrekt, weil irgendetwas mit den ID nicht richtig von der Datenbank eingelesen wird. (Ohne Probleme getestet auf Ruby 1.8.6)
-
 == TODO
 
 * Konstante LOCAL_DEVELOPMENT zuverlässiger setzen (environment.rb)

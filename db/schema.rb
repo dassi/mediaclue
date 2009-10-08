@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091007080506) do
+ActiveRecord::Schema.define(:version => 20091008102841) do
 
   create_table "group_permissions", :force => true do |t|
     t.integer  "group_id"
@@ -68,6 +68,20 @@ ActiveRecord::Schema.define(:version => 20091007080506) do
     t.datetime "updated_at"
   end
 
+  create_table "search_queries", :force => true do |t|
+    t.string   "name"
+    t.text     "ferret_query"
+    t.boolean  "audio_clips",   :default => false
+    t.boolean  "video_clips",   :default => false
+    t.boolean  "documents",     :default => false
+    t.boolean  "images",        :default => false
+    t.boolean  "my_media_only", :default => false
+    t.integer  "user_id"
+    t.integer  "position"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "sessions", :force => true do |t|
     t.string   "session_id", :default => "", :null => false
     t.text     "data"
@@ -114,6 +128,7 @@ ActiveRecord::Schema.define(:version => 20091007080506) do
     t.datetime "remember_token_expires_at"
     t.boolean  "is_group"
     t.string   "full_name"
+    t.integer  "last_search_query_id"
   end
 
 end

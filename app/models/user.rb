@@ -4,10 +4,14 @@ class User < ActiveRecord::Base
 
   include Authorization::UserMethods
 
-  has_many :media_sets, :foreign_key => "owner_id"
+  has_many :media_sets, :foreign_key => "owner_id" # Kein dependent destroy, zu gefährlich, Medien gehen verloren
   
-  has_many :user_group_memberships
+  has_many :user_group_memberships, :dependent => :destroy
   has_many :user_groups, :through => :user_group_memberships
+  
+  has_many :search_queries, :order => 'position ASC', :dependent => :destroy
+  
+  belongs_to :last_search_query, :class_name => "SearchQuery", :foreign_key => "last_search_query_id", :dependent => :destroy
 
   # Virtual attribute for the unencrypted password
   attr_accessor :password
@@ -104,6 +108,16 @@ class User < ActiveRecord::Base
 
   def is_owner_of?(object)
     object.owner == self
+  end
+
+  def get_or_create_last_search_query
+    if self.last_search_query.nil?
+      self.create_last_search_query
+      self.save!
+    end
+    
+    self.last_search_query
+    
   end
   
   protected #######################################################################################

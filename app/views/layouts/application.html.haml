@@ -32,7 +32,7 @@
       #intranet
         - menu_items = []
         - if logged_in?
-          -  menu_items.concat([ link_to('Suchen', media_path), link_to('Meine Kollektionen', media_sets_path), link_to('Hochladen', uploader_media_set_path(current_user.uploading_media_set))])
+          -  menu_items.concat([ link_to('Suchen', media_path), link_to('Meine Übersicht', media_sets_path), link_to('Hochladen', uploader_media_set_path(current_user.uploading_media_set))])
         
         - if URL_TO_EXTERNAL_HELP
           - menu_items << link_to('Hilfe', URL_TO_EXTERNAL_HELP, :target => 'blank')

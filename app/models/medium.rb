@@ -198,9 +198,17 @@ class Medium < ActiveRecord::Base
     "Medium"
   end
   
+  def self.type_display_name_plural
+    "Medien"
+  end
+  
   # Convenience-Methode auf Instanz
   def type_display_name
     self.class.type_display_name
+  end
+  
+  def type_display_name_plural
+    self.class.type_display_name_plural
   end
   
 

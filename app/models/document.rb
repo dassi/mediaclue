@@ -12,4 +12,8 @@ class Document < Medium
     "Dokument"
   end
                
+  def self.type_display_name_plural
+    "Dokumente"
+  end
+               
 end

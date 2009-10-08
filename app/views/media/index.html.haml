@@ -1,25 +1,39 @@
 #left
   %h1 Nach Medien suchen
-  %p.limited Hier können Sie nach den Medien suchen, auf denen Sie Leseberechtigung haben. Gesucht wird in Titel, Beschreibung und Schlagworten von Medien und Kollektionen.
+  %p.limited
+    Hier können Sie nach den Medien suchen, auf denen Sie Leseberechtigung haben. Gesucht wird in Titel, Beschreibung und Schlagworten von Medien und Kollektionen.
+    %span{:style => 'float:right', :class => 'smalltext'}
+      = link_to_function 'Hilfe anzeigen' do |page|
+        - page.visual_effect(:toggle_blind, 'help', :duration => 0.5)
+  .clear
 
-  -form_tag(search_media_path, :method => :get, :name => 'search_form') do
-    Suche nach:
-    .clear
-    .left
-      .left
-        - for media_class in Medium.sub_classes
-          = check_box_tag 'media_types[]', media_class.to_s, true
-          = media_class.type_display_name
-          %br
-      .left
-        = check_box_tag 'my_media_only', '1', params[:my_media_only] || false
-        Nur in eigenen Medien suchen
-    .clear
-    %br  
+  #help{:style => 'display: none'}
+    %p Beispiele für die Suchsyntax:
+    %ul
+      %li
+        %pre Geschichte Napoleon
+        Mehrwort-Suche. Findet Medien mit zwingendem Vorkommen beider Wörter "Geschichte" und "Napoleon".
+      %li
+        %pre "national geographic magazin"
+        Satzsuche. Findet die exakte Wortfolge "National Geographic Magazin".
+      %li
+        %pre Eiger OR Mönch
+        Oder-Verknüpfung. Findet alle Medien die entweder "Eiger" oder "Mönch" enthalten.
+      %li
+        %pre Strauss -Johann
+        Ausschluss. Findet alle Medien die "Strauss" enthalten, nicht aber "Johann".
+      %li
+        %pre afrik*
+        Mehrbuchstaben-Platzhalterzeichen. Findet Medien mit "afrikanisch" oder "Afrika" etc.
+      %li
+        %pre ?euer
+        Einzelbuchstaben-Platzhalterzeichen. Findet Medien mit "Feuer" oder "teuer" etc., nicht aber "Steuer".
+
+  -form_tag(search_media_path, :name => 'search_form') do
     Volltextsuche:
     %br
     #search_panel
-      = text_field_tag 'search_fulltext', params[:search_fulltext], :style => 'width:85%;height:18px'
+      = text_field_tag 'search_fulltext', @query.ferret_query, :style => 'width:85%;height:18px'
       = submit_tag("Suchen", :style => 'width:75px')
     %br
     .slide_in
@@ -30,27 +44,31 @@
       Top-Schlagworte
       %br
       = top_tags_link_list('search_fulltext', {:limit => 30})
+    %br
+    .clear
+    %fieldset.left{:style => 'width:100%'}
+      %legend Optionen
+      .left
+        - for media_class in Medium.sub_classes
+          = check_box_tag "media_types[#{media_class.to_s.tableize}]", '1', @query.media_type?(media_class)
+          = media_class.type_display_name_plural
+          %br
+      .left
+        = check_box_tag 'my_media_only', '1', @query.my_media_only?
+        Nur in eigenen Medien suchen
+        %br
+        = check_box_tag 'save_query', '1', false
+        Suchanfrage speichern als:
+        = text_field_tag 'saved_query_name', nil, :onclick => "$('save_query').checked = true"
+    .clear
+    %br  
 
-  %p Beispiele für die Suchsyntax:
-  %ul
-    %li
-      %pre Geschichte Napoleon
-      Mehrwort-Suche. Findet Medien mit zwingendem Vorkommen beider Wörter "Geschichte" und "Napoleon".
-    %li
-      %pre "national geographic magazin"
-      Satzsuche. Findet die exakte Wortfolge "National Geographic Magazin".
-    %li
-      %pre Eiger OR Mönch
-      Oder-Verknüpfung. Findet alle Medien die entweder "Eiger" oder "Mönch" enthalten.
-    %li
-      %pre Strauss -Johann
-      Ausschluss. Findet alle Medien die "Strauss" enthalten, nicht aber "Johann".
-    %li
-      %pre afrik*
-      Mehrbuchstaben-Platzhalterzeichen. Findet Medien mit "afrikanisch" oder "Afrika" etc.
-    %li
-      %pre ?euer
-      Einzelbuchstaben-Platzhalterzeichen. Findet Medien mit "Feuer" oder "teuer" etc., nicht aber "Steuer".
+#right                                                                                                                        
+  %h2.first Gespeicherte Suchanfragen
+  - if current_user.search_queries.empty?
+    = no_data_text
+  - else
+    %table.properties_table= render :partial => 'search_queries/list_item', :collection => current_user.search_queries
 
 %script
   document.search_form.search_fulltext.focus()

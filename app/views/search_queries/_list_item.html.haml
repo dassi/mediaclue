@@ -1,0 +1,4 @@
+%tr.media_set_list
+  %td{:style => 'width:400px'}
+    %strong= link_to h(list_item.name), search_media_path(:query_id => list_item)
+  %td= "&nbsp;&rsaquo;&nbsp;#{link_to 'Löschen...', search_query_path(list_item), :method => :delete, :confirm => 'Wirklich löschen?'}"

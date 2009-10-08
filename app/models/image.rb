@@ -40,6 +40,10 @@ class Image < Medium
     "Bild"
   end
 
+  def self.type_display_name_plural
+    "Bilder"
+  end
+
   def tiff?
     content_type == 'image/tiff'
   end

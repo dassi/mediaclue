@@ -4,7 +4,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe AccountController, "GET login" do
 
   before :each do
-    @user = mock_model(User, :id => 1)
+    @user = mock_user(:id => 1)
     User.stub!(:authenticate).and_return(@user)
   end
 
@@ -22,7 +22,7 @@ describe AccountController, "GET logout" do
   integrate_views
   
   before :each do
-    @user = mock_model(User, :id => 1)
+    @user = mock_user(:id => 1)
     User.stub!(:authenticate).and_return(@user)
   end
 

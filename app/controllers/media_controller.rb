@@ -1,13 +1,47 @@
 class MediaController < ApplicationController
   
+  protected #######################################################################################
+  
+  # Hilfsfunktion, die die Suche mit einer SearchQuery macht
+  # TODO: Evt. auslagern?
+  def search_with_query(search_query)
+    
+    if not search_query.ferret_query.blank?
+      
+      find_options = {}
+      ferret_options = {:limit => MAX_SEARCH_RESULTS}
+      
+      if search_query.my_media_only?
+        find_options[:conditions] = ['owner_id = ?', current_user.id]
+      end
+        
+      media = Medium.find_with_ferret_for_user(search_query.ferret_query, current_user, ferret_options, find_options)
+      media_from_sets = MediaSet.find_media_with_ferret_for_user(search_query.ferret_query, current_user, ferret_options, find_options)
+      found_media = (media + media_from_sets).uniq
+    else
+      found_media = []
+    end
+    
+    # Allenfalls nur bestimmte Medientypen berücksichtigen
+    # TODO: Dies ist besser (oder zusätzlich) in find_with_ferret_for_user und find_media_with_ferret_for_user, siehe oben.
+    # Es war aber nicht ganz trivial, auf den ersten Blick, deshalb hier an zentraler Stelle sichergestellt:
+    if not search_query.all_media_types?
+      klasses = search_query.media_types_classes
+
+      # Filtern, falls nicht alle angewählt sind
+      if Medium.sub_classes.to_set != klasses
+        found_media.reject! { |m| not klasses.any? { |klass| m.instance_of?(klass) }}
+      end
+    end
+
+    found_media
+  end
+  
+  public ##########################################################################################
   
   # GET /media
-  # GET /media.xml
   def index
-    respond_to do |format|
-      format.html  # { render :action => 'index' }
-#      format.xml  { render :xml => @media }
-    end
+    @query = current_user.last_search_query || current_user.build_last_search_query(:images => true, :audio_clips => true, :video_clips => true, :documents => true)
   end
 
   
@@ -153,40 +187,45 @@ class MediaController < ApplicationController
       end
     end
   end
+
   
 
   # GET /media/search
   # Medien suchen nach Suchkriterien
   def search
 
-    if not params[:search_fulltext].blank?
-      
-      find_options = {}
-      ferret_options = {}
-      
-      if params[:my_media_only] == '1'
-        find_options[:conditions] = ['owner_id = ?', current_user.id]
-      end
-        
-      media = Medium.find_with_ferret_for_user(params[:search_fulltext], current_user, ferret_options, find_options)
-      media_from_sets = MediaSet.find_media_with_ferret_for_user(params[:search_fulltext], current_user, ferret_options, find_options)
-      found_media = (media + media_from_sets).uniq
+    # Query erstellen, entweder von ID, oder von Such-Parametern
+    if params[:query_id]
+      query = current_user.search_queries.find(params[:query_id])
     else
-      found_media = []
-    end
+      query = current_user.get_or_create_last_search_query
     
-    # Allenfalls nur bestimmte Medientypen berücksichtigen
-    # TODO: Dies ist besser (oder zusätzlich) in find_with_ferret_for_user und find_media_with_ferret_for_user, siehe oben.
-    # Es war aber nicht ganz trivial, auf den ersten Blick, deshalb hier an zentraler Stelle sichergestellt:
-    if params[:media_types] and params[:media_types].any?
-      klasses = params[:media_types].collect(&:constantize).to_set
+      query.ferret_query = params[:search_fulltext]
 
-      # Filtern, falls nicht alle angewählt sind
-      if Medium.sub_classes.to_set != klasses
-        found_media.reject! { |m| not klasses.any? { |klass| m.instance_of?(klass) }}
+      query.images = params[:media_types][:images] == '1'
+      query.audio_clips = params[:media_types][:audio_clips] == '1'
+      query.video_clips = params[:media_types][:video_clips] == '1'
+      query.documents = params[:media_types][:documents] == '1'
+    
+      query.my_media_only = params[:my_media_only] == '1'
+      
+      query.save!
+
+      # Allenfalls als SearchQuery abspeichern
+      if (params[:save_query] == '1') && (not params[:saved_query_name].blank?)
+        new_query = query.dup
+        new_query.user = current_user
+        new_query.name = params[:saved_query_name]
+        new_query.save!
+        
+        flash[:notice] = 'Diese Suchabfrage wurde gespeichert.'
       end
     end
 
+
+    # Suche durchführen
+    found_media = search_with_query(query)
+    
     if found_media.any?
       # Gefundene Medien in das Suchresultat-Set abspeichern
       media_set = current_user.search_result_media_set
@@ -200,7 +239,7 @@ class MediaController < ApplicationController
       redirect_to media_set_url(media_set)
     else
       flash[:notice] = 'Keine Medien gefunden'
-      render :action => 'index'
+      redirect_to media_path
     end
   end
 

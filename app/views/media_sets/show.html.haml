@@ -40,7 +40,18 @@
         %li= link_to 'Bearbeiten', edit_media_set_path(@media_set) 
         %li= link_to 'Löschen', media_set_path(@media_set), :confirm => 'Sind Sie sicher? Die Kollektion wird gelöscht. Die enthaltenen Medien werden jedoch nicht gelöscht.', :method => :delete
       -elsif @media_set.search_result?
-        %li= link_to 'Suchresultat speichern', edit_media_set_path(@media_set)
+        / - if params[:search_params]
+        /   %li
+        /     = link_to_function 'Als Suchanfrage speichern' do |page|
+        /       - page.show('save_search_query_form')
+        /     #save_search_query_form{:style => 'display:none'}
+        /       - form_remote_tag :url => search_queries_path do
+        /         Name:
+        /         = hidden_field_tag 'search_query[search_params]', params[:search_params].to_yaml
+        /         = text_field_tag 'search_query[name]', nil
+        /         = submit_tag 'Suchanfrage speichern'
+          
+        %li= link_to 'Suchresultat als Kollektion speichern', edit_media_set_path(@media_set)
       -elsif @media_set.composing? or @media_set.uploading?
         %li= link_to 'Als neue Kollektion speichern', edit_media_set_path(@media_set)
 

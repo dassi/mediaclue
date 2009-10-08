@@ -12,4 +12,8 @@ class VideoClip < Medium
     "Video Clip"
   end
   
+  def self.type_display_name_plural
+    "Video Clips"
+  end
+  
 end

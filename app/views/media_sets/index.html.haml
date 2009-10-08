@@ -1,21 +1,24 @@
-%h1 Meine Kollektionen
+%h1 Meine Übersicht
 
-%h2 Vollständig definierte Kollektionen
+%h2 Meine Kollektionen
 -if current_user.defined_media_sets.empty?
   = no_data_text
 -else
 %table.properties_table= render :partial => 'list_item', :collection => current_user.defined_media_sets
 
-%h2
-  Noch unvollständig definierte Kollektionen
-  %span.explanation (Diesen fehlen noch notwendige Informationen wie Copyright, Schlagworte etc. Bitte ergänzen!)
-
--if current_user.media_sets_to_define.empty?
-  = no_data_text
--else
-  %table.properties_table= render :partial => 'list_item', :collection => current_user.media_sets_to_define
+-if not current_user.media_sets_to_define.empty?
+  %h2
+    Noch unvollständig definierte Kollektionen
+    %span.explanation (Diesen fehlen noch notwendige Informationen wie Copyright, Schlagworte etc. Bitte ergänzen!)
+    %table.properties_table= render :partial => 'list_item', :collection => current_user.media_sets_to_define
 
 %h2 
   Automatische Kollektionen 
   %span.explanation  (Werden vom System generisch erstellt)
 %table.properties_table= render :partial => 'list_item', :collection => [current_user.owner_media_set, current_user.search_result_media_set, current_user.composing_media_set, current_user.uploading_media_set]
+
+%h2 Gespeicherte Suchanfragen
+- if current_user.search_queries.empty?
+  = no_data_text
+- else
+  %table.properties_table= render :partial => 'search_queries/list_item', :collection => current_user.search_queries

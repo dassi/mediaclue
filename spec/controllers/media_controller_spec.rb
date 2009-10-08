@@ -5,9 +5,9 @@ describe MediaController, "POST 'update'" do
   before :each do
     logged_in_user
     permit_everything
-    @medium = mock_model(Medium, :id => 1)
+    @medium = mock_medium(:id => 1)
     @medium.stub!(:tag_with)
-    @medium.stub!(:permit?).and_return(true)
+    # @medium.stub!(:permit?).and_return(true)
     Medium.stub!(:find).and_return(@medium)
   end
   
@@ -48,30 +48,34 @@ describe MediaController, "GET 'index'" do
   
 end
 
-describe MediaController, "GET 'search'" do
+describe MediaController, "POST 'search'" do
 
   integrate_views
   
   before :each do
     @current_user = logged_in_user
-    @medium = mock_model(Medium, :id => 1)
+    @medium = mock_medium(:id => 1)
     @current_user.stub!(:search_result_media_set).and_return(MediaSet.create)
     @current_user.stub!(:composing_media_set).and_return(MediaSet.create)
     @current_user.stub!(:uploading_media_set).and_return(MediaSet.create)
   end
   
-  it "should redirect to media set, if found media" do
+  it "should redirect to search result media set, if found media" do
     Medium.should_receive(:find_with_ferret_for_user).and_return([@medium])
     MediaSet.should_receive(:find_media_with_ferret_for_user).and_return([@medium])
-    get :search, :search_fulltext => 'something with hits', :media_types => ['Medium', 'AudioClip', 'VideoClip'] # "Medium" nur für Tests sinnvoll!
-    response.should be_redirect
+    assigns[:query] = mock_search_query
+    search_result_media_set = mock_media_set
+    @current_user.should_receive(:search_result_media_set).and_return(search_result_media_set)
+    post :search, :search_fulltext => 'something with hits', :media_types => {:images => '1', :audio_clips => '1', :video_clips => '1', :documents => '1'}
+    response.should redirect_to(media_set_path(search_result_media_set))
   end
 
   it "should stay on search page, if nothing found" do
     Medium.should_receive(:find_with_ferret_for_user).and_return([])
     MediaSet.should_receive(:find_media_with_ferret_for_user).and_return([])
-    get :search, :search_fulltext => 'something with no hits', :media_types => ['AudioClip', 'VideoClip']
-    response.should_not be_redirect
+    assigns[:query] = mock_search_query
+    post :search, :search_fulltext => 'something with no hits', :media_types => {:images => '1', :audio_clips => '1', :video_clips => '1', :documents => '1'}
+    response.should redirect_to(media_path)
   end
 
   # it "should render 'application' layout file" do

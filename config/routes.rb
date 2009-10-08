@@ -1,13 +1,16 @@
 ActionController::Routing::Routes.draw do |map|
 
-  map.resources :media, :collection => {:search => :get}
+  map.resources :media, :collection => {:search => :post}
   map.resources :media_sets, :collection => {:browse => :get}
 
   map.resources :media_sets, 
                 :member => {:uploader => :get, :uploader_window => :get, :upload => :post, :compose => :get, 
                             :set_collection => :get, :order => :get, :update_positions => :post} do |media_sets|
+    # TODO: Obsolet?
     media_sets.resources :media, :member => {:add => :put, :remove => :put}
   end
+  
+  map.resources :search_queries
 
   
   # The priority is based upon order of creation: first created -> highest priority.
