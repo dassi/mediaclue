@@ -312,7 +312,7 @@ class MediaSetsController < ApplicationController
           end
           
         when 'all'
-          m[:tag_names] << media_set_tag_names
+          m[:tag_names] << (' ' + media_set_tag_names)
         end
       end
       
