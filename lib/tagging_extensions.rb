@@ -55,11 +55,13 @@ class ActiveRecord::Base #:nodoc:
 
       # auskommentierte condition taggable_type schränkt auf Tags eines bestimmten Model-Typs ein. 
       # Zur Zeit Differenzierung nach Typ nicht gewünscht.
-      conditions = [
-        # "taggings.taggable_type = '#{ActiveRecord::Base.send(:class_name_of_active_record_descendant, self).to_s}'",
-        options[:conditions]
-      ]
-      conditions = conditions.compact.join(' and ')
+
+      # conditions = [
+      #   # "taggings.taggable_type = '#{ActiveRecord::Base.send(:class_name_of_active_record_descendant, self).to_s}'",
+      # ]
+      # conditions = conditions.compact.join(' and ')
+
+      conditions = options[:conditions]
       
       at_least  = sanitize_sql(['count >= ?', options[:at_least]]) if options[:at_least]
       at_most   = sanitize_sql(['count <= ?', options[:at_most]]) if options[:at_most]

@@ -54,7 +54,25 @@ module ApplicationHelper
     SUBJECT_SELECTIONS.collect{ |s| link_to_textfield_append_function(s, dom_id) }.join('<span> <span/>')    
   end
   
+  # Liefert eine Link-Liste von den häufigsten Tags. Fach-Tags werden rausgenommen.
   def top_tags_link_list(dom_id, options = {})
+    
+    # TODO: Medium ist hier nur ein workaround. Es sollte einen Klassenunabhängigen Zugang zu dieser Funktion geben!!!
+    tag_names = Medium.tag_counts(options).collect(&:name)    
+
+    # Fach-Tags rausnehmen, die gehören nicht dazu
+    # TODO: Das Limit (z.B. 30) stimmt hier danach nicht mehr, ist aber nicht so tragisch, aber unkorrekt.
+    tag_names -= SUBJECT_SELECTIONS
+
+    tag_names.collect{ |t| link_to_textfield_append_function(t, dom_id) }.join('&nbsp; ')    
+  end
+
+  # Liefert eine Link-Liste von den häufigsten Tags. Fach-Tags werden rausgenommen.
+  def my_top_tags_link_list(dom_id, options = {})
+
+    tagging_ids = (current_user.media_sets.collect(&:tagging_ids) + current_user.media.collect(&:tagging_ids)).flatten
+
+    options[:conditions] = ['taggings.id IN (?)', tagging_ids]
     
     # TODO: Medium ist hier nur ein workaround. Es sollte einen Klassenunabhängigen Zugang zu dieser Funktion geben!!!
     tag_names = Medium.tag_counts(options).collect(&:name)    

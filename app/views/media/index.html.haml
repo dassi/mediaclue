@@ -44,6 +44,11 @@
       Top-Schlagworte
       %br
       = top_tags_link_list('search_fulltext', {:limit => 30})
+      %br
+      Meine Top-Schlagworte
+      %br
+      = my_top_tags_link_list('search_fulltext', {:limit => 30})
+      #related_tags
     %br
     .clear
     %fieldset.left{:style => 'width:100%'}
@@ -64,7 +69,7 @@
     %br  
 
 #right                                                                                                                        
-  %h2.first Gespeicherte Suchanfragen
+  %h2.first Meine gespeicherten Suchanfragen
   - if current_user.search_queries.empty?
     = no_data_text
   - else
