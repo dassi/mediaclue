@@ -1,6 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
 
-  map.resources :media, :collection => {:search => :post}
+  map.resources :media, :collection => {:search => [:post, :get]}
   map.resources :media_sets, :collection => {:browse => :get}
 
   map.resources :media_sets, 
