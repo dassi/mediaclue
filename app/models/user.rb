@@ -4,7 +4,8 @@ class User < ActiveRecord::Base
 
   include Authorization::UserMethods
 
-  has_many :media_sets, :foreign_key => "owner_id" # Kein dependent destroy, zu gefährlich, Medien gehen verloren
+  has_many :media_sets, :foreign_key => 'owner_id' # Kein dependent destroy, zu gefährlich, Medien gehen verloren
+  has_many :media, :foreign_key => 'owner_id'      # Kein dependent destroy, zu gefährlich, Medien gehen verloren
   
   has_many :user_group_memberships, :dependent => :destroy
   has_many :user_groups, :through => :user_group_memberships
