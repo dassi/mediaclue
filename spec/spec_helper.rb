@@ -130,7 +130,9 @@ def mock_user(attributes = {})
   attributes.reverse_merge!(:get_or_create_last_search_query => mock_search_query,
                             :last_search_query => mock_search_query,
                             :search_queries => [],
-                            :full_name => 'Ed Min')
+                            :full_name => 'Ed Min',
+                            :media_sets => [],
+                            :media => [])
   
   mock = mock_model(User, attributes)
   mock
