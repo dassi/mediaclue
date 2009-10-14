@@ -9,6 +9,8 @@
       =render :partial => "media/#{form.template_path}/preview", :object => form
 
     .media_info_form.left
+      -# Hinweis: Die Parameter sind hier deshalb im Kontext eines media_sets, weil das Formular für ein Medium
+      -# generell auch als Teilformular eines MediaSets dienen muss.
       -fields_for("media_set[media_attributes][]", form) do |media_form|
         .edit_media_name
           Name

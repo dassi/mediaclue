@@ -29,7 +29,7 @@
 #right
   %ul
     %li= backlink
-    -if current_user.is_owner_of?(@medium)
+    -if current_user.can_edit?(@medium)
       %li= link_to 'Bearbeiten', edit_medium_path(@medium)
       %li= link_to 'Löschen', medium_path(@medium), :confirm => 'Sind Sie sicher? Das Medium wird aus der Mediendatenbank gelöscht und auch aus allen Mediensets entfernt! Dieser Vorgang kann nicht rückgängig gemacht werden.', :method => :delete
     %li= medium_download_link(@medium)

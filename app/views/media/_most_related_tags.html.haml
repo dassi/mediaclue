@@ -1,0 +1,4 @@
+- if search_tag_names.any?
+  = related_tags_link_list('search_fulltext', search_tag_names)
+- else
+  = no_data_text

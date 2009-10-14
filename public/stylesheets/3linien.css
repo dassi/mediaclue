@@ -17,8 +17,7 @@ body {
 
 p {
   font-family: Verdana, Arial, Helvetica, sans-serif;
-  line-height: 17px;
-  margin: 11px 0 10px 0;
+  margin: 3px 0 3px 0;
   padding: 0px;
 }
 
@@ -67,7 +66,7 @@ ul {
 
 /*interne und externe links */
 
-#intranet {
+#menu {
   font-family: Verdana, Arial, Helvetica, sans-serif;
   padding: 8px 2px 5px 20px;
   border-bottom: solid 1px #fff;
@@ -77,12 +76,13 @@ ul {
   font-size: 9pt;
 }
 
-#intranet a {
+#menu a {
   text-decoration: none;
+  font-weight: bold;
   color: #fff;
 }
 
-#intranet a:hover {
+#menu a:hover {
   text-decoration: underline;
   color: #fff;
 }
@@ -114,10 +114,6 @@ ul {
 #service img {
   vertical-align: middle;
   padding-right: 12px;
-}
-
-.fixerHead p {
-  font-size: 11px;
 }
 
 .fixerHead #container {
@@ -495,3 +491,6 @@ fieldset {
   padding-left: 20px;
 }
 
+#help {
+  background-color: #E7FFB7;
+}

@@ -39,21 +39,14 @@ class MediaController < ApplicationController
   
   public ##########################################################################################
   
-  # GET /media
   def index
     @query = current_user.last_search_query || current_user.build_last_search_query(:images => true, :audio_clips => true, :video_clips => true, :documents => true)
   end
 
   
-  # GET /media/1
-  # GET /media/1.png?size=medium
-  # GET /media/1.gif?size=medium
-  # GET /media/1.jpeg?size=medium
-  # GET /media/1.jpg?size=medium
   def show    
     @medium = Medium.find params[:id]
     permit :view, @medium do
-    # permit "owner of :medium or viewer of :medium" do
       if params[:format]
         params[:format].downcase!
   #      params[:size] ||= :small if @medium.is_a? Image
@@ -70,8 +63,7 @@ class MediaController < ApplicationController
     end
   end
 
-  # GET /media/new
-  # GET /media/new.xml
+
   def new
     @medium = Medium.new
 
@@ -80,7 +72,7 @@ class MediaController < ApplicationController
     end
   end
 
-  # GET /media/1/edit
+
   def edit
     @medium = Medium.find params[:id]
     permit :edit, @medium do
@@ -89,8 +81,7 @@ class MediaController < ApplicationController
     end
   end  
 
-  # POST /media
-  # POST /media.xml
+
   def create
     @medium = Medium.new params[:medium]
 
@@ -105,31 +96,29 @@ class MediaController < ApplicationController
     end
   end  
 
-  # PUT /media/1
-  # PUT /media/1.xml
+
   def update
     @medium = Medium.find params[:id]
     permit :edit, @medium do
       if @medium
+        # Hinweis: Die Parameter kommen deshalb im Kontext eines media_sets, weil das Formular für ein Medium
+        # generell auch als Teilformular eines MediaSets dienen muss.
         medium_params = params[:media_set][:media_attributes][params[:id]]
 
         respond_to do |format|
           if @medium.update_attributes(medium_params)
             flash[:notice] = 'Medium wurde erfolgreich aktualisiert.'
             format.html { redirect_to medium_url(@medium) }
-            # format.xml { head :ok }
           else
             @user_groups = UserGroup.find :all
             format.html { render :action => "edit" }
-            # format.xml  { render :xml => @medium.errors, :status => :unprocessable_entity }
           end
         end
       end
     end
   end
 
-  # DELETE /media/1
-  # DELETE /media/1.xml
+
   def destroy
     @medium = Medium.find params[:id]
     permit :edit, @medium do
@@ -141,7 +130,7 @@ class MediaController < ApplicationController
     end
   end
 
-  # PUT /media_sets/1/media/1/add
+
   # Medium zu Set hinzufügen
   def add
     @media_set = MediaSet.find params[:media_set_id]
@@ -163,12 +152,12 @@ class MediaController < ApplicationController
     end
   end
 
-  # PUT /media_sets/1/media/1/remove
+
   # Medium aus Set entfernen
   def remove
     @media_set = MediaSet.find params[:media_set_id]
     @medium = Medium.find params[:id]
-#    permit "(owner of :media_set) and (owner of :medium or viewer of :medium)" do
+
     permit :edit, @media_set do
       collection_method = @medium.template_path
 
@@ -188,9 +177,7 @@ class MediaController < ApplicationController
     end
   end
 
-  
 
-  # GET /media/search
   # Medien suchen nach Suchkriterien
   def search
 
@@ -243,4 +230,24 @@ class MediaController < ApplicationController
     end
   end
 
+
+  # Zeige per AJAX eine Liste der nächst-häufigsten Tags, zu den bereits eingetippten Tags
+  def ajax_search_lookahead
+    search_text = params[:tag_names]
+    
+    if not search_text.blank?
+      search_tag_names = Medium.parse_tags(search_text)
+      approx_total_hits = Medium.total_hits(search_text)
+    else
+      search_tag_names = []
+      approx_total_hits = nil
+    end
+
+    render :update do |page|
+      page.replace_html 'related_tags', :partial => "media/most_related_tags", :locals => {:search_tag_names => search_tag_names}
+      page.replace_html 'approx_total_hits', :partial => "media/approx_total_hits", :locals => {:approx_total_hits => approx_total_hits}
+    end
+    
+  end
+  
 end

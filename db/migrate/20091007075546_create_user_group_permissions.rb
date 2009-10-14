@@ -1,7 +1,7 @@
-class CreateGroupPermissions < ActiveRecord::Migration
+class CreateUserGroupPermissions < ActiveRecord::Migration
   def self.up
-    create_table :group_permissions do |t|
-      t.belongs_to :group
+    create_table :user_group_permissions do |t|
+      t.belongs_to :user_group
       t.belongs_to :medium
       t.boolean :read, :default => false 
       t.boolean :write, :default => false
@@ -10,6 +10,6 @@ class CreateGroupPermissions < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :group_permissions
+    drop_table :user_group_permissions
   end
 end

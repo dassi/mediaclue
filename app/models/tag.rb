@@ -1,8 +1,7 @@
 # The Tag model. This model is automatically generated and added to your app if you run the tagging generator included with has_many_polymorphs.
 class Tag < ActiveRecord::Base
 
-  DELIMITER = ", " # Controls how to join tagnames
-  PARSE_EXPRESSION = /"(.+?)"|\s+|[,;]\s*/ # Controls how to split tagnames from strings. You may need to change the <tt>validates_format_of parameters</tt> if you change this.
+  PARSE_EXPRESSION_SPLITTER = /"(.+?)"|\s+|[,;]\s*/ # Controls how to split tagnames from strings. You may need to change the <tt>validates_format_of parameters</tt> if you change this.
   TAG_ERROR_TEXT = 
     "Das Schlagwort \"%s\" enthält ungültige Zeichen! <br/>" + 
     "Nur folgende Zeichen sind erlaubt: A-Z, a-z, 0-9, Ä, Ö, Ü, È, É, À, ä, ö, ü, è, é, à, ß, ç, \", _, -. <br/>" + 
@@ -16,9 +15,6 @@ class Tag < ActiveRecord::Base
   # If database speed becomes an issue, you could remove these validations and rescue the ActiveRecord database constraint errors instead.
   validates_presence_of :name
   validates_uniqueness_of :name, :case_sensitive => false
-
-  # Change this validation if you need more complex tag names.
-  # validates_format_of :name, :with => /^[a-zäöüèéàßçA-ZÄÖÜÈÉÀ0-9\_\-]+$/, :message => "contains unallowed characters"
 
   # Set up the polymorphic relationship.
   has_many_polymorphs :taggables,

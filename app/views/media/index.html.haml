@@ -33,22 +33,26 @@
     Volltextsuche:
     %br
     #search_panel
-      = text_field_tag 'search_fulltext', @query.ferret_query, :style => 'width:85%;height:18px'
+      = text_field_tag 'search_fulltext', @query.ferret_query, :style => 'width:420px;height:18px', :autocomplete => 'off'
       = submit_tag("Suchen", :style => 'width:75px')
-    %br
+      = button_to_function 'Zurücksetzen', "$('search_fulltext').value=''"
+      = observe_field 'search_fulltext', :url => {:action => 'ajax_search_lookahead'}, :with => "'tag_names=' + value", :frequency => 1
+      %p.smalltext#approx_total_hits
+    %h2
     .slide_in
-      Fach-Schlagworte
-      %br
-      = subjects_link_list('search_fulltext')
-      %br
-      Top-Schlagworte
-      %br
-      = top_tags_link_list('search_fulltext', {:limit => 30})
-      %br
-      Meine Top-Schlagworte
-      %br
-      = my_top_tags_link_list('search_fulltext', {:limit => 30})
-      #related_tags
+      %p
+        Intelligenter Schlagworte-Vorschlag:
+        %span#related_tags
+    .slide_in
+      %p
+        Fach-Schlagworte:
+        = subjects_link_list('search_fulltext')
+      %p
+        Top-Schlagworte: 
+        = top_tags_link_list('search_fulltext', {:limit => 30})
+      %p
+        Meine Top-Schlagworte:
+        = my_top_tags_link_list('search_fulltext', {:limit => 30})
     %br
     .clear
     %fieldset.left{:style => 'width:100%'}

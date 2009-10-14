@@ -38,7 +38,7 @@ module ApplicationHelper
   end
   
   def options_for_viewer
-    [['nur Besitzer', 'owner']].concat(@user_groups.collect {|g| ["Gruppe #{g.full_name.titlecase}", "group-#{g.id}"]})
+    [['nur Besitzer', 'owner']].concat(@user_groups.collect {|g| ["Gruppe #{g.full_name.titlecase}", g.id]})
   end
   
   # generiert eine id für html-elemente aus db-objekten
@@ -83,6 +83,32 @@ module ApplicationHelper
 
     tag_names.collect{ |t| link_to_textfield_append_function(t, dom_id) }.join('&nbsp; ')    
   end
+
+  # Liefert eine Link-Liste mit Tags, die am meisten in Kombination mit den given_tag_names vorkommen
+  def related_tags_link_list(dom_id, given_tag_names, options = {})
+
+    taggables = Medium.tagged_with(*given_tag_names) + MediaSet.tagged_with(*given_tag_names)
+
+    tagging_ids = taggables.collect(&:tagging_ids).flatten
+                         
+    options[:limit] ||= 15
+    options[:conditions] = ['taggings.id IN (?)', tagging_ids]
+
+    # TODO: Medium ist hier nur ein workaround. Es sollte einen Klassenunabhängigen Zugang zu dieser Funktion geben!!!
+    suggested_tag_names = Medium.tag_counts(options).collect(&:name)    
+
+    # Fach-Tags rausnehmen, die gehören nicht dazu
+    # TODO: Das Limit (z.B. 30) stimmt hier danach nicht mehr, ist aber nicht so tragisch, aber unkorrekt.
+    suggested_tag_names -= SUBJECT_SELECTIONS
+    suggested_tag_names -= given_tag_names
+
+    if suggested_tag_names.any?
+      suggested_tag_names.collect{ |t| link_to_textfield_append_function(t, dom_id) }.join('&nbsp; ')
+    else
+      no_data_text
+    end
+    
+  end
   
   def link_to_textfield_append_function(name, field_id)
     # Testen, ob ein blank vorkommt, und dann den String mit Anführungszeichen einfassen
@@ -91,7 +117,7 @@ module ApplicationHelper
     else
       value = name
     end
-    link_to(name, "#", :onclick => "append_link_value('#{field_id}', '#{value}')")
+    link_to_function(name, "append_link_value('#{field_id}', '#{value}')")
     # link_to_function(name) do |page|
     #   page << "append_link_value('#{field_id}', '#{value}')"
     # end

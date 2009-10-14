@@ -2,7 +2,10 @@ class Medium < ActiveRecord::Base
     
   include Authorization::ModelMethods
   
-  acts_as_ferret :remote => true, :fields => [:name, :desc, :tag_names, :meta_data]
+  acts_as_ferret :remote => true, :fields => {:name => { :boost => 2 },
+                                              :desc => { :boost => 2 },
+                                              :tag_names => { :boost => 3 },
+                                              :meta_data => { }}
 
   # Pagination, Anzahl pro Seite
   @@per_page = 20
@@ -16,9 +19,9 @@ class Medium < ActiveRecord::Base
   has_many :media_set_memberships
   has_many :media_sets, :through => :media_set_memberships
                                                  
-  has_many :group_permissions
-  has_many :read_permitted_groups, :through => :group_permissions, :source => :group, :conditions => {:group_permissions => {:read => true}}
-  has_many :write_permitted_groups, :through => :group_permissions, :source => :group, :conditions => {:group_permissions => {:write => true}}
+  has_many :user_group_permissions, :dependent => :destroy
+  has_many :read_permitted_user_groups, :through => :user_group_permissions, :source => :user_group, :conditions => {:user_group_permissions => {:read => true}}
+  has_many :write_permitted_user_groups, :through => :user_group_permissions, :source => :user_group, :conditions => {:user_group_permissions => {:write => true}}
 
   belongs_to :owner, :class_name => "User", :foreign_key => "owner_id"
   
@@ -30,6 +33,7 @@ class Medium < ActiveRecord::Base
   before_create :import_meta_data if FEATURE_METADATA
   
   # Auswahl für Quelle/Copytright
+  # TODO: Als Model License auslagern
   SOURCE_SELECTIONS = [
     ['Unbekannt', 'unknown'],
     ['Netzklau (nur für persönlichen Gebrauch)', 'personal'],
@@ -70,7 +74,7 @@ class Medium < ActiveRecord::Base
     all_found_media = self.find_with_ferret(query, options, find_options)
     
     # Rechte prüfen, auf jedem gefundenen Medium
-    viewable_media = all_found_media.select { |m| user.can_view?(m) or user.is_owner_of?(m) }
+    viewable_media = all_found_media.select { |m| m.can_view?(user) }
     
     viewable_media
   end
@@ -221,13 +225,11 @@ class Medium < ActiveRecord::Base
   # end
   
   def can_view?(user)
-    # TODO
-    true
+    (self.owner == user) or (self.read_permitted_user_groups.any? { |g| g.member?(user) })
   end
 
   def can_edit?(user)
-    # TODO
-    true
+    (self.owner == user) or (self.write_permitted_user_groups.any? { |g| g.member?(user) })
   end
   
 end

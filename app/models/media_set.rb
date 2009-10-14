@@ -3,7 +3,9 @@ class MediaSet < ActiveRecord::Base
 
   include Authorization::ModelMethods
   
-  acts_as_ferret :remote => true, :fields => [:name, :desc, :tag_names]
+  acts_as_ferret :remote => true, :fields => {:name => { },
+                                              :desc => { },
+                                              :tag_names => { :boost => 2 }}
 
   belongs_to :owner, :class_name => "User", :foreign_key => "owner_id"
   
@@ -154,7 +156,7 @@ class MediaSet < ActiveRecord::Base
     all_found_media = all_found_media_sets.collect(&:media).flatten.uniq
     
     # Rechte prüfen, auf jedem gefundenen Medium
-    viewable_media = all_found_media.select { |m| user.can_view?(m) or user.is_owner_of?(m) }
+    viewable_media = all_found_media.select { |m| m.can_view?(user) }
     
     viewable_media
   end
@@ -219,13 +221,11 @@ class MediaSet < ActiveRecord::Base
   end  
 
   def can_view?(user)
-    # TODO
-    true
+    self.owner == user
   end
 
   def can_edit?(user)
-    # TODO
-    true
+    self.owner == user
   end
   
   def images
@@ -250,7 +250,7 @@ class MediaSet < ActiveRecord::Base
   # Evt. auch ein Fall für neues Feature von Rails 2.3, welches assoziationen mitspeichern kann? Auf jedenfall evt. auch smarter machen und nur geänderte speichern
   def save_media
     media.each do |medium|
-      medium.save(false)
+      medium.save(false) if medium.changed?
     end
   end
 

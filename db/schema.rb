@@ -11,15 +11,6 @@
 
 ActiveRecord::Schema.define(:version => 20091008102841) do
 
-  create_table "group_permissions", :force => true do |t|
-    t.integer  "group_id"
-    t.integer  "medium_id"
-    t.boolean  "read",       :default => false
-    t.boolean  "write",      :default => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "image_thumbnails", :force => true do |t|
     t.integer  "size"
     t.string   "content_type"
@@ -109,6 +100,15 @@ ActiveRecord::Schema.define(:version => 20091008102841) do
   create_table "user_group_memberships", :force => true do |t|
     t.integer  "user_id"
     t.integer  "user_group_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_group_permissions", :force => true do |t|
+    t.integer  "user_group_id"
+    t.integer  "medium_id"
+    t.boolean  "read",          :default => false
+    t.boolean  "write",         :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

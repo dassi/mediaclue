@@ -69,6 +69,11 @@ describe Medium, "and parsing tag strings" do
     Medium.parse_tags("\"bling bling\" \"blang blang\"").should eql(["bling bling", "blang blang"])
     Medium.parse_tags("\"bling,bling\" \"blang, blang\"").should eql(["bling,bling", "blang, blang"])
     Medium.parse_tags("\"bling;bling\" \"blang; blang\"").should eql(["bling;bling", "blang; blang"])
+
+    Medium.parse_tags("\"  bling   bling \" \" blang  blang \"").should eql(["bling bling", "blang blang"])
+
+    Medium.parse_tags("\"bling bling\"  between  \"blang blang\"").should eql(["bling bling", "between", "blang blang"])
+
   end
 
   it "should allow special characters" do

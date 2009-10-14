@@ -35,7 +35,7 @@
 #right
   %ul
     %li= per_page_select(@media_set, @per_page)
-    -if current_user.is_owner_of?(@media_set)
+    -if current_user.can_edit?(@media_set)
       -if @media_set.defined? or @media_set.defining?
         %li= link_to 'Bearbeiten', edit_media_set_path(@media_set) 
         %li= link_to 'Löschen', media_set_path(@media_set), :confirm => 'Sind Sie sicher? Die Kollektion wird gelöscht. Die enthaltenen Medien werden jedoch nicht gelöscht.', :method => :delete

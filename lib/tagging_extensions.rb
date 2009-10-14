@@ -19,7 +19,7 @@ class ActiveRecord::Base #:nodoc:
       sql  = "SELECT #{(scope && scope[:select]) || options[:select]} "
       sql << "FROM #{(scope && scope[:from]) || options[:from]} "
 
-      add_joins!(sql, options, scope)
+      add_joins!(sql, options[:joins], scope)
 
       sql << "WHERE #{table_name}.#{primary_key} = taggings.taggable_id "
       sql << "AND taggings.taggable_type = '#{ActiveRecord::Base.send(:class_name_of_active_record_descendant, self).to_s}' "
@@ -41,7 +41,7 @@ class ActiveRecord::Base #:nodoc:
 
     def parse_tags(tag_string)
       return [] if tag_string.blank?
-      tag_string.split(Tag::PARSE_EXPRESSION).reject(&:blank?).map { |tag_name| tag_name.strip.squeeze(" ") }.flatten.compact.uniq
+      tag_string.split(Tag::PARSE_EXPRESSION_SPLITTER).reject(&:blank?).map { |tag_name| tag_name.strip.squeeze(" ") }.flatten.compact.uniq
     end
 
     # Options:
@@ -110,11 +110,6 @@ class ActiveRecord::Base #:nodoc:
       tags.delete(*(tags.select do |tag|
         outgoing.include? tag.name
       end))
-    end
-
-   # Returns the tags on <tt>self</tt> as a string.
-    def tag_list
-      # Redefined later to avoid an RDoc parse error.
     end
 
     # Replace the existing tags on <tt>self</tt>. Accepts a string of tagnames, an array of tagnames, an array of ids, or an array of Tags.
