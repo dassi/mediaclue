@@ -33,31 +33,20 @@ function truebody(){
     // geht nicht für Safari return (!window.opera && document.compatMode && document.compatMode!="BackCompat")? document.documentElement : document.body
 }
 
-function showtrail(imagename,title,description,showthumb,height,filetype){
-    if (height > 0){
+function showtrail(imagename,title,description,showthumb,height){
+    if (height > 0) {
         currentimageheight = height;
     }
     
-    document.onmousemove=followmouse;
+    document.onmousemove = followmouse;
     
     newHTML = '<div style="padding:2px; color:white; background-color:#222; border:2px solid #555;">';
     newHTML = newHTML + '<h3 style="color:white;margin:2px;">' + title + '</h3>';
     newHTML = newHTML + '<p style="margin:2px;max-width:350px;">' + description.replace(/\[[^\]]*\]/g, '') + '<p/>';
     
-    if (showthumb > 0){
+    if (showthumb) {
         newHTML = newHTML + '<div style="text-align: center; padding: 1px 2px 0px 2px;">';
-        if(filetype == 8) { // Video
-            newHTML = newHTML + '<object width="380" height="285" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0">';
-            newHTML = newHTML + '<param name="movie" value="video_loupe.swf">';
-            newHTML = newHTML + '<param name="quality" value="best">';
-            newHTML = newHTML + '<param name="loop" value="true">';
-            
-            newHTML = newHTML + '<param name="FlashVars" value="videoLocation=' + imagename + '&bufferPercent=25">';
-            newHTML = newHTML + '<EMBED SRC="video_loupe.swf" LOOP="true" QUALITY="best" FlashVars="videoLocation=' + imagename + '&bufferPercent=25" WIDTH="380" HEIGHT="285">';
-            newHTML = newHTML + '</object></div>';
-        } else {
         newHTML = newHTML + '<img src="' + imagename + '" alt="' + title + '" /></div>';
-        }
     }
 
     newHTML = newHTML + '</div>';

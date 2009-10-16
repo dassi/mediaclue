@@ -3,6 +3,7 @@
 -else
   - small_preview ||= false
   -if small_preview
-    =medium_image_tag(preview, :thumbnail, :onmouseover => "showtrail('#{preview.public_filename(:medium)}','#{escape_javascript(preview.name)}','#{escape_javascript(preview.desc ? preview.desc.ellipsis(150) : nil)}','1',351,1);", :onmouseout => "hidetrail();")
+    - js_onmouseover = "showtrail('#{preview.public_filename(:medium)}','#{escape_javascript(preview.name)}','',true,351);"
+    = medium_image_tag(preview, :thumbnail, :onmouseover => js_onmouseover, :onmouseout => "hidetrail();")
   -else
     =medium_image_tag(preview, :medium)
