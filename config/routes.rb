@@ -1,14 +1,11 @@
 ActionController::Routing::Routes.draw do |map|
 
   map.resources :media, :collection => {:search => [:post, :get]}
-  map.resources :media_sets, :collection => {:browse => :get}
-
-  map.resources :media_sets, 
-                :member => {:uploader => :get, :uploader_window => :get, :upload => :post, :compose => :get, 
-                            :set_collection => :get, :order => :get, :update_positions => :post} do |media_sets|
-    # TODO: Obsolet?
-    media_sets.resources :media, :member => {:add => :put, :remove => :put}
-  end
+  map.resources :media_sets,
+                :collection => {:browse => :get},
+                :member => {:uploader => :get, :uploader_window => :get, :upload => :post, :compose => :get,
+                            :set_collection => :get, :order => :get, :update_positions => :post,
+                            :add_medium => :put, :remove_medium => :put}
   
   map.resources :search_queries
 

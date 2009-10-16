@@ -213,6 +213,7 @@ class MediaSetsController < ApplicationController
   def set_collection
     @media_set = MediaSet.find params[:id]
     permit :edit, @media_set do
+      # Wenn leer, dann löschen, sonst zurücksetzen auf "defined"
       if current_user.composing_media_set.media.empty?
         current_user.composing_media_set.destroy
       else
@@ -221,11 +222,11 @@ class MediaSetsController < ApplicationController
       @media_set.compose!
     end   
     
-    # Composing MediaSet des Users in Session merken
-    session[:composing_media_set_id] = current_user.composing_media_set.id
+    # # Composing MediaSet des Users in Session merken
+    # session[:composing_media_set_id] = current_user.composing_media_set.id
         
     # Redirect zum aktuellen Suchresultat-MediaSet
-    redirect_to media_set_url(current_user.search_result_media_set)    
+    redirect_to media_set_url(@media_set)
   end
   
 
@@ -272,7 +273,54 @@ class MediaSetsController < ApplicationController
       end
       render :nothing => true
     end
-  end   
+  end
+  
+
+  # Medium zu Set hinzufügen
+  def add_medium
+    @media_set = MediaSet.find params[:id]
+    @medium = Medium.find params[:medium_id]
+    if permit?(:edit, @media_set) && permit?(:view, @medium)
+      unless @media_set.media.include? @medium
+        @media_set.media << @medium
+
+        respond_to do |format|
+          format.js do
+            render :update do |page|
+              page.insert_html :bottom, 'collected_media', :partial => "media/#{@medium.template_path}/collection_item", :object => @medium, :locals => {:media_set => @media_set}
+            end
+          end
+        end
+      else
+        render :nothing => true
+      end
+    end
+  end
+
+
+  # Medium aus Set entfernen
+  def remove_medium
+    @media_set = MediaSet.find params[:id]
+    @medium = Medium.find params[:medium_id]
+
+    if permit?(:edit, @media_set) && permit?(:view, @medium)
+
+      if @media_set and !@media_set.owning? and @medium and @media_set.media.include?(@medium)
+        @media_set.media.delete(@medium)
+
+        respond_to do |format|
+          format.js do
+            render :update do |page|
+              page.remove [params[:div_prefix], "medium_#{@medium.id}"].compact.join('_')
+            end
+          end
+        end
+      else
+        render :nothing => true
+      end
+    end
+  end
+
   
   private #####################################################################
   

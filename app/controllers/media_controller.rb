@@ -131,51 +131,6 @@ class MediaController < ApplicationController
   end
 
 
-  # Medium zu Set hinzufügen
-  def add
-    @media_set = MediaSet.find params[:media_set_id]
-    @medium = Medium.find params[:id]
-    permit :edit, @media_set do
-      unless @media_set.images.include? @medium
-        @media_set.images << @medium
-
-        respond_to do |format|
-          format.js do
-            render :update do |page|
-              page.insert_html :bottom, 'collected_media', :partial => "media/#{@medium.template_path}/collection_item", :object => @medium, :locals => {:media_set => @media_set}
-            end
-          end
-        end
-      else
-        render :nothing => true
-      end
-    end
-  end
-
-
-  # Medium aus Set entfernen
-  def remove
-    @media_set = MediaSet.find params[:media_set_id]
-    @medium = Medium.find params[:id]
-
-    permit :edit, @media_set do
-      collection_method = @medium.template_path
-
-      if @media_set and !@media_set.owning? and @medium and @media_set.send(collection_method).include? @medium
-        @media_set.send(collection_method).delete @medium
-
-        respond_to do |format|
-          format.js do
-            render :update do |page|
-              page.remove [params[:div_prefix], "medium_#{@medium.id}"].compact.join('_')
-            end
-          end
-        end
-      else
-        render :nothing => true
-      end
-    end
-  end
 
 
   # Medien suchen nach Suchkriterien
@@ -219,8 +174,8 @@ class MediaController < ApplicationController
       media_set.media_set_memberships.clear
       media_set.media << found_media
     
-      # Composing MediaSet des Users in Session merken
-      session[:composing_media_set_id] = current_user.composing_media_set.id
+      # # Composing MediaSet des Users in Session merken
+      # session[:composing_media_set_id] = current_user.composing_media_set.id
         
       # Redirect zum aktuellen Suchresultat-MediaSet
       redirect_to media_set_url(media_set)
