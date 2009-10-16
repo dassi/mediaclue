@@ -91,20 +91,20 @@ class User < ActiveRecord::Base
   end
 
   def uploading_media_set
-    singleton_media_set :uploading, 'upload!', 'Aktuelle Hochlade-Kollektion'
+    singleton_media_set :uploading, 'upload!'
   end
 
   def composing_media_set
-    singleton_media_set :composing, 'compose!', 'Aktuelle Auswahl'
+    singleton_media_set :composing, 'compose!'
   end
   
   def search_result_media_set
-    singleton_media_set :search_result, 'to_search_result!', 'Letztes Suchresultat'
+    singleton_media_set :search_result, 'to_search_result!'
   end
   
   # das MediaSet, das alle Medien des owners aufnimmt
   def owner_media_set
-    singleton_media_set :owning, 'own!', 'Meine Medien'
+    singleton_media_set :owning, 'own!'
   end
 
   def is_owner_of?(object)
@@ -124,7 +124,7 @@ class User < ActiveRecord::Base
   protected #######################################################################################
 
   # Liefert die "Singleton-Instanz" eines MediaSets dieses Users mit einem bestimmten State
-  def singleton_media_set(state, event, name = nil)
+  def singleton_media_set(state, event)
     media_sets = media_sets_of_state state
     
     # Erzeugen, falls inexistent
@@ -135,9 +135,6 @@ class User < ActiveRecord::Base
       media_set = media_sets.first
     end    
 
-    # Optional einen gewünschten Namen vergeben (nicht speichern!)
-    media_set.name = name if name
-    
     media_set
   end  
   

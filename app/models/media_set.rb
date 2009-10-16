@@ -43,16 +43,17 @@ class MediaSet < ActiveRecord::Base
     validate_new_tag_names
   end
                                   
-  # TODO: Diese state machine ist evt. nicht ganz die richtige Wahl für den Zweck.
+  # TODO: Diese state machine ist evt. nicht ganz die richtige Wahl für den Zweck. Z.B. state uloading, search_result, composing sind nicht wirklich Zustände der Kollektion, sondern Kontexte
 
   acts_as_state_machine :initial => :created
-  state :created
-  state :uploading
-  state :search_result
-  state :composing
-  state :owning 
-  state :defining#, :enter => Proc.new {|ms| ms.update_attributes! :name => "Kollektion #{ms.id}" if ms.name.nil? or ['search_result','composing','uploading'].include?(ms.state) }
-  state :defined
+  
+  state :created        # "Erzeugt"
+  state :uploading      # "Aktuelle Hochlade Kollektion"
+  state :search_result  # "Letztes Suchergebnis"
+  state :composing      # "Aktuelle Auswahl"
+  state :owning         # "Meine Medien"
+  state :defining       # "noch zu vervollständigen"
+  state :defined        # "Vollständig definiert, alles OK"
 
   event :upload do
     transitions :from => :created, :to => :uploading
@@ -99,11 +100,29 @@ class MediaSet < ActiveRecord::Base
   end 
   
   def caption
+
     if not name.blank?
-      name
+      caption = name
+      state_name_postfix = " (#{name})"
     else
-      "Kollektion Nr. #{id}"
+      caption = "Kollektion Nr. #{id}"
+      state_name_postfix = ''
     end
+
+    # Falls es ein spezielles MediaSet ist, dann den Namen speziell bilden
+    case self.state
+      when 'uploading'
+        caption = 'Aktuelle Hochlade-Kollektion' + state_name_postfix
+      when 'composing'
+        caption = 'Aktuelle Auswahl' + state_name_postfix
+      when 'search_result'
+        caption = 'Letztes Suchresultat'
+      when 'owning'
+        caption = 'Meine Medien'
+    end
+    
+    caption
+    
   end
   
   def tag_names

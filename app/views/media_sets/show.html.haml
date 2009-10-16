@@ -1,7 +1,6 @@
 #left
   %h1 
-    Kollektion
-    %i= @media_set.caption
+    = @media_set.caption
     = "ordnen" if @enable_ordering 
 
   -if @enable_ordering
@@ -75,7 +74,7 @@
 
   -if @composing_media_set and !@media_set.composing?
     %ul
-      %li= link_to 'Aktuelle Auswahl speichern', edit_media_set_path(@composing_media_set)
+      %li= link_to 'Aktuelle Auswahl als neue Kollektion speichern', edit_media_set_path(@composing_media_set)
     =render :partial => 'media_sets/collection_box', :object => @composing_media_set if @composing_media_set
 
 

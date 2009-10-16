@@ -15,8 +15,9 @@ describe User do
   end
   
   it "should return singleton instance of media_set with certain state" do
-    media_set = @user.send(:singleton_media_set, :owning, 'own!', 'Meine Medien')
-    media_set.name.should eql('Meine Medien')
+    media_set = @user.send(:singleton_media_set, :owning, 'own!')
+    media_set.name.should be_blank
+    media_set.caption.should eql('Meine Medien')
     media_set.state.should eql('owning')
   end
 
