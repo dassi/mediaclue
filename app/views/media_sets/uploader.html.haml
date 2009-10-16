@@ -104,7 +104,7 @@
 %br
 -if @media_set.defined?
   %h2 Hochgeladene Dateien:
-  = render :partial => 'media_sets/collection_box'
+  = render :partial => 'media_sets/collection_box', :object => @media_set
   = button_to "2. Kollektion #{@media_set.caption} bearbeiten...", edit_media_set_path(@media_set), :method => :get
 -elsif @media_set.uploading?
   %h2 Hochgeladene Dateien:

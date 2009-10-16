@@ -27,7 +27,7 @@ p.limited {
 
 h1 {
   font-size: 150%;
-  color: #0099FF;                                                   
+  color: #0099FF;
   font-variant: normal;
   line-height: 120%;
 }
@@ -116,7 +116,7 @@ ul {
   padding-right: 12px;
 }
 
-.fixerHead #container {
+#container {
   width: 1000px;
   background-color: #e8e5df;
   margin: 0 auto;
@@ -126,12 +126,12 @@ ul {
   height: 100%;
 }
 
-.fixerHead #header {
+#header {
   background: #fff;
   padding: 0 0 0 20px;
 }
 
-.fixerHead #header .title {
+#header .title {
   color: black;
   font-size: 180%;
 }
@@ -186,7 +186,7 @@ ul {
   background-color: #eeeeee;
 }
 
-.fixerHead #spalte2 {
+#spalte2 {
   font-family: Verdana, Arial, Helvetica, sans-serif;
   float: right;
   width: 155px;
@@ -229,22 +229,27 @@ ul {
 }
 
 #hauptinhalt h2 {
-  color: #77AAFF;
+  color: #0099FF;
   font-size: 120%;
 }
 
-.fixerHead #footer {
+#hauptinhalt h3 {
+  color: #0099FF;
+  font-size: 110%;
+}
+
+#footer {
   padding: 0 10px 0 20px;
   background-color: #e8e5df;
   border-top: 1px solid #fff;
 }
 
-.fixerHead #footer p {
+#footer p {
   margin: 0;
   padding: 10px 0;
 }
 
-.fixerHead #footer a {
+#footer a {
   color: #666666;
   text-decoration: none;
 }
@@ -337,15 +342,16 @@ fieldset {
 /*  margin-left:20px;*/
 }
 
-#right .box {
+/*#right .box {
   float: right;
   width: 300px;
 }
+*/
 
 .box {
-  background: #F6F9FB;
+  background: #F0F0F0;
   border: 1px solid #E1E1E1;
-  padding:10px 10px 15px 10px;
+  padding: 3px 3px 3px 3px;
   margin: 10px 0 10px 0;
 }
 

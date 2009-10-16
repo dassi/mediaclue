@@ -1,4 +1,6 @@
 #collection_box.box
+  - if collection_box
+    .title= collection_box.caption
   #collected_media
     - if collection_box
       - for medium in collection_box.media_for_user_as_viewer(current_user)
