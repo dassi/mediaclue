@@ -16,7 +16,7 @@ class Medium < ActiveRecord::Base
   # Flag, ob wir Metadaten extrahieren beim Speichern
   attr_accessor :is_importing_metadata 
 
-  has_many :media_set_memberships
+  has_many :media_set_memberships, :dependent => :destroy
   has_many :media_sets, :through => :media_set_memberships
                                                  
   has_many :user_group_permissions, :dependent => :destroy
