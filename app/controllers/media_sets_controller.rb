@@ -24,9 +24,14 @@ class MediaSetsController < ApplicationController
         @media = @media_set.media_for_user_as_viewer(current_user)
       end
 
-      @media = @media.paginate :page => params[:page], :per_page => @per_page
+      # Allenfalls paginaten, sofern nicht alle angezeigt werden sollen
+      unless @per_page == 'all'
+        @media = @media.paginate :page => params[:page], :per_page => @per_page
+        @paginate = true
+      else
+        @paginate = false
+      end
       
-      @paginate = true
       @size = params[:size] || 'small'
       @composing_media_set = current_user.composing_media_set
 
