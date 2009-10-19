@@ -23,7 +23,7 @@ module Authorization
     def self.included(receiver)
       receiver.extend         ClassMethods
       receiver.send :include, InstanceMethods
-      receiver.send :helper_method, :permit
+      receiver.send :helper_method, :permit, :permit?
     end
   end
 

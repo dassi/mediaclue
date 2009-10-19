@@ -1,0 +1,19 @@
+%h3
+  Diashow von Bildern der Kollektion
+  =h @media_set.caption
+- div_id = "mediaplayer"
+%div{:id => div_id}
+
+:javascript
+  var so = new SWFObject('/imagerotator/imagerotator.swf','ply','900','800','9','#000000');
+  so.addParam('allowfullscreen','true');
+  so.addParam('allowscriptaccess','always');
+  so.addVariable('file','#{media_set_url(@media_set, :format => :xspf, :style => 'slideshow')}');
+  so.addVariable('linkfromdisplay', 'false');
+  so.addVariable('rotatetime', '5');
+  so.addVariable('shuffle', 'false');
+  so.addVariable('repeat', 'list');
+  so.addVariable('transition', 'slowfade');
+  so.addVariable('showicons', 'true');
+  so.addVariable('shownavigation', 'true');
+  so.write('#{div_id}');

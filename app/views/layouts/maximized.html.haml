@@ -1,0 +1,31 @@
+!!! XML
+!!!
+%html
+  %head
+    %meta{'http-equiv' => 'Content-Type', :content => 'text/html', :charset => 'utf-8'} 
+    %title
+      mediaclue
+      =PROJECT_NAME
+
+    = stylesheet_link_tag "3linien", :media => "all"
+    = stylesheet_link_tag "application_3linien", :media => "all"
+    = stylesheet_link_tag "spiffy", :media => "all"
+    = stylesheet_link_tag "media", :media => "all"
+    = javascript_include_tag :defaults, 'uploader', 'hoverimage', 'swfobject.js'
+  %body
+    #container
+      #header
+
+        .left
+          = link_to(image_tag('logo_small.png', :width => 90, :height => 49, :style => 'vertical-align:text-bottom'), root_url)
+          &nbsp;
+          = PROJECT_NAME
+        #service
+          = link_to('Zurück zur Normalansicht', @back_url)
+        .clear
+
+      #hauptinhalt
+        = yield
+        %br{:class => "clear"}
+      %br{:class => "clear"}
+      #footer

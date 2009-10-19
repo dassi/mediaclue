@@ -1,5 +1,8 @@
 unless SUPRESS_EARLY_DB_CONNECTION
 
+  # Playlist-Format, www.xspf.org
+  Mime::Type.register('application/xspf+xml', :xspf)
+  
   # Aus allen content_types der Medien über MIME::Types die Rails-eigenen Mime::Type registrieren
   # damit die respond_to handler funktionieren.
   for media_class in Medium.sub_classes

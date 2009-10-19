@@ -17,7 +17,7 @@ function open_tag_list (dom_id) {
 function append_link_value(dom_id, value) {
   try 
   { 
-    $(dom_id).value = $(dom_id).value + ' ' + value 
+    $(dom_id).value = $(dom_id).value + ' ' + value + ' '
   } catch (e) { 
     alert('RJS error:\n\n' + e.toString()); 
     alert('$(\'' + dom_id + '\').value = $(\'' + dom_id + '\').value + \' ' + dom_id + '\'');

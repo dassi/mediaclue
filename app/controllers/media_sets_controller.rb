@@ -1,6 +1,6 @@
 class MediaSetsController < ApplicationController
 
-  MEDIA_SET_STYLES = ['lightbox']
+  MEDIA_SET_STYLES = ['lightbox', 'slideshow']
   
   protected #######################################################################################
   
@@ -55,7 +55,14 @@ class MediaSetsController < ApplicationController
     permit :view, @media_set do
       session[:per_page] = params[:per_page] if params[:per_page]
       @per_page = session[:per_page] || 20
-      if params[:style] == 'lightbox'
+
+      layout = 'application'
+      case params[:style]
+      when 'slideshow'
+        @media = @media_set.images_for_user_as_viewer(current_user)
+        @back_url = media_set_path(@media_set)
+        layout = 'maximized'
+      when 'lightbox'
         @media = @media_set.images_for_user_as_viewer(current_user)
       else
         @media = @media_set.media_for_user_as_viewer(current_user)
@@ -72,14 +79,20 @@ class MediaSetsController < ApplicationController
       @size = params[:size] || 'small'
       @composing_media_set = current_user.composing_media_set
 
-      render_block = nil    
-      render_block = lambda {render :action => "show_#{params[:style]}"} if params[:style] and MEDIA_SET_STYLES.include?(params[:style])
+      if params[:style] and MEDIA_SET_STYLES.include?(params[:style])
+        action = "show_#{params[:style]}"
+      else
+        action = 'show'
+      end
 
       if @composing_media_set.nil? or (@composing_media_set and permit?(:edit, @composing_media_set)) 
         respond_to do |format|
-          format.html(&render_block)
+          format.html {
+            render :action => action, :layout => layout
+          }
           format.zip  { send_file @media_set.to_zip_for_user(current_user), :type => 'application/zip', :disposition => 'attachment' }
           format.pdf  { send_file @media_set.to_pdf_for_user(current_user), :type => 'application/pdf', :disposition => 'attachment' }
+          format.xspf # Playlist for Slideshow
         end
       end
     end
