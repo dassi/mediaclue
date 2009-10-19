@@ -21,7 +21,17 @@
   - if not @media.empty?
     %p= will_paginate @media if @paginate
     #media_list.media
-      =render :partial => 'media/list_item', :locals => {:member_media_set => @media_set, :composing_media_set => @composing_media_set, :size => :small}, :collection => @media
+      %div{:style => 'float:right'}
+        Selektion:
+        = link_to_function 'Alle' do |page|
+          - page.select('input[type=checkbox][name="selected_media[]"]').each do |item|
+            - item.checked = true
+        = link_to_function 'Keine' do |page|
+          - page.select('input[type=checkbox][name="selected_media[]"]').each do |item|
+            - item.checked = false
+      .clear
+      - form_tag(nil, :id => 'multi_action_form') do
+        = render :partial => 'media/list_item', :locals => {:member_media_set => @media_set, :composing_media_set => @composing_media_set, :size => :small}, :collection => @media
     =sortable_element 'media_list', :tag => 'div', :url => update_positions_media_set_path(@media_set), :scroll => true if @enable_ordering
     %p= will_paginate @media if @paginate
   - else
@@ -32,24 +42,13 @@
 
 
 #right
+  %h3.first Bearbeitung
   %ul
-    %li= per_page_select(@media_set, @per_page)
     -if current_user.can_edit?(@media_set)
       -if @media_set.defined? or @media_set.defining?
-        %li= link_to 'Bearbeiten', edit_media_set_path(@media_set) 
-        %li= link_to 'Löschen', media_set_path(@media_set), :confirm => 'Sind Sie sicher? Die Kollektion wird gelöscht. Die enthaltenen Medien werden jedoch nicht gelöscht.', :method => :delete
+        %li= link_to 'Kollektion bearbeiten', edit_media_set_path(@media_set) 
+        %li= link_to 'Kollektion löschen', media_set_path(@media_set), :confirm => 'Sind Sie sicher? Die Kollektion wird gelöscht. Die enthaltenen Medien werden jedoch nicht gelöscht.', :method => :delete
       -elsif @media_set.search_result?
-        / - if params[:search_params]
-        /   %li
-        /     = link_to_function 'Als Suchanfrage speichern' do |page|
-        /       - page.show('save_search_query_form')
-        /     #save_search_query_form{:style => 'display:none'}
-        /       - form_remote_tag :url => search_queries_path do
-        /         Name:
-        /         = hidden_field_tag 'search_query[search_params]', params[:search_params].to_yaml
-        /         = text_field_tag 'search_query[name]', nil
-        /         = submit_tag 'Suchanfrage speichern'
-          
         %li= link_to 'Suchresultat als Kollektion speichern', edit_media_set_path(@media_set)
       -elsif @media_set.composing? or @media_set.uploading?
         %li= link_to 'Als neue Kollektion speichern', edit_media_set_path(@media_set)
@@ -57,24 +56,37 @@
       -if not @enable_ordering
         %li= link_to 'Medien ordnen', order_media_set_path(@media_set)
 
-      %br
       -if @media_set.defined? or @media_set.defining?
+        %br
         %li= link_to 'Weitere Medien in diese Kollektion hochladen', uploader_media_set_path(@media_set) 
-        %li= link_to 'Diese Kollektion zur aktuellen Auswahl machen', set_collection_media_set_path(@media_set) 
+        %li= link_to 'Diese Kollektion zur Sammelkollektion machen', set_collection_media_set_path(@media_set) 
 
-    %br
+  %h3 Download
+  %ul
     %li= link_to 'Alle Medien als ZIP-File herunterladen', media_set_path(@media_set, :format => :zip)
     %li= link_to 'Bilder als PDF-Diashow herunterladen', media_set_path(@media_set, :format => :pdf)
 
-    %br
-    %li= link_to 'Bilder in Ansicht "Leuchtpult klein"', media_set_path(@media_set, :style => 'lightbox', :size => 'small')
-    %li= link_to 'Bilder in Ansicht "Leuchtpult gross"', media_set_path(@media_set, :style => 'lightbox', :size => 'big')
+  %h3 Ansicht
+  %ul
+    %li= per_page_select(@media_set, @per_page)
+    %li= link_to 'Zeige Bilder in Ansicht "Leuchtpult klein"', media_set_path(@media_set, :style => 'lightbox', :size => 'small')
+    %li= link_to 'Zeige Bilder in Ansicht "Leuchtpult gross"', media_set_path(@media_set, :style => 'lightbox', :size => 'big')
 
-  %br
+  %h3 Selektierte Medien...
+  %ul
+    %li= link_to_remote('...aus dieser Kollektion entfernen', :url => remove_media_media_set_path(@media_set), :submit => 'multi_action_form', :confirm => "Selektierte Medien wirklich aus dieser Kollektion entfernen (Medien selbst werden nicht gelöscht)?")
+    -#Braucht einen Auswahl-Mechanismus: %li= link_to_remote('...in andere Kollektion verschieben', :url => move_media_media_set_path(@media_set), :submit => 'multi_action_form', :confirm => "Selektierte Medien wirklich aus dieser Kollektion entfernen (Medien selbst werden nicht gelöscht)?")
+    -#ditto: %li= link_to_remote('...zu anderer Kollektion hinzufügen', :url => add_media_media_set_path(@media_set), :submit => 'multi_action_form', :confirm => "Selektierte Medien wirklich aus dieser Kollektion entfernen (Medien selbst werden nicht gelöscht)?")
 
-  -if @composing_media_set and !@media_set.composing?
+    - if @composing_media_set and !@media_set.composing?
+      %li= link_to_remote('...zur Sammelkollektion hinzufügen', :url => add_media_media_set_path(@composing_media_set), :submit => 'multi_action_form')
+      %li= link_to_remote('...in Sammelkollektion verschieben', :url => move_media_media_set_path(@media_set, :target_media_set_id => @composing_media_set), :submit => 'multi_action_form')
+
+  - if @composing_media_set and !@media_set.composing?
+    %h3 Sammelkollektion
     %ul
-      %li= link_to 'Aktuelle Auswahl als neue Kollektion speichern', edit_media_set_path(@composing_media_set)
+      %li= link_to 'Als Kollektion speichern', edit_media_set_path(@composing_media_set)
+      %li= link_to 'Zur aktuellen Kollektion hinzufügen', merge_media_set_path(@media_set, :source_media_set_id => @composing_media_set)
     =render :partial => 'media_sets/collection_box', :object => @composing_media_set if @composing_media_set
 
 

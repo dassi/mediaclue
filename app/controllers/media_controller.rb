@@ -6,33 +6,70 @@ class MediaController < ApplicationController
   # TODO: Evt. auslagern?
   def search_with_query(search_query)
     
-    if not search_query.ferret_query.blank?
-      
-      find_options = {}
-      ferret_options = {:limit => MAX_SEARCH_RESULTS}
-      
-      if search_query.my_media_only?
-        find_options[:conditions] = ['owner_id = ?', current_user.id]
-      end
-        
-      media = Medium.find_with_ferret_for_user(search_query.ferret_query, current_user, ferret_options, find_options)
-      media_from_sets = MediaSet.find_media_with_ferret_for_user(search_query.ferret_query, current_user, ferret_options, find_options)
-      found_media = (media + media_from_sets).uniq
-    else
-      found_media = []
-    end
+    find_options = {}
+    find_options[:conditions] = {}
+    find_options[:limit] = MAX_SEARCH_RESULTS
     
-    # Allenfalls nur bestimmte Medientypen berücksichtigen
-    # TODO: Dies ist besser (oder zusätzlich) in find_with_ferret_for_user und find_media_with_ferret_for_user, siehe oben.
-    # Es war aber nicht ganz trivial, auf den ersten Blick, deshalb hier an zentraler Stelle sichergestellt:
+    find_options[:conditions][:media] = {}
+    
+    if search_query.my_media_only?
+      find_options[:conditions][:media][:owner_id] = current_user.id
+    end
+
     if not search_query.all_media_types?
-      klasses = search_query.media_types_classes
+      klasses = search_query.media_types_classes.collect(&:to_s)
 
       # Filtern, falls nicht alle angewählt sind
-      if Medium.sub_classes.to_set != klasses
-        found_media.reject! { |m| not klasses.any? { |klass| m.instance_of?(klass) }}
-      end
+      find_options[:conditions][:media][:type] = klasses
+      
     end
+    
+    search_with_ferret = (not search_query.ferret_query.blank?)
+
+    find_options_for_medium = find_options.dup
+    find_options_for_medium[:conditions].delete(:media_sets)
+    
+    find_options_for_media_set = find_options.dup
+    # find_options_for_media_set[:conditions].delete(:media)
+    
+    # Suche per ferret, oder direkt in der DB
+    if search_with_ferret
+      
+      ferret_options = {:limit => MAX_SEARCH_RESULTS}
+        
+      media = Medium.find_with_ferret_for_user(search_query.ferret_query, current_user, ferret_options, find_options_for_medium)
+      
+      if not search_query.my_media_only?
+        media_from_sets = MediaSet.find_media_with_ferret_for_user(search_query.ferret_query, current_user, ferret_options, find_options_for_media_set)
+      else
+        media_from_sets = []
+      end
+      
+    else
+      media = Medium.find_all_for_user(current_user, find_options_for_medium)
+
+      if not search_query.my_media_only?
+        media_from_sets = MediaSet.find_all_media_for_user(current_user, find_options_for_media_set)
+      else
+        media_from_sets = []
+      end
+      
+    end
+
+    # Suchresultat zusammenfassen
+    found_media = (media + media_from_sets).uniq
+    
+    # # Allenfalls nur bestimmte Medientypen berücksichtigen
+    # # TODO: Dies ist besser (oder zusätzlich) in find_with_ferret_for_user und find_media_with_ferret_for_user, siehe oben.
+    # # Es war aber nicht ganz trivial, auf den ersten Blick, deshalb hier an zentraler Stelle sichergestellt:
+    # if not search_query.all_media_types?
+    #   klasses = search_query.media_types_classes
+    # 
+    #   # Filtern, falls nicht alle angewählt sind
+    #   if Medium.sub_classes.to_set != klasses
+    #     found_media.reject! { |m| not klasses.any? { |klass| m.instance_of?(klass) }}
+    #   end
+    # end
 
     found_media
   end

@@ -3,10 +3,11 @@
 %div{:id => div_id}
 
 :javascript
-  var so = new SWFObject('/mediaplayer/player.swf','ply','580','20','9','#ffffff');
+  var so = new SWFObject('/mediaplayer/player.swf','ply','580','100','9','#ffffff');
   so.addParam('allowfullscreen','false');
   so.addParam('allowscriptaccess','always');
   so.addParam('wmode','opaque');
   so.addVariable('file','#{fullview.public_filename}');
   so.addVariable('skin', '/mediaplayer/skins/nacht.swf');
+  so.addVariable('plugins', 'spectrumvisualizer-1');
   so.write('#{div_id}');

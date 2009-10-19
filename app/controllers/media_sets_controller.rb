@@ -2,6 +2,43 @@ class MediaSetsController < ApplicationController
 
   MEDIA_SET_STYLES = ['lightbox']
   
+  protected #######################################################################################
+  
+  # Medien aus Set entfernen
+  def remove_media_from_media_set(media_set, media)
+
+    removed_media = []
+    
+    for medium in media
+      if permit?(:view, medium)
+        removed_media << medium
+      end
+    end
+
+    media_set.media.delete(removed_media)
+    
+    removed_media
+  end
+  
+
+  # Medium zu Set hinzufügen
+  def add_media_to_media_set(media_set, media)
+
+    added_media = []
+    
+      for medium in media
+        if permit?(:view, medium) && (not media_set.media.include?(medium))
+          added_media << medium
+        end
+      end
+      
+      media_set.media << added_media
+
+      added_media
+  end
+
+  public ##########################################################################################
+  
   # GET /media_sets
   # GET /media_sets.xml
   def index
@@ -282,48 +319,108 @@ class MediaSetsController < ApplicationController
   
 
   # Medium zu Set hinzufügen
-  def add_medium
-    @media_set = MediaSet.find params[:id]
-    @medium = Medium.find params[:medium_id]
-    if permit?(:edit, @media_set) && permit?(:view, @medium)
-      unless @media_set.media.include? @medium
-        @media_set.media << @medium
+  def add_media
+    media_set = MediaSet.find(params[:id])
+    media = Medium.find(params[:selected_media] || params[:medium_id]).to_a
+    
+    if permit?(:edit, media_set)
+      added_media = add_media_to_media_set(media_set, media)
 
-        respond_to do |format|
-          format.js do
-            render :update do |page|
-              page.insert_html :bottom, 'collected_media', :partial => "media/#{@medium.template_path}/collection_item", :object => @medium, :locals => {:media_set => @media_set}
+      # OPTIMIZE: Unschön, dass hier die JS-Repsonse mit der Funktion "Zu Sammelkollektion" fix verbunden ist. Man kann eben auch in andere MediaSet adden.
+      respond_to do |format|
+        format.js do
+          render :update do |page|
+            for medium in added_media
+              page.insert_html :bottom, 'collected_media', :partial => "media/#{medium.template_path}/collection_item", :object => medium, :locals => {:media_set => media_set}
             end
           end
         end
-      else
-        render :nothing => true
       end
+    else
+      render :nothing => true
     end
   end
 
 
-  # Medium aus Set entfernen
-  def remove_medium
-    @media_set = MediaSet.find params[:id]
-    @medium = Medium.find params[:medium_id]
+  # Medien aus Set entfernen
+  def remove_media
+    media_set = MediaSet.find params[:id]
+    media = Medium.find(params[:selected_media] || params[:medium_id]).to_a
 
-    if permit?(:edit, @media_set) && permit?(:view, @medium)
+    if media_set && media.any? && permit?(:edit, media_set)
 
-      if @media_set and !@media_set.owning? and @medium and @media_set.media.include?(@medium)
-        @media_set.media.delete(@medium)
-
-        respond_to do |format|
-          format.js do
-            render :update do |page|
-              page.remove [params[:div_prefix], "medium_#{@medium.id}"].compact.join('_')
+      removed_media = remove_media_from_media_set(media_set, media)
+      
+      respond_to do |format|
+        format.html do
+          redirect_to media_set_path(media_set)
+        end
+        
+        format.js do
+          render :update do |page|
+            for medium in removed_media
+              page.remove [params[:div_prefix], "medium_#{medium.id}"].compact.join('_')
             end
           end
         end
-      else
-        render :nothing => true
       end
+    else
+      render :nothing => true
     end
+  end
+  
+  # Medien aus Set entfernen
+  def move_media
+    source_media_set = MediaSet.find(params[:id])
+    target_media_set = MediaSet.find(params[:target_media_set_id])
+    media = Medium.find(params[:selected_media] || params[:medium_id]).to_a
+    
+
+    if target_media_set && source_media_set && media.any? && permit?(:edit, target_media_set) && permit?(:edit, source_media_set)
+
+      removed_media = remove_media_from_media_set(source_media_set, media)
+      added_media = add_media_to_media_set(target_media_set, removed_media)
+
+      respond_to do |format|
+        format.js do
+          render :update do |page|
+            for medium in removed_media
+              page.remove [params[:div_prefix], "medium_#{medium.id}"].compact.join('_')
+            end
+            for medium in added_media
+              page.insert_html :bottom, 'collected_media', :partial => "media/#{medium.template_path}/collection_item", :object => medium, :locals => {:media_set => target_media_set}
+            end
+          end
+        end
+      end
+    else
+      render :nothing => true
+    end
+  end
+  
+
+  # Mergen mit einer anderen Kollektion
+  def merge
+    target_media_set = MediaSet.find(params[:id])
+    source_media_set = MediaSet.find(params[:source_media_set_id])
+
+    if target_media_set && source_media_set && permit?(:edit, target_media_set) && permit?(:view, source_media_set)
+
+      media = source_media_set.media_for_user_as_viewer(current_user)
+      added_media = add_media_to_media_set(target_media_set, media)
+      
+      # TODO: Allenfalls auch Metadaten mergen
+
+      respond_to do |format|
+        format.html do
+          flash[:notice] = 'Kollektionen verschmelzt. Ergebnis-Menge ist in dieser Kollektion.'
+          redirect_to media_set_path(target_media_set)
+        end
+      end
+    else
+      render :nothing => true
+    end
+    
   end
 
   

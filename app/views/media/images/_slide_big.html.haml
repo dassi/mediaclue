@@ -1,3 +1,4 @@
+- member_media_set ||= nil
 .media_lightbox_big{:id => "medium_#{slide_big.id}"}
   =spiffy_top 'slide'
   .slidefg
@@ -6,5 +7,6 @@
   .remove_button
     =medium_download_button(slide_big)
     =medium_add_to_collection_button(composing_media_set, slide_big)
-    =medium_remove_from_set_button(member_media_set, slide_big) if defined?(member_media_set)
+    - if member_media_set && permit?(:edit, member_media_set)
+      = medium_remove_from_set_button(member_media_set, slide_big)
 

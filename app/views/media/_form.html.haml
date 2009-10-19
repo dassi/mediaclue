@@ -28,7 +28,7 @@
             %span.explanation zusätzlich für dieses Medium
             %br
             - m_dom_id = dom_id(form)
-            =media_form.text_field :tag_names, :class => 'media_tags', :id => m_dom_id, :onfocus => "open_tag_list('#{m_dom_id}');"
+            =media_form.text_field :tag_names, :class => 'media_tags', :id => m_dom_id, :onfocus => "open_tag_list('#{m_dom_id}');", :autocomplete => 'off'
           %div{:id => "tag_link_list_#{m_dom_id}", :style => 'display: none', :class => 'slide_in'}
             = close_tag_link_list(m_dom_id)
             Fach-Schlagworte

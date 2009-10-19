@@ -9,10 +9,6 @@ module ApplicationHelper
     "<b class='#{class_base}'><b class='#{class_base}5'></b><b class='#{class_base}4'></b><b class='#{class_base}3'></b><b class='#{class_base}2'><b></b></b><b class='#{class_base}1'><b></b></b></b>"
   end
 
-  def escape_newline(string)
-    string.gsub "\r\n", '<br />' if string
-  end
-
   def backlink
     link_to_function 'Zurück', 'history.back();'
   end
@@ -26,8 +22,8 @@ module ApplicationHelper
   end
   
   def formatted_desc(desc_model)
-    if desc_model.desc and !desc_model.desc.empty?
-      escape_newline(desc_model.desc)
+    if not desc_model.desc.blank?
+      simple_format(desc_model.desc)
     else
       no_data_text
     end

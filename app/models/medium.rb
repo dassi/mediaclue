@@ -71,7 +71,22 @@ class Medium < ActiveRecord::Base
   public ##########################################################################################
   
   def self.find_with_ferret_for_user(query, user, options = {}, find_options = {})
+
+    # acts_as_ferret erwartet bei den conditions kein Hash, deshalb konvertieren
+    if find_options[:conditions].is_a?(Hash)
+      find_options[:conditions] = sanitize_sql_hash_for_conditions(find_options[:conditions])
+    end
+    
     all_found_media = self.find_with_ferret(query, options, find_options)
+    
+    # Rechte prüfen, auf jedem gefundenen Medium
+    viewable_media = all_found_media.select { |m| m.can_view?(user) }
+    
+    viewable_media
+  end
+   
+  def self.find_all_for_user(user, find_options = {})
+    all_found_media = self.find(:all, find_options)
     
     # Rechte prüfen, auf jedem gefundenen Medium
     viewable_media = all_found_media.select { |m| m.can_view?(user) }

@@ -5,7 +5,7 @@ ActionController::Routing::Routes.draw do |map|
                 :collection => {:browse => :get},
                 :member => {:uploader => :get, :uploader_window => :get, :upload => :post, :compose => :get,
                             :set_collection => :get, :order => :get, :update_positions => :post,
-                            :add_medium => :put, :remove_medium => :put}
+                            :add_media => [:put, :post], :remove_media => [:put, :post], :move_media => [:post], :merge => :get}
   
   map.resources :search_queries
 

@@ -32,6 +32,12 @@ h1 {
   line-height: 120%;
 }
 
+h1,
+h2,
+h3 {
+  margin: 1em 0 0.3em 0;
+}
+
 h1.first,
 h2.first,
 h3.first {
@@ -40,6 +46,10 @@ h3.first {
 
 img {
   border: none;
+}
+
+img.icon {
+  vertical-align: text-bottom;
 }
 
 ul {
@@ -101,16 +111,6 @@ ul {
   font-size: 11px;
 }
 
-#service a {
-  text-decoration: none;
-  color: #000000;
-}
-
-#service a:hover {
-  text-decoration: underline;
-  color: #666666;
-}
-
 #service img {
   vertical-align: middle;
   padding-right: 12px;
@@ -128,7 +128,7 @@ ul {
 
 #header {
   background: #fff;
-  padding: 0 0 0 20px;
+  padding: 5px 0 5px 20px;
 }
 
 #header .title {

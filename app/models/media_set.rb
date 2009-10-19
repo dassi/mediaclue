@@ -50,7 +50,7 @@ class MediaSet < ActiveRecord::Base
   state :created        # "Erzeugt"
   state :uploading      # "Aktuelle Hochlade Kollektion"
   state :search_result  # "Letztes Suchergebnis"
-  state :composing      # "Aktuelle Auswahl"
+  state :composing      # "Sammelkollektion"
   state :owning         # "Meine Medien"
   state :defining       # "noch zu vervollständigen"
   state :defined        # "Vollständig definiert, alles OK"
@@ -114,7 +114,7 @@ class MediaSet < ActiveRecord::Base
       when 'uploading'
         caption = 'Aktuelle Hochlade-Kollektion' + state_name_postfix
       when 'composing'
-        caption = 'Aktuelle Auswahl' + state_name_postfix
+        caption = 'Sammelkollektion' + state_name_postfix
       when 'search_result'
         caption = 'Letztes Suchresultat'
       when 'owning'
@@ -170,7 +170,30 @@ class MediaSet < ActiveRecord::Base
   end
   
   def self.find_media_with_ferret_for_user(query, user, options = {}, find_options = {})
+
+    # acts_as_ferret erwartet bei den conditions kein Hash, deshalb konvertieren
+    if find_options[:conditions].is_a?(Hash)
+      find_options[:conditions] = sanitize_sql_hash_for_conditions(find_options[:conditions])
+    end
+
+    # Media immer includen, weil da conditions durch die find_options reinkommen können
+    find_options[:include] = :media
+    
     all_found_media_sets = self.find_with_ferret(query, options, find_options)
+    
+    all_found_media = all_found_media_sets.collect(&:media).flatten.uniq
+    
+    # Rechte prüfen, auf jedem gefundenen Medium
+    viewable_media = all_found_media.select { |m| m.can_view?(user) }
+    
+    viewable_media
+  end
+  
+  def self.find_all_media_for_user(user, find_options = {})
+    # Media immer includen, weil da conditions durch die find_options reinkommen können
+    find_options[:include] = :media
+
+    all_found_media_sets = self.find(:all, find_options)
     
     all_found_media = all_found_media_sets.collect(&:media).flatten.uniq
     

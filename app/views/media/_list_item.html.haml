@@ -12,12 +12,14 @@
           .media_name
             =link_to list_item.name, medium_path(list_item)
           .media_actions
-            =medium_download_button(list_item)
-            =medium_add_to_collection_button(composing_media_set, list_item)
-            =medium_remove_from_set_button(member_media_set, list_item) if defined?(member_media_set) and not member_media_set.owning?
+            =#medium_download_button(list_item)
+            =#medium_add_to_collection_button(composing_media_set, list_item)
+            =#medium_remove_from_set_button(member_media_set, list_item) if defined?(member_media_set) and not member_media_set.owning?
+            =check_box_tag 'selected_media[]', list_item.id
           .clear
       -unless @enable_ordering
         .media_tags= list_item.tags
-        .media_desc{:style => 'max-height:300px'}= escape_newline list_item.desc
+        - unless list_item.desc.blank?
+          .media_desc{:style => 'max-height:300px'}= simple_format(list_item.desc)
     .clear
   =spiffy_bottom
