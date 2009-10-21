@@ -35,8 +35,8 @@
     #search_panel
       = text_field_tag 'search_fulltext', @query.ferret_query, :style => 'width:420px;height:18px', :autocomplete => 'off'
       = submit_tag("Suchen", :style => 'width:75px')
-      = button_to_function 'Zurücksetzen', "$('search_fulltext').value=''"
-      = observe_field 'search_fulltext', :url => {:action => 'ajax_search_lookahead'}, :with => "'tag_names=' + value", :frequency => 1
+      = button_to_function 'Zurücksetzen', "reset_search_field();"
+      = build_delayed_observer 'search_fulltext', :url => {:action => 'ajax_search_lookahead'}, :with => 'tag_names', :frequency => 0.5
       %p.smalltext#approx_total_hits
     %h2
     .slide_in
