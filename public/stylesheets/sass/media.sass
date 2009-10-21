@@ -108,8 +108,8 @@ div.media_desc
 -#  background-color: #e0e0e0
 
 
-div.media_desc_detail
-  width: 800px
+/ div.media_desc_detail
+/   width: 800px
   
 
 div.media_tags
@@ -218,18 +218,38 @@ div.slide_in
 
 table
   border-collapse: collapse
+  
+table.properties
+  td
+    background-color: #F0F0F0
+    color: #606060
+  tr
+    border-bottom: 1px solid #ddd
+    td.value
+      font-weight: bold
+  / tr:first-child
+  /   border-top: 1px solid #ddd
+  th
+    text-align: left
+    color: #bbb
+    border-top: none
+    border-bottom: 1px solid #ddd
+  th.label
+    width: 200px
+  th.value
+    width: 590px
 
-table.properties_table td
-  background-color: #F0F0F0
-  color: #606060
-  font-weight: bold
-  border-top: 1px solid #ddd
-#  width: 210px
-
-table.properties_table td:first-child
-  border-top: 1px solid #ddd
-  font-weight: normal
-
-table.properties_table th
-  text-align: left
-  color: #bbb
+table.list
+  tr
+    background-color: #F0F0F0
+    color: #606060
+    border-bottom: 1px solid #ddd
+  tr:first-child
+    border-top: 1px solid #ddd
+  tr.group_title
+    border-top: none
+    td
+      height: 2em
+      vertical-align: bottom
+      border-bottom: 1px solid #ccc
+      background-color: white

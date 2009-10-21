@@ -13,10 +13,6 @@ module ApplicationHelper
     link_to_function 'Zurück', 'history.back();'
   end
   
-  def table_row(row, cell_tag = 'td', widths = nil)
-    content_tag 'tr', row.collect { |cell| content_tag(cell_tag, cell, :style => (widths ? "width:#{widths[row.index(cell)]}px;" : nil) ) }.to_s
-  end
-  
   def formatted_tag_list(tagged_model)
     tagged_model.tag_list.empty? ? no_data_text : tagged_model.tag_list
   end
@@ -53,8 +49,13 @@ module ApplicationHelper
   # Liefert eine Link-Liste von den häufigsten Tags. Fach-Tags werden rausgenommen.
   def top_tags_link_list(dom_id, options = {})
     
-    # TODO: Medium ist hier nur ein workaround. Es sollte einen Klassenunabhängigen Zugang zu dieser Funktion geben!!!
-    tag_names = Medium.tag_counts(options).collect(&:name)    
+    # Hole die häufigsten Tags (relativ zum Typ des getaggten Objektes)
+    tags_from_media = Medium.tag_counts(options)
+    tags_from_media_sets = MediaSet.tag_counts(options)
+
+    # Füge die Liste zusammen, so dass die ersten Elemente beider Listen wieder an ersten Stellen sind
+    # So sind die häufigst gebrauchten Tags zuerst, unabhängig ob in MediaSet oder Medium verwendet.
+    tag_names = tags_from_media_sets.zip(tags_from_media).flatten.compact.uniq.collect(&:name)
 
     # Fach-Tags rausnehmen, die gehören nicht dazu
     # TODO: Das Limit (z.B. 30) stimmt hier danach nicht mehr, ist aber nicht so tragisch, aber unkorrekt.
@@ -69,9 +70,14 @@ module ApplicationHelper
     tagging_ids = (current_user.media_sets.collect(&:tagging_ids) + current_user.media.collect(&:tagging_ids)).flatten
 
     options[:conditions] = ['taggings.id IN (?)', tagging_ids]
-    
-    # TODO: Medium ist hier nur ein workaround. Es sollte einen Klassenunabhängigen Zugang zu dieser Funktion geben!!!
-    tag_names = Medium.tag_counts(options).collect(&:name)    
+
+    # Hole die häufigsten Tags (relativ zum Typ des getaggten Objektes)
+    tags_from_media = Medium.tag_counts(options)
+    tags_from_media_sets = MediaSet.tag_counts(options)
+
+    # Füge die Liste zusammen, so dass die ersten Elemente beider Listen wieder an ersten Stellen sind
+    # So sind die häufigst gebrauchten Tags zuerst, unabhängig ob in MediaSet oder Medium verwendet.
+    tag_names = tags_from_media_sets.zip(tags_from_media).flatten.compact.uniq.collect(&:name)
 
     # Fach-Tags rausnehmen, die gehören nicht dazu
     # TODO: Das Limit (z.B. 30) stimmt hier danach nicht mehr, ist aber nicht so tragisch, aber unkorrekt.
@@ -90,8 +96,13 @@ module ApplicationHelper
     options[:limit] ||= 15
     options[:conditions] = ['taggings.id IN (?)', tagging_ids]
 
-    # TODO: Medium ist hier nur ein workaround. Es sollte einen Klassenunabhängigen Zugang zu dieser Funktion geben!!!
-    suggested_tag_names = Medium.tag_counts(options).collect(&:name)    
+    # Hole die häufigsten Tags (relativ zum Typ des getaggten Objektes)
+    tags_from_media = Medium.tag_counts(options)
+    tags_from_media_sets = MediaSet.tag_counts(options)
+
+    # Füge die Liste zusammen, so dass die ersten Elemente beider Listen wieder an ersten Stellen sind
+    # So sind die häufigst gebrauchten Tags zuerst, unabhängig ob in MediaSet oder Medium verwendet.
+    suggested_tag_names = tags_from_media_sets.zip(tags_from_media).flatten.compact.uniq.collect(&:name)
 
     # Fach-Tags rausnehmen, die gehören nicht dazu
     # TODO: Das Limit (z.B. 30) stimmt hier danach nicht mehr, ist aber nicht so tragisch, aber unkorrekt.

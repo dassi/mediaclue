@@ -8,12 +8,20 @@
       Ordnen Sie die Medien durch Drag & Drop.
       =button_to 'Medien ordnen beenden', media_set_path(@media_set), :method => :get
   -elsif @media_set.defined? or @media_set.defining?
-    %table.properties_table
-      =table_row ['Eigenschaft', 'Wert'], 'th', [200, 340]
-      =table_row ['Schlagworte', formatted_tag_list(@media_set)]
-      =table_row ['Besitzer', @media_set.owner_name || no_data_text]
-      =table_row ['Erstellt am', @media_set.created_at.to_formatted_s(:german)]
-      =table_row ['Zuletzt bearbeitet am', @media_set.updated_at.to_formatted_s(:german)]
+    %table.properties
+      %tr
+        %th.label Eigenschaft
+        %th.value Wert
+      - label_and_values = []
+      - label_and_values << ['Schlagworte', formatted_tag_list(@media_set)]
+      - label_and_values << ['Besitzer', @media_set.owner_name || no_data_text]
+      - label_and_values << ['Erstellt am', @media_set.created_at.to_formatted_s(:german)]
+      - label_and_values << ['Zuletzt bearbeitet am', @media_set.updated_at.to_formatted_s(:german)]
+      - label_and_values << ['Persönliche Einsortierung', @media_set.sort_path]
+      - for label, value in label_and_values
+        %tr
+          %td.label= label
+          %td.value= value
 
     %h2 Beschreibung
     .media_set_desc= formatted_desc(@media_set)
@@ -57,7 +65,6 @@
         %li= link_to 'Medien ordnen', order_media_set_path(@media_set)
 
       -if @media_set.defined? or @media_set.defining?
-        %br
         %li= link_to 'Weitere Medien in diese Kollektion hochladen', uploader_media_set_path(@media_set) 
         %li= link_to 'Diese Kollektion zur Sammelkollektion machen', set_collection_media_set_path(@media_set) 
 

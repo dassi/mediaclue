@@ -27,7 +27,7 @@ p.limited {
 
 h1 {
   font-size: 150%;
-  color: #0099FF;
+  color: #222;
   font-variant: normal;
   line-height: 120%;
 }
@@ -230,7 +230,7 @@ ul {
 
 #hauptinhalt h2 {
   color: #0099FF;
-  font-size: 120%;
+  font-size: 130%;
 }
 
 #hauptinhalt h3 {
@@ -307,14 +307,13 @@ select {
 }
 
 a,
-a:visited,
-#hauptinhalt a:visited,
-#hauptinhalt a {
+a:visited {
+  text-decoration: none;
   color: rgb(0, 109, 193);
 }
 
 a:hover {
-  text-decoration: none;
+  text-decoration: underline;
 }
 
 
@@ -340,6 +339,18 @@ fieldset {
   border-left: 1px silver solid;
   min-height: 400px;
 /*  margin-left:20px;*/
+}
+
+#column1 {
+  width: 450px;
+  float: left;
+  margin-bottom: 20px;   
+}
+
+#column2 {
+  width: 450px;
+  float: right;
+  margin-bottom: 20px;   
 }
 
 /*#right .box {
