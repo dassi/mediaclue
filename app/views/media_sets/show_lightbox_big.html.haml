@@ -1,0 +1,10 @@
+%h1 
+  Leuchtpult Grossansicht Kollektion
+  %i= @media_set.caption
+
+= per_page_select(@media_set, @per_page, :size => @size, :style => 'lightbox')
+
+#media_list
+  %p= will_paginate @media if @paginate
+  =render :partial => "media/images/slide_#{@size}", :locals => {:member_media_set => @media_set, :composing_media_set => @composing_media_set}, :collection => @media
+  %p.clear= will_paginate @media if @paginate

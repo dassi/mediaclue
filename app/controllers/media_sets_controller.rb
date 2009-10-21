@@ -55,6 +55,8 @@ class MediaSetsController < ApplicationController
     permit :view, @media_set do
       session[:per_page] = params[:per_page] if params[:per_page]
       @per_page = session[:per_page] || 20
+      @size = params[:size]
+      @style = params[:style]
 
       layout = 'application'
       case params[:style]
@@ -63,7 +65,12 @@ class MediaSetsController < ApplicationController
         @back_url = media_set_path(@media_set)
         layout = 'maximized'
       when 'lightbox'
+        @size ||= 'small'
         @media = @media_set.images_for_user_as_viewer(current_user)
+        if @size == 'big'
+          layout = 'maximized'
+          @back_url = media_set_path(@media_set)
+        end
       else
         @media = @media_set.media_for_user_as_viewer(current_user)
       end
@@ -76,11 +83,10 @@ class MediaSetsController < ApplicationController
         @paginate = false
       end
       
-      @size = params[:size] || 'small'
       @composing_media_set = current_user.composing_media_set
 
       if params[:style] and MEDIA_SET_STYLES.include?(params[:style])
-        action = "show_#{params[:style]}"
+        action = ['show', params[:style], @size].compact.join('_')
       else
         action = 'show'
       end
