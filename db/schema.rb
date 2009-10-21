@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091008102841) do
+ActiveRecord::Schema.define(:version => 20091020070209) do
 
   create_table "image_thumbnails", :force => true do |t|
     t.integer  "size"
@@ -57,6 +57,7 @@ ActiveRecord::Schema.define(:version => 20091008102841) do
     t.integer  "owner_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "sort_path"
   end
 
   create_table "search_queries", :force => true do |t|

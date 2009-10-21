@@ -31,6 +31,19 @@
     %label{:for => 'desc'} Beschreibung
     %br
     = f.text_area 'desc', :rows => '10'
+
+  %p
+    %label{:for => 'sort_path'}
+      Persönliche Einsortierung
+      %span.explanation
+        Sortierungs-Bezeichner. Mehrere Ebenen durch "/" getrennt. Beispiele "123", "A/01", "TODO", "Vorträge/Klasse 1a/Projektwoche"
+        - if not (used_sort_pathes = MediaSet.used_sort_pathes).blank?
+          %br
+          Bereits verwendete Bezeichner:
+          = used_sort_pathes.join(', ')
+    %br
+    = f.text_field 'sort_path'
+
   - field_set_tag 'Schnell-Zuweisungen für alle Medien' do
     %span.explanation Diese Einstellungen werden beim Speichern für alle Medien dieser Kollektion übernommen, können nachträglich aber auch pro Medium abgeändert werden.
     %p

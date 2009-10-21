@@ -1,24 +1,54 @@
 %h1 Meine Übersicht
 
-%h2 Meine Kollektionen
--if current_user.defined_media_sets.empty?
-  = no_data_text
--else
-%table.properties_table= render :partial => 'list_item', :collection => current_user.defined_media_sets
-
--if not current_user.media_sets_to_define.empty?
+#column1
   %h2
-    Noch unvollständig definierte Kollektionen
-    %span.explanation (Diesen fehlen noch notwendige Informationen wie Copyright, Schlagworte etc. Bitte ergänzen!)
-  %table.properties_table= render :partial => 'list_item', :collection => current_user.media_sets_to_define
+    Meine Kollektionen
+    %span.explanation (Gruppiert nach persönlicher Einsortierung)
+  - media_sets = current_user.defined_media_sets
+  - if media_sets.empty?
+    = no_data_text
+  - else
+    %table.list
+      - depth = 0
+      - grouped_media_sets = media_sets.group_by { |ms| ms.sort_path_array }.sort { |a1, a2| a1.first <=> a2.first }
+      - for group_key, media_set_group in grouped_media_sets
+        - if not group_key.empty?
+          %tr.group_title
+            %td{:colspan => 3}
+              %strong= group_key.join(' / ')
+        = render :partial => 'list_item', :collection => media_set_group.sort
 
-%h2 
-  Automatische Kollektionen 
-  %span.explanation  (Werden vom System generisch erstellt)
-%table.properties_table= render :partial => 'list_item', :collection => [current_user.owner_media_set, current_user.search_result_media_set, current_user.composing_media_set, current_user.uploading_media_set]
+  - if not media_sets.empty?
+    %h2
+      Meine Kollektionen
+      %span.explanation (Gruppiert nach häufigsten Schlagworten)
+    %table.list
+      - tagging_ids = current_user.media_sets.collect(&:tagging_ids).flatten
+      - top_tags = MediaSet.tag_counts(:at_least => 2, :conditions => ['taggings.id IN (?)', tagging_ids])
+      - for tag in top_tags
+        - media_sets = tag.media_sets.for_user(current_user)
+        - if not media_sets.empty?
+          %tr.group_title
+            %td{:colspan => 3}
+              %strong= tag.name
+          = render :partial => 'list_item', :collection => media_sets.sort
 
-%h2 Gespeicherte Suchanfragen
-- if current_user.search_queries.empty?
-  = no_data_text
-- else
-  %table.properties_table= render :partial => 'search_queries/list_item', :collection => current_user.search_queries
+
+#column2
+  %h2 
+    Automatische Kollektionen 
+    %span.explanation  (Werden vom System generisch erstellt)
+  %table.list= render :partial => 'list_item', :collection => [current_user.owner_media_set, current_user.search_result_media_set, current_user.composing_media_set, current_user.uploading_media_set]
+
+  - media_sets = current_user.media_sets_to_define
+  -if not media_sets.empty?
+    %h2
+      Noch unvollständig definierte Kollektionen
+      %span.explanation (Diesen fehlen noch notwendige Informationen wie Copyright, Schlagworte etc. Bitte ergänzen!)
+    %table.list= render :partial => 'list_item', :collection => media_sets.sort
+
+  %h2 Gespeicherte Suchanfragen
+  - if current_user.search_queries.empty?
+    = no_data_text
+  - else
+    %table.list= render :partial => 'search_queries/list_item', :collection => current_user.search_queries

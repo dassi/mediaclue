@@ -82,6 +82,40 @@ class MediaSet < ActiveRecord::Base
   event :store do
     transitions :from => :defining, :to => :defined
   end
+
+
+  protected #######################################################################################
+  
+  # TODO: Warum brauchts das hier?! Mitunter verlangsamt das extrem das Speichern eines Sets, weil attachment_fu alle Bilder-Thumbnails nochmals erzeugt!!!
+  # Evt. auch ein Fall für neues Feature von Rails 2.3, welches assoziationen mitspeichern kann? Auf jedenfall evt. auch smarter machen und nur geänderte speichern
+  # Gemacht: Prüfung auf changed?, dies muss aber noch verifiziert werden, ob das was bringt
+  def save_media
+    media.each do |medium|
+      medium.save(false) if medium.changed?
+    end
+  end
+
+  def save_new_tags
+    self.tag_with(@tag_names) if @tag_names
+  end
+
+  def validate_new_tag_names
+    tag_name_list = MediaSet.parse_tags(@tag_names)
+    tag_name_list.each { |name| 
+      errors.add :tag_names, (Tag::TAG_ERROR_TEXT % name) unless Tag.new(:name => name).tag_name_valid?
+    }
+    
+    # wenn durch Array-differenz nicht ein kleinerer Array zurückkommt, d.h. kein fach enthalten ist
+    unless (tag_name_list - SUBJECT_SELECTIONS).size < tag_name_list.size
+      errors.add :tag_names, "Die Kollektion muss mindestens mit einem Fach verschlagwortet werden"
+    end
+  end
+
+  public ##########################################################################################
+
+  def self.used_sort_pathes
+    self.connection.select_values('SELECT DISTINCT sort_path FROM media_sets WHERE (sort_path IS NOT NULL) AND (sort_path != "") ORDER BY sort_path ASC')
+  end
   
   def images_for_user_as_viewer(user)
     self.media.images.reject { |medium| !(user.can_view?(medium)) }
@@ -286,30 +320,16 @@ class MediaSet < ActiveRecord::Base
     media.documents
   end
   
-  private #####################################################################
+  def sort_path_array
+    sort_path.to_s.split('/')
+  end
   
-  # TODO: Warum brauchts das hier?! Mitunter verlangsamt das extrem das Speichern eines Sets, weil attachment_fu alle Bilder-Thumbnails nochmals erzeugt!!!
-  # Evt. auch ein Fall für neues Feature von Rails 2.3, welches assoziationen mitspeichern kann? Auf jedenfall evt. auch smarter machen und nur geänderte speichern
-  def save_media
-    media.each do |medium|
-      medium.save(false) if medium.changed?
-    end
+  def sort_array
+    sort_path_array << caption
   end
-
-  def save_new_tags
-    self.tag_with(@tag_names) if @tag_names
-  end
-
-  def validate_new_tag_names
-    tag_name_list = MediaSet.parse_tags(@tag_names)
-    tag_name_list.each { |name| 
-      errors.add :tag_names, (Tag::TAG_ERROR_TEXT % name) unless Tag.new(:name => name).tag_name_valid?
-    }
-    
-    # wenn durch Array-differenz nicht ein kleinerer Array zurückkommt, d.h. kein fach enthalten ist
-    unless (tag_name_list - SUBJECT_SELECTIONS).size < tag_name_list.size
-      errors.add :tag_names, "Die Kollektion muss mindestens mit einem Fach verschlagwortet werden"
-    end
+  
+  def <=>(other_media_set)
+    self.sort_array <=> other_media_set.sort_array
   end
   
 end

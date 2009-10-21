@@ -10,7 +10,7 @@ class ActiveRecord::Base #:nodoc:
     #
     def tagged_with(*tag_list)
       options = tag_list.last.is_a?(Hash) ? tag_list.pop : {}
-      tag_list =  (tag_list)
+      # tag_list = (tag_list)
 
       scope = scope(:find)
       options[:select] ||= "#{table_name}.*"
@@ -53,15 +53,13 @@ class ActiveRecord::Base #:nodoc:
     def tag_counts(options = {})
       options.assert_valid_keys :conditions, :at_least, :at_most, :order, :limit
 
-      # auskommentierte condition taggable_type schränkt auf Tags eines bestimmten Model-Typs ein. 
-      # Zur Zeit Differenzierung nach Typ nicht gewünscht.
+      # Conditions umwandeln in String, weil wir nachher noch mehr SQL anhängen
+      if options[:conditions]
+        options[:conditions] = sanitize_sql_for_conditions(options[:conditions])
+      end
 
-      # conditions = [
-      #   # "taggings.taggable_type = '#{ActiveRecord::Base.send(:class_name_of_active_record_descendant, self).to_s}'",
-      # ]
-      # conditions = conditions.compact.join(' and ')
-
-      conditions = options[:conditions]
+      # taggable_type schränkt auf Tags eines bestimmten Model-Typs ein. 
+      conditions = '(' + [options[:conditions], "taggings.taggable_type = '#{self.to_s}'"].compact.join(') AND (') + ')'
       
       at_least  = sanitize_sql(['count >= ?', options[:at_least]]) if options[:at_least]
       at_most   = sanitize_sql(['count <= ?', options[:at_most]]) if options[:at_most]

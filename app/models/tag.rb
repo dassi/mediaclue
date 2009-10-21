@@ -27,6 +27,11 @@ class Tag < ActiveRecord::Base
       def to_s
         self.map { |e| tag_name = e.name; tag_name.include?(" ")  ? "\"#{tag_name}\"" : tag_name}.sort.join(' ')
       end
+    },
+    :extend => proc {
+      def for_user(user)
+        find(:all, :conditions => {:owner_id => user})
+      end
     }
 
 
