@@ -125,9 +125,6 @@ module ApplicationHelper
       value = name
     end
     link_to_function(name, "append_link_value('#{field_id}', '#{value}')")
-    # link_to_function(name) do |page|
-    #   page << "append_link_value('#{field_id}', '#{value}')"
-    # end
   end
   
   def close_tag_link_list(dom_id)
@@ -149,50 +146,4 @@ module ApplicationHelper
     "window.open('#{url}','popup',params);return false;"
   end
   
-  
-  # def error_messages_for(object_name, options = {})
-  #   options = options.symbolize_keys
-  #   object = options[:object] || instance_variable_get("@#{object_name}")
-  #   if object && !object.errors.empty?
-  #     content_tag("div",
-  #       content_tag(
-  #       options[:header_tag] || "h2",
-  #       "#{object.errors.count} Fehler verhindern, dass diese Daten gespeichert werden!"
-  #       ) +
-  #       content_tag("p", "Mit folgenden Feldern gab es Probleme:") +
-  #       content_tag("ul", object.errors.collect { |attr, msg| content_tag(:li, msg) }), "id" => options[:id] || "errorExplanation", "class" => options[:class] || "errorExplanation" 
-  #     )
-  #   else
-  #     ""
-  #   end
-  # end  
-  
-#  # Ersatz für error_messages_for
-#  def german_error_messages_for(*params)
-#    options = params.last.is_a?(Hash) ? params.pop.symbolize_keys : {}
-#    objects = params.collect {|object_name| instance_variable_get("@#{object_name}") }.compact
-#    count   = objects.inject(0) {|sum, object| sum + object.errors.count }
-#    unless count.zero?
-#      html = {}
-#      [:id, :class].each do |key|
-#      if options.include?(key)
-#        value = options[key]
-#          html[key] = value unless value.blank?
-#        else
-#          html[key] = 'errorExplanation'
-#        end
-#      end
-#      header_message = "Beim Speichern sind #{count} Fehler aufgetreten!"
-#      error_messages = objects.map {|object| object.errors.collect { |attr, msg| content_tag(:li, msg) } }
-##       error_messages = objects.map {|object| object.errors.full_messages.map {|msg| content_tag(:li, msg) } }
-#      content_tag(:div,
-#        content_tag(options[:header_tag] || :h3, header_message) <<
-#          content_tag(:p, 'In folgenden Feldern:') <<
-#          content_tag(:ul, error_messages),
-#        html
-#      )
-#    else
-#      ''
-#    end
-#  end
 end
