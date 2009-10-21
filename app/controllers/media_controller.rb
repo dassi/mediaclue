@@ -229,7 +229,10 @@ class MediaController < ApplicationController
     
     if not search_text.blank?
       search_tag_names = Medium.parse_tags(search_text)
-      approx_total_hits = Medium.total_hits(search_text)
+      approx_total_hits = Medium.total_hits(search_text) + MediaSet.total_hits(search_text)
+      
+      # TODO: approx_total_hits muss zuverlässiger berechnet werden können, um aussagekräftig zu sein
+      # Es bräuchte auch ein Rechte-Test, denn was nützen 100 gefundene Medien, welche danach nicht angezeigt werden dürfen?
     else
       search_tag_names = []
       approx_total_hits = nil
