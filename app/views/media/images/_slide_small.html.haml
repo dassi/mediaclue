@@ -8,7 +8,7 @@
     -if @enable_ordering
       =medium_image_tag(slide_small, :small, :style => "margin-top:#{margin_top}px")
     -else
-      - js_onmouseover = "showtrail('#{slide_small.public_filename(:medium)}','#{escape_javascript(slide_small.name)}','#{escape_javascript(slide_small.desc.try(:ellipsis,150))}',true,351);"
+      - js_onmouseover = "showtrail('#{slide_small.public_filename(:medium)}','#{escape_javascript(slide_small.name)}','#{escape_javascript(truncate(slide_small.desc,150))}',true,351);"
       =link_to medium_image_tag(slide_small, :small, :style => "margin-top:#{margin_top}px", :onmouseover => js_onmouseover, :onmouseout => "hidetrail();"), medium_path(slide_small)
       
   =spiffy_bottom 'slide'

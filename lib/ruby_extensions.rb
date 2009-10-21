@@ -22,11 +22,6 @@ class String
     @@windows_converter.iconv(self)
   end
   
-  def ellipsis(count)
-    result = slice(0..(count-1))
-    result += '...' if length > count
-    result
-  end
 end
 
 
