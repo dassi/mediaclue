@@ -82,6 +82,7 @@
 
   %h3 Selektierte Medien...
   %ul
+    %li= link_to_remote('...als Diashow anzeigen', :url => media_set_path(@media_set, :style => 'slideshow'), :submit => 'multi_action_form', :method => :get)
     %li= link_to_remote('...aus dieser Kollektion entfernen', :url => remove_media_media_set_path(@media_set), :submit => 'multi_action_form', :confirm => "Selektierte Medien wirklich aus dieser Kollektion entfernen (Medien selbst werden nicht gelöscht)?")
     -#Braucht einen Auswahl-Mechanismus: %li= link_to_remote('...in andere Kollektion verschieben', :url => move_media_media_set_path(@media_set), :submit => 'multi_action_form', :confirm => "Selektierte Medien wirklich aus dieser Kollektion entfernen (Medien selbst werden nicht gelöscht)?")
     -#ditto: %li= link_to_remote('...zu anderer Kollektion hinzufügen', :url => add_media_media_set_path(@media_set), :submit => 'multi_action_form', :confirm => "Selektierte Medien wirklich aus dieser Kollektion entfernen (Medien selbst werden nicht gelöscht)?")

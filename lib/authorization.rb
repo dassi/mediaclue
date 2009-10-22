@@ -19,7 +19,7 @@ module Authorization
       end
       alias_method :permit?, :permit
     end
-  
+    
     def self.included(receiver)
       receiver.extend         ClassMethods
       receiver.send :include, InstanceMethods
@@ -43,7 +43,7 @@ module Authorization
           can_edit?(user)
         end
       end
-      
+
       def can_view?(user)
         raise NotImplementedError
       end
@@ -81,4 +81,28 @@ module Authorization
       receiver.send :include, InstanceMethods
     end
   end
+end
+
+
+# Wir erweitern Object um Authorization-Funktionalitäten, so dass wir ganz generell damit umgehen können
+class Object
+  
+  # Filtert eine objects collection und liefert diejenigen Objekte zurück, bei welchen die action erlaubt ist
+  def permitted_only(user, action)
+    self.to_a.select { |item| item.permit?(user, action) }
+  end
+  
+  def viewable_only(user)
+    self.permitted_only(user, :view)
+  end
+  
+  def editable_only(user)
+    self.permitted_only(user, :edit)
+  end
+
+  # Default-Implementation, welche alle Rechte verneint
+  def permit?(user, action)
+    false
+  end
+  
 end

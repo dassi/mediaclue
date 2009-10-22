@@ -56,12 +56,17 @@ class MediaSetsController < ApplicationController
       session[:per_page] = params[:per_page] if params[:per_page]
       @per_page = session[:per_page] || 20
       @size = params[:size]
-      @style = params[:style]
+      @style = params[:style] if MEDIA_SET_STYLES.include?(params[:style])
 
       layout = 'application'
-      case params[:style]
+      
+      case @style
       when 'slideshow'
-        @media = @media_set.images_for_user_as_viewer(current_user)
+        if params[:selected_media] && params[:selected_media].any?
+          @media = @media_set.media.find(params[:selected_media]).viewable_only(current_user)
+        else
+          @media = @media_set.images_for_user_as_viewer(current_user)
+        end
         @back_url = media_set_path(@media_set)
         layout = 'maximized'
       when 'lightbox'
@@ -85,17 +90,21 @@ class MediaSetsController < ApplicationController
       
       @composing_media_set = current_user.composing_media_set
 
-      if params[:style] and MEDIA_SET_STYLES.include?(params[:style])
-        action = ['show', params[:style], @size].compact.join('_')
-      else
-        action = 'show'
-      end
+      action = ['show', @style, @size].compact.join('_')
 
       if @composing_media_set.nil? or (@composing_media_set and permit?(:edit, @composing_media_set)) 
         respond_to do |format|
-          format.html {
+          # Wir leiten alle AJAX-Calls auf show weiter als normale requests. Als convenience, damit man auch per AJAX
+          # den Befehl auslösen kann. Wird verwendet bei "Diashow für selektierte Bilder"
+          format.js do
+            render :update do |page|
+              # Achtung! Redirect in RJS mit Parametern ist ziemlich hässlich. Es muss zwingend :escape => false gesetzt werden!
+              page.redirect_to url_for(:controller => 'media_sets', :action => 'show', :style => params[:style], :selected_media => params[:selected_media], :escape => false)
+            end
+          end
+          format.html do
             render :action => action, :layout => layout
-          }
+          end
           format.zip  { send_file @media_set.to_zip_for_user(current_user), :type => 'application/zip', :disposition => 'attachment' }
           format.pdf  { send_file @media_set.to_pdf_for_user(current_user), :type => 'application/pdf', :disposition => 'attachment' }
           format.xspf # Playlist for Slideshow

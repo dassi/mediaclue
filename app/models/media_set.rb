@@ -118,7 +118,7 @@ class MediaSet < ActiveRecord::Base
   end
   
   def images_for_user_as_viewer(user)
-    self.media.images.reject { |medium| !(user.can_view?(medium)) }
+    self.media.images.viewable_only(user)
   end
   
   def media_for_user_as_viewer(user)
