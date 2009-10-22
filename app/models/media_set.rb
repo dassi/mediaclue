@@ -1,3 +1,7 @@
+if LOCAL_DEVELOPMENT
+  require_dependency 'ruport_extensions'
+end
+
 # Collection von Medium-Objekten.
 class MediaSet < ActiveRecord::Base
 
@@ -195,7 +199,7 @@ class MediaSet < ActiveRecord::Base
     filename = File.join RAILS_ROOT, 'tmp', "#{File.sanitize_filename(name)}_ID#{id}.pdf"
 #    files = self.images_for_user_as_viewer(user).collect { |image| image.public_filename(:pdfslideshow) }
 #    PdfSlideShowController.render_pdf :filename => filename, :image_files => files, :name => self.name, :desc => self.desc
-     PdfSlideShowController.render_pdf :filename => filename, 
+     ::PdfSlideShowController.render_pdf :filename => filename, 
                                      :media_set => self,
                                      :images => self.images_for_user_as_viewer(user)
 #                                    :name => self.name, 
@@ -237,65 +241,6 @@ class MediaSet < ActiveRecord::Base
     viewable_media
   end
   
-  
-  # Ruport Renderer, die eine Diashow der Medien des MediaSets als PDF erzeugt
-  # TODO: Auslagern ein besseren Ort
-  class PdfSlideShowController < Ruport::Controller
-    stage :slide_show
-    required_option :filename, :media_set, :images
-
-    class PDF < Ruport::Formatter::PDF    
-      renders :pdf, :for => PdfSlideShowController        
-      proxy_to_pdf_writer
-
-      build :slide_show do
-        #options.paper_size = 'A4'
-        options.paper_size = [21, 28]
-        options.paper_orientation = :landscape      
-        options.text_format = { :font_size => 12 }      
-        catalog.page_mode = 'FullScreen'
-
-#        fill_color Color::RGB::Black
-#        rectangle(0, 0, page_width, page_height).fill
-
-        select_font 'Helvetica'
-#        fill_color Color::RGB::White
-        add_text options.media_set.caption.to_latin1, :font_size => 24 if options.media_set.caption
-        add_text ' '
-        add_text options.media_set.desc.to_latin1, :font_size => 12 if options.media_set.desc
-        add_text ' '
-        add_text "Schlagworte: #{options.media_set.tags.to_s.to_latin1}", :font_size => 12 if options.media_set.desc
-        add_text ' '
-        add_text "Bilder:", :font_size => 12
-        add_text ' '
-        
-        table = Ruport::Data::Table.new :data => options.images.collect { |image| [image.name.to_latin1, image.original_filename.to_latin1, image.desc ? image.desc[0..80].to_latin1 : '', image.tags.to_s.to_latin1] },
-                                        :column_names => ['Name', 'Dateiname', 'Beschreibung (Anriss)', 'Schlagworte']
-        
-        options.table_format = {:width => 720, :font_size => 8}        
-        draw_table table
-        
-#        for image in options.images
-#          add_text "- #{image.name} (#{image.original_filename})", :font_size => 8
-#        end
-
-        for image_file in options.images.collect { |image| image.full_filename(:pdfslideshow) }
-          start_new_page true
-          fill_color Color::RGB::Black
-          rectangle(0, 0, page_width, page_height).fill
-          begin
-            center_image_in_box image_file, :x => 0, :y => 0, :width => 796, :height => 597
-          rescue TypeError
-#            logger.error "Error adding image to PDF-slideshow: " + $!
-            puts "Error adding image to PDF-slideshow: " + $!
-          end
-        end
-
-        save_as options.filename
-      end
-    end      
-  end  
-
   def can_view?(user)
     self.owner == user
   end

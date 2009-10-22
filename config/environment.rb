@@ -110,6 +110,7 @@ end
 require 'ruby_extensions'
 require 'tagging_extensions'
 require 'rails_extensions'
+require 'ruport_extensions'
 
 # gems nach rails initialize
 require 'uuidtools'
