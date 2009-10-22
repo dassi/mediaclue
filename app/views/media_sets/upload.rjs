@@ -1,1 +1,1 @@
-page.insert_html :bottom, 'collected_media', :partial => "media/#{@medium.template_path}/collection_item", :object => @medium, :locals => {:media_set => @media_set}
+# page.insert_html :bottom, 'collected_media', :partial => "media/#{@medium.template_path}/collection_item", :object => @medium, :locals => {:media_set => @media_set}
