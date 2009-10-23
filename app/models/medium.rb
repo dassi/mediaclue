@@ -30,7 +30,9 @@ class Medium < ActiveRecord::Base
   validates_presence_of :name
   
   after_save :save_new_tags
+  after_save :create_preview_offloaded
   before_create :import_meta_data if FEATURE_METADATA
+  
   
   # Auswahl für Quelle/Copytright
   # TODO: Als Model License auslagern
@@ -66,6 +68,10 @@ class Medium < ActiveRecord::Base
     if self.is_importing_metadata
       self.meta_data = MiniExiftool.new(self.temp_path).to_yaml
     end
+  end
+  
+  def create_preview_offloaded
+    DocumentPreviewGenerator.new.convert(self.full_filename)
   end
   
   public ##########################################################################################

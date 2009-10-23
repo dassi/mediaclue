@@ -72,6 +72,8 @@ Rails::Initializer.run do |config|
   config.gem 'mini_exiftool', :version => '~>1.0.1'
   config.gem 'rubyzip', :lib => 'zip/zip', :version => '~>0.9.1'
   config.gem 'ruport', :version => '~>1.6.1'
+  config.gem 'bj', :version => '~>1.0.1'
+  config.gem 'FooBarWidget-daemon_controller', :lib => 'daemon_controller', :version => '~>0.2.1'
 
   # Only load the plugins named here, in the order given. By default, all plugins
   # in vendor/plugins are loaded in alphabetical order.
@@ -111,6 +113,8 @@ require 'ruby_extensions'
 require 'tagging_extensions'
 require 'rails_extensions'
 require 'ruport_extensions'
+
+autoload(:DocumentPreviewGenerator, 'support/document_preview_generator.rb')
 
 # gems nach rails initialize
 require 'uuidtools'
