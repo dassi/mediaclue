@@ -7,14 +7,17 @@
     .media_info.left
       .media_name_row
         -if @enable_ordering
-          =list_item.name
+          =h list_item.name
         -else
           .media_name
-            =link_to list_item.name, medium_path(list_item)
+            -if permit?(:edit, list_item)
+              = link_to image_tag('pencil.png', :class => 'icon'), edit_medium_path(list_item, :back_url => url_for)
+            =link_to(h(list_item.name), medium_path(list_item))
           .media_actions
             =#medium_download_button(list_item)
             =#medium_add_to_collection_button(composing_media_set, list_item)
             =#medium_remove_from_set_button(member_media_set, list_item) if defined?(member_media_set) and not member_media_set.owning?
+
             =check_box_tag 'selected_media[]', list_item.id
           .clear
       -unless @enable_ordering

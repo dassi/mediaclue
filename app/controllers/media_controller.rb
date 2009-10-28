@@ -144,7 +144,13 @@ class MediaController < ApplicationController
         respond_to do |format|
           if @medium.update_attributes(medium_params)
             flash[:notice] = 'Medium wurde erfolgreich aktualisiert.'
-            format.html { redirect_to medium_url(@medium) }
+            format.html do
+              if params[:back_url].present?
+                redirect_to params[:back_url]
+              else
+                redirect_to medium_url(@medium)
+              end
+            end
           else
             @user_groups = UserGroup.find :all
             format.html { render :action => "edit" }

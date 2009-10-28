@@ -7,6 +7,7 @@
 
 -form_for(:medium, @medium, :url => medium_path(@medium), :html => {:method => :put}) do |f|
   %p
+    = hidden_field_tag 'back_url', params[:back_url] if params[:back_url].present?
     = render :partial => 'form', :object => @medium
     = submit_tag 'Speichern'
     = link_to 'Abbrechen', medium_path(@medium)
