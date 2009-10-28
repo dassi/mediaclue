@@ -5,7 +5,6 @@ class PreviewGenerator
 
   # TODO: Hier nicht doppelspurig fahren mit dem openoffice_server Script
   # Und den Pfad variabel halten, in constants
-  OOO_HOME='/Applications/office/OpenOffice.org.app/Contents'
   PIDFILE="#{OOO_HOME}/openoffice-headless.pid"
   LOGFILE="#{OOO_HOME}/openoffice-headless.log"
                     
