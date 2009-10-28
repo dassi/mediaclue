@@ -38,9 +38,9 @@ class PreviewGenerator
   def ensure_openoffice_ready
     if not @controller.running?
       @controller.start 
-      # OPTIMIZE: Hier einfach 6 Sekunden warten ist nicht zuverlässig. Trotzdem braucht OO eine Zeit, bis es via Netzwerk verfügbar ist.
+      # OPTIMIZE: Hier einfach x Sekunden warten ist nicht zuverlässig. Trotzdem braucht OO eine Zeit, bis es via Netzwerk verfügbar ist.
       # Wie kann man dies robust feststellen? Evt. Kommando via UNO senden?
-      sleep(6)
+      sleep(10)
     end
   end
 
