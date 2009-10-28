@@ -66,7 +66,7 @@ Rails::Initializer.run do |config|
   # config.gem "bj"
   # config.gem "hpricot", :version => '0.6', :source => "http://code.whytheluckystiff.net"
   # config.gem "aws-s3", :lib => "aws/s3"
-  config.gem 'ferret', :version => '>=0.11.6'
+  config.gem 'ferret', :version => '~>0.11.6'
   config.gem 'acts_as_ferret', :version => ACTS_AS_FERRET_VERSION
   config.gem 'mime-types', :version => '~>1.16', :lib => 'mime/types'
   config.gem 'mini_exiftool', :version => '~>1.0.1'
@@ -75,6 +75,7 @@ Rails::Initializer.run do |config|
   config.gem 'bj', :version => '~>1.0.1'
   config.gem 'FooBarWidget-daemon_controller', :lib => 'daemon_controller', :version => '~>0.2.1'
   config.gem 'image_science', :version => '~>1.2.1'
+  config.gem 'haml', :version => '~>2.2.5'
 
   # Only load the plugins named here, in the order given. By default, all plugins
   # in vendor/plugins are loaded in alphabetical order.
@@ -118,6 +119,7 @@ require 'ruport_extensions'
 autoload(:PreviewGenerator, 'support/preview_generator.rb')
 
 # gems nach rails initialize
+gem 'uuidtools', '~>1.0.3'
 require 'uuidtools'
 
 # Hack, damit die Klasse Tag sicher geladen wird um das Klassen-lade-problem zu lösen. Siehe auch:

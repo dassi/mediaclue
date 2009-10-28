@@ -37,32 +37,21 @@ Website: www.mediaclue.ch
 === Server
 
 * Rails-fähiger Server, zum Beispiel Linux-Server mit Apache und Passenger-Modul.
-* Ruby 1.8.6 (siehe unten, es gibt Probleme mit 1.8.7)
+* Ruby 1.8.7 empfohlen (geht vermutlich auch mit 1.8.6)
 
 === Verwendete plugins
 
 * acts_as_authenticated
 * acts_as_state_machine
 * has_many_polymorphs
-* attachment_fu
-
 
 === Benötigte gems
 
-* rubyzip
-* image_science (Auf ubuntu nimmt man besser das apt-package "libimage-science-ruby")
-* mime-types
-* uuidtools, 1.x (not 2.x)
-* acts_as_ferret
-* ferret
-* haml
-* rspec-rails
-* ruport
-* mini_exiftool (Exiftool selbst muss auch installiert sein, siehe http://www.sno.phy.queensu.ca/~phil/exiftool/)
+* siehe environment.rb
 
 === Sonstige
 
-* Java muss installiert sein
+* Java muss installiert sein (Für UNO-Script, welches mit OpenOffice spricht)
 * OpenOffice muss für die Preview-Bilder von verschiedensten Dokumenten installiert sein
 * swftools (Benötigt wird nur pdf2swf)
                                                                                               
@@ -72,7 +61,7 @@ Website: www.mediaclue.ch
 * Datei database.yml kopieren von database.yml.template und anpassen
 * Datenbanken erstellen (z.B. MySQL Datenbank mit Namen "mediaclue_development")
 * Migrationen durchführen: rake db:migrate SUPRESS_EARLY_DB_CONNECTION=yes
-* Admin-Test-User anlegen mit: rake mediaclue:sample_data:load_admin
+* Admin-Test-User anlegen mit: rake mediaclue:sample_data:load_admin und rake mediaclue:sample_data:load_user
 * Ordner media_storage erzeugen und link in /public/m/ anpassen
 
 == Bekannte Probleme (Known Bugs)
