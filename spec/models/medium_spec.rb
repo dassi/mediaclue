@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe Medium do
   before(:each) do
     @medium = Medium.new
-    @medium.stub!(:temp_path).and_return('/tmp/blablabla.txt')
+    # @medium.stub!(:temp_path).and_return('/tmp/blablabla.txt')
   end
 
   it "should be valid with a name" do
@@ -19,11 +19,17 @@ describe Medium do
     exiftool_mock = mock(MiniExiftool)
     exiftool_mock.should_receive(:to_yaml).and_return('xyz: blabla')
     MiniExiftool.should_receive(:new).and_return(exiftool_mock)
+
+    @medium.should_receive(:save_attachment?).and_return(true)
+    # @medium.stub!(:valid?).and_return(true)
+    @medium.stub!(:set_size_from_temp_path).and_return(true)
+    @medium.stub!(:filename).and_return('blabla.jpg')
+    @medium.should_receive(:save_to_storage).and_return(true)
     
     @medium.is_importing_metadata = true
     @medium.should_receive(:meta_data=)
-    
-    @medium.stub!(:valid?).and_return(true)
+
+    @medium.name = 'test_medium'
     @medium.save!
   end
 

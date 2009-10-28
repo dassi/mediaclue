@@ -1,1 +1,26 @@
-=image_tag "#{preview.ext.downcase}.gif"
+- if preview.has_preview?
+  - if @enable_ordering
+    = medium_image_tag(preview, :thumbnail)
+  - else
+    - small_preview ||= false
+    - if small_preview
+      - js_onmouseover = "showtrail('#{preview.image_thumbnail(:medium).public_filename}','#{escape_javascript(preview.name)}','Titelblatt-Vorschau',true,351);"
+      = medium_image_tag(preview, :thumbnail, :onmouseover => js_onmouseover, :onmouseout => "hidetrail();")
+    - else
+      - if preview.flash_preview && preview.flash_preview.available?
+        - width = 350                              
+        - height = 300
+        - div_id = "previewplayer#{preview.id}"
+        %p Kurzvorschau (Ausschnitt):
+        %div{:id => div_id}
+
+        :javascript
+          var so = new SWFObject('#{preview.flash_preview.public_filename}','ply','#{width}','#{height}','9','#ffffff');
+          so.addParam('allowfullscreen','true');
+          so.addParam('allowscriptaccess','always');
+          so.addParam('wmode','opaque');
+          so.write('#{div_id}');     
+      - else
+        = no_preview_text
+- else
+  = no_preview_text

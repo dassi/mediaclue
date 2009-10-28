@@ -71,7 +71,7 @@ class PdfSlideShowFormatter < Ruport::Formatter::PDF
           # Bild platzieren
           fill_color(Color::RGB::Black)
           rectangle(x, y, thumb_width, thumb_height).fill
-          center_image_in_box(image.full_filename(:small), :x => x, :y => y, :width => thumb_width, :height => thumb_height)
+          center_image_in_box(image.image_thumbnail(:small).full_filename, :x => x, :y => y, :width => thumb_width, :height => thumb_height)
           fill_color(Color::RGB::White)
           pdf_writer.add_text(x, y, number.to_s)
           add_internal_link(number.to_s, x, y, x+thumb_width, y+thumb_height)
@@ -96,7 +96,7 @@ class PdfSlideShowFormatter < Ruport::Formatter::PDF
       
       # Bild platzieren
       begin
-        center_image_in_box(image.full_filename(:pdfslideshow), :x => 0, :y => 0, :width => page_width, :height => page_height)
+        center_image_in_box(image.image_thumbnail(:pdfslideshow).full_filename, :x => 0, :y => 0, :width => page_width, :height => page_height)
         add_destination(number.to_s, 'Fit')
       rescue TypeError
         # puts "Error adding image to PDF-slideshow: " + $!

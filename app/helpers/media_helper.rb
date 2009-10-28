@@ -1,7 +1,12 @@
 module MediaHelper
 
   def medium_image_tag(medium, size = :small, options = {})
-    image_tag(medium.public_filename(size), options)
+    thumbnail = medium.image_thumbnail(size.to_s)
+    if thumbnail && thumbnail.available?
+      image_tag(medium.image_thumbnail(size.to_s).public_filename, options)
+    else
+      no_preview_text
+    end
   end
   
   def medium_download_button(medium)

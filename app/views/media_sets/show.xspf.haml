@@ -4,5 +4,5 @@
     - for medium in @media
       %track
         %duration 5
-        %location= medium.public_filename(:pdfslideshow)
+        %location= medium.image_thumbnail(:pdfslideshow).public_filename
         %link= medium_path(medium)

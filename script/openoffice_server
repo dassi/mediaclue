@@ -31,13 +31,14 @@ echo "No openoffice to stop."
 ;;
 
 status)
+echo "Processes named soffice:"
+ps | grep -i soffice | grep -v grep
 if [ -f $PIDFILE ] ; then
 echo "OpenOffice headless running pid $(cat $PIDFILE)."
 else
 echo "No pid file $PIDFILE"
+exit 1
 fi
-echo "Processes named soffice:"
-ps | grep -i soffice | grep -v grep
 ;;
 
 *)

@@ -28,6 +28,10 @@ module ApplicationHelper
   def no_data_text
     content_tag('em', '[keine]')
   end
+
+  def no_preview_text
+    content_tag('em', '[Vorschau nicht verfügbar]')
+  end
   
   def options_for_viewer
     [['nur Besitzer', 'owner']].concat(@user_groups.collect {|g| ["Gruppe #{g.full_name.titlecase}", g.id]})

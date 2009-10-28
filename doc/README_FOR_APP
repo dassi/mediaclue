@@ -59,6 +59,12 @@ Website: www.mediaclue.ch
 * rspec-rails
 * ruport
 * mini_exiftool (Exiftool selbst muss auch installiert sein, siehe http://www.sno.phy.queensu.ca/~phil/exiftool/)
+
+=== Sonstige
+
+* Java muss installiert sein
+* OpenOffice muss für die Preview-Bilder von verschiedensten Dokumenten installiert sein
+* swftools (Benötigt wird nur pdf2swf)
                                                                                               
 == Installation
 

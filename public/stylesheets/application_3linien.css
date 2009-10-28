@@ -4,3 +4,8 @@
   font-size: 10px;
   font-weight: normal;
 }
+
+div.flash_preview {
+  border: 1px solid gray;
+  padding: 3px;
+}

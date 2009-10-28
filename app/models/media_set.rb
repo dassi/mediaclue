@@ -197,7 +197,7 @@ class MediaSet < ActiveRecord::Base
   
   def to_pdf_for_user(user)
     filename = File.join RAILS_ROOT, 'tmp', "#{File.sanitize_filename(name)}_ID#{id}.pdf"
-#    files = self.images_for_user_as_viewer(user).collect { |image| image.public_filename(:pdfslideshow) }
+#    files = self.images_for_user_as_viewer(user).collect { |image| image.image_thumbnail(:pdfslideshow).public_filename }
 #    PdfSlideShowController.render_pdf :filename => filename, :image_files => files, :name => self.name, :desc => self.desc
      ::PdfSlideShowController.render_pdf :filename => filename, 
                                      :media_set => self,

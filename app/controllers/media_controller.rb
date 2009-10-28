@@ -86,7 +86,6 @@ class MediaController < ApplicationController
     permit :view, @medium do
       if params[:format]
         params[:format].downcase!
-  #      params[:size] ||= :small if @medium.is_a? Image
       end
 
       respond_to do |format|
@@ -94,7 +93,7 @@ class MediaController < ApplicationController
 
         # Formate aus MIME-Type des Mediums erzeugen (für Download wichtig. Bilder werden beim Anzeigen ansonsten direkt via public-URL angezeigt)
         @medium.class.file_extensions.each do |ext|
-          format.send(ext) { send_file @medium.full_filename(params[:size]), :type => @medium.content_type, :disposition => 'attachment', :filename => @medium.pretty_filename }
+          format.send(ext) { send_file @medium.full_filename, :type => @medium.content_type, :disposition => 'attachment', :filename => @medium.pretty_filename }
         end
       end
     end
@@ -243,6 +242,17 @@ class MediaController < ApplicationController
       page.replace_html 'approx_total_hits', :partial => "media/approx_total_hits", :locals => {:approx_total_hits => approx_total_hits}
     end
     
+  end
+  
+  def generate_previews
+    @medium = Medium.find params[:id]
+
+    permit :edit, @medium do
+      @medium.recreate_previews
+      flash[:notice] = 'Vorschau-Varianten werden erzeugt. Dies kann bis zu einigen Minuten in Anspruch nehmen, bis die Vorschauen verfügbar sind.'
+    end
+    
+    redirect_to :action => 'show'
   end
   
 end

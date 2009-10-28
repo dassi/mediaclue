@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091022213513) do
+ActiveRecord::Schema.define(:version => 20091023165257) do
 
   create_table "bj_config", :primary_key => "bj_config_id", :force => true do |t|
     t.text "hostname"
@@ -63,8 +63,6 @@ ActiveRecord::Schema.define(:version => 20091022213513) do
     t.string   "filename"
     t.integer  "height"
     t.integer  "width"
-    t.integer  "parent_id"
-    t.string   "thumbnail"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -104,6 +102,17 @@ ActiveRecord::Schema.define(:version => 20091022213513) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "sort_path"
+  end
+
+  create_table "previews", :force => true do |t|
+    t.integer  "medium_id"
+    t.string   "type"
+    t.string   "name"
+    t.string   "filename"
+    t.integer  "height"
+    t.integer  "width"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "search_queries", :force => true do |t|
