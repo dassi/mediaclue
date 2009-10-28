@@ -300,10 +300,8 @@ select {
 
 
 #right ul {
-  /*font-size: 90%;*/
   margin:0 0 0 15px;
   padding:0;
-  list-style-image: url(/images/bullet.gif);
 }
 
 a,
@@ -391,28 +389,6 @@ fieldset {
 .box li {
   margin-top:5px;
 }
-
-
-#nav{ list-style: none; margin: 2.0em 0; width: 25em; float: right;}
-#nav li{ padding: 0; margin: 0; }
-#nav a{
-  display: block;
-  height: 2.0em;
-  padding: 0.3em 0.3em 0.3em 0.8em;
-  border-bottom: 2px; /*solid #1a1a1a*/
-  border-top: 2px; /*solid #1a1a1a*/
-  color: #93B300;
-  background-color: #F7F9FB;
-  font-weight: bold;
-  text-decoration: none;
-  }
-
-#nav a:hover{
-  color: #1a1a1a;
-  background: url(/images/bg_t.gif) no-repeat;
-  background-color: #fff;
-  font-weight: bold;
-  }
 
 
 #search_fulltext {

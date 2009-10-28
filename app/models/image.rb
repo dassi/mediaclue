@@ -44,8 +44,8 @@ class Image < Medium
     # return unless @saved_attachment
     
     with_image do |img|
-      self.width  = img.width  if respond_to?(:width)
-      self.height = img.height if respond_to?(:height)
+      self.width  = img.width
+      self.height = img.height
       resize_image_or_thumbnail! img
     end
   end
@@ -59,20 +59,6 @@ class Image < Medium
 
   # Performs the actual resizing operation for a thumbnail
   def resize_image(img, size)
-    # create a dummy temp file to write to
-    # ImageScience doesn't handle all gifs properly, so it converts them to
-    # pngs for thumbnails.  It has something to do with trying to save gifs
-    # with a larger palette than 256 colors, which is all the gif format
-    # supports.
-    # filename.sub!(/gif$/, 'png')
-    # content_type.sub!(/gif$/, 'png')
-    # 
-    # # Andreas Brodbeck (mindclue):
-    # # TIFFs in JPEGs verwandeln
-    # filename.sub!(/tiff$/, 'jpg')
-    # filename.sub!(/tif$/, 'jpg')
-    # content_type.sub!(/tiff$/, 'jpeg')
-    
     temp_paths.unshift write_to_temp_file(filename)
     grab_dimensions = lambda do |img|
       self.width  = img.width  if respond_to?(:width)
