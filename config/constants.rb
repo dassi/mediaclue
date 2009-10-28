@@ -59,3 +59,9 @@ TEMP_PATH = './tmp'
 
 # Anzahl Seiten, welche als Vorschau für Dokumente generiert werden                    
 MAX_PAGES_DOCUMENT_PREVIEW = 5
+
+# Ort wo das soffice-binary von OpenOffice liegt
+OOO_HOME='/Applications/office/OpenOffice.org.app/Contents'
+                     
+# Login nur via HTTPS
+LOGIN_WITH_HTTPS_ONLY = false

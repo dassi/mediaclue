@@ -3,12 +3,15 @@ class AccountController < ApplicationController
   # If you want "remember me" functionality, add this before_filter to Application Controller
   # before_filter :login_from_cookie
   before_filter :login_required, :except => [:login]
+  
+  filter_parameter_logging(:password)
 
   def login
     # Sicherstellen, dass das Login via https geht
-    # if (not request.ssl?) and (not LOCAL_DEVELOPMENT)
-    #   redirect_to url_for(:action => 'login', :protocol => 'https://')
-    # end
+    
+    if LOGIN_WITH_HTTPS_ONLY and (not request.ssl?) and (not LOCAL_DEVELOPMENT)
+      redirect_to url_for(:action => 'login', :protocol => 'https://')
+    end
 
     return unless request.post?
     
