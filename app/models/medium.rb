@@ -128,13 +128,10 @@ class Medium < ActiveRecord::Base
 
 
   # Returns true if the attachment data will be written to the storage system on the next save
-  def save_attachment?
-    File.file?(temp_path.to_s)
+  def need_to_save_attachment?
+    @need_to_save_attachment == true
+    # File.file?(temp_path.to_s)
   end
-
-
-  # nil placeholder in case this field is used in a form.
-  def uploaded_data() nil; end
 
 
   # This method handles the uploaded file object.  If you set the field name to uploaded_data, you don't need
@@ -151,9 +148,16 @@ class Medium < ActiveRecord::Base
     # Daten einlesen von temp-File oder Stream
     if file_data.is_a?(StringIO)
       file_data.rewind
-      set_temp_data file_data.read
+      data = file_data.read
+      if data.present?
+        temp_paths.unshift(write_to_temp_file(data))
+        @need_to_save_attachment = true
+      end
     else
-      self.temp_paths.unshift(file_data)
+      if file_data.present?
+        self.temp_paths.unshift(file_data)
+        @need_to_save_attachment = true
+      end
     end
   end
 
@@ -174,16 +178,10 @@ class Medium < ActiveRecord::Base
   end
 
 
-  # Gets the data from the latest temp file.  This will read the file into memory.
-  def temp_data
-    save_attachment? ? File.read(temp_path) : nil
-  end
-
-
-  # Writes the given data to a Tempfile and adds it to the collection of temp files.
-  def set_temp_data(data)
-    temp_paths.unshift(write_to_temp_file(data)) unless data.nil?
-  end
+  # # Gets the data from the latest temp file.  This will read the file into memory.
+  # def temp_data
+  #   save_attachment? ? File.read(temp_path) : nil
+  # end
 
 
   # Copies the given file to a randomly named Tempfile.
@@ -211,7 +209,7 @@ class Medium < ActiveRecord::Base
 
   # before_validation callback.
   def set_size_from_temp_path
-    self.size = File.size(temp_path) if save_attachment?
+    self.size = File.size(temp_path) if need_to_save_attachment?
   end
 
 
@@ -226,28 +224,26 @@ class Medium < ActiveRecord::Base
   end
 
 
-  # Renames the given file before saving
-  def rename_file
-    return unless @old_filename && @old_filename != full_filename
-    if save_attachment? && File.exists?(@old_filename)
-      FileUtils.rm @old_filename
-    elsif File.exists?(@old_filename)
-      FileUtils.mv @old_filename, full_filename
-    end
-    @old_filename =  nil
-    true
-  end
+  # # Renames the given file before saving
+  # def rename_file
+  #   return unless @old_filename && @old_filename != full_filename
+  #   if save_attachment? && File.exists?(@old_filename)
+  #     FileUtils.rm @old_filename
+  #   elsif File.exists?(@old_filename)
+  #     FileUtils.mv @old_filename, full_filename
+  #   end
+  #   @old_filename =  nil
+  #   true
+  # end
 
   
   # Saves the file to the file system
   def save_to_storage
-    if save_attachment?
-      # TODO: This overwrites the file if it exists, maybe have an allow_overwrite option?
-      FileUtils.mkdir_p(File.dirname(full_filename))
-      File.cp(temp_path, full_filename)
-      # File.chmod(attachment_options[:chmod] || 0644, full_filename)
-      File.chmod(0644, full_filename)
-    end
+    # TODO: This overwrites the file if it exists, maybe have an allow_overwrite option?
+    FileUtils.mkdir_p(File.dirname(full_filename))
+    File.cp(temp_path, full_filename)
+    # File.chmod(attachment_options[:chmod] || 0644, full_filename)
+    File.chmod(0644, full_filename)
     @old_filename = nil
     true
   end
@@ -293,15 +289,16 @@ class Medium < ActiveRecord::Base
 
   # Subklassen können diese Method überschreiben, um das Attachment zu bearbeiten auf Bedarf, bevor es gespeichert wird
   def process_attachment
-    @saved_attachment = save_attachment?
+    # @saved_attachment = save_attachment?
   end
 
   # Cleans up after processing.  Thumbnails are created, the attachment is stored to the backend, and the temp_paths are cleared.
   def after_process_attachment
-    if @saved_attachment
+    if need_to_save_attachment?
       save_to_storage
       @temp_paths.clear if @temp_paths
-      @saved_attachment = nil
+      @need_to_save_attachment = false
+      # @saved_attachment = nil
       callback :after_attachment_saved
     end
   end

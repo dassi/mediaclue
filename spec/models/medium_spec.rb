@@ -20,7 +20,7 @@ describe Medium do
     exiftool_mock.should_receive(:to_yaml).and_return('xyz: blabla')
     MiniExiftool.should_receive(:new).and_return(exiftool_mock)
 
-    @medium.should_receive(:save_attachment?).and_return(true)
+    @medium.should_receive(:need_to_save_attachment?).and_return(true)
     # @medium.stub!(:valid?).and_return(true)
     @medium.stub!(:set_size_from_temp_path).and_return(true)
     @medium.stub!(:filename).and_return('blabla.jpg')
