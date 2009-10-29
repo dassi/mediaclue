@@ -54,6 +54,7 @@ Website: www.mediaclue.ch
 * Java muss installiert sein (Für UNO-Script, welches mit OpenOffice spricht)
 * OpenOffice muss für die Preview-Bilder von verschiedensten Dokumenten installiert sein
 * swftools (Benötigt wird nur pdf2swf)
+* imagemagick
                                                                                               
 == Installation
 
