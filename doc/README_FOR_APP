@@ -55,13 +55,14 @@ Website: www.mediaclue.ch
 * OpenOffice muss für die Preview-Bilder von verschiedensten Dokumenten installiert sein
 * swftools (Benötigt wird nur pdf2swf)
 * imagemagick
+* exiftool
                                                                                               
 == Installation
 
 * In config/initializers/session_store.rb den secret-Key abändern auf eine neue Zufallsreihe. (Nicht erforderlich aber aus Sicherheitsgründen empfohlen)
 * Datei database.yml kopieren von database.yml.template und anpassen
 * Datenbanken erstellen (z.B. MySQL Datenbank mit Namen "mediaclue_development")
-* Migrationen durchführen: rake db:migrate SUPRESS_EARLY_DB_CONNECTION=yes
+* Migrationen durchführen: "rake db:migrate SUPRESS_EARLY_DB_CONNECTION=yes" oder mit "rake db:schema:load SUPRESS_EARLY_DB_CONNECTION=yes"
 * Admin-Test-User anlegen mit: rake mediaclue:sample_data:load_admin und rake mediaclue:sample_data:load_user
 * Ordner media_storage erzeugen und link in /public/m/ anpassen
 
