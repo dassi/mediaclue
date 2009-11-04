@@ -44,6 +44,10 @@ class PreviewGenerator
     end
   end
 
+  def random_tempfile_filename
+    "#{rand Time.now.to_i}#{filename || 'attachment'}"
+  end
+
 
   # Erstellt ein PDF via Background-Job bei Bedarf. Falls schon vorhanden, dann wird nicht erneut ein Background Job aufgesetzt.
   # Liefert den Namen des temporären PDF-Files
@@ -51,7 +55,15 @@ class PreviewGenerator
 
     # Falls nicht schon gemacht, dann Job aufsetzen um PDF zu erzeugen
     if @pdf_temp_file.nil?
-      @pdf_temp_file = Tempfile.new(['temp_pdf_file', '.pdf'], TEMP_PATH).path
+      
+      # In Ruby 1.8.6 ist Tempfile nicht ganz so praktisch, weil es eine eigene File-Endung nimmt,
+      # wir brauchen aber zwingend eine Endung .pdf
+      if RUBY_VERSION == '1.8.6'
+        # Dies hier ist evt. nicht ganz so sicher wie Tempfile, aber wir betrachten Ruby 1.8.6 als nicht empfohlen
+        @pdf_temp_file = "#{TEMP_PATH}/temp_pdf_file_#{rand Time.now.to_i}.pdf"
+      else
+        @pdf_temp_file = Tempfile.new(['temp_pdf_file', '.pdf'], TEMP_PATH).path
+      end
       Bj.submit(jodconverter_command(source_file, @pdf_temp_file))
     end
     
