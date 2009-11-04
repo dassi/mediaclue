@@ -15,8 +15,7 @@ exit
 fi
 fi
 echo "Starting OpenOffice headless server..."
-cd $OOO_HOME/program
-./soffice.bin -headless -accept="socket,port=8100;urp;" & > $LOGFILE 2>&1
+$OOO_HOME/program/soffice.bin -headless -nofirststartwizard -accept="socket,host=localhost,port=8100;urp;StarOffice.Service" & > $LOGFILE 2>&1
 echo $! | tee $PIDFILE
 ;;
 
