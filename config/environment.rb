@@ -73,6 +73,7 @@ Rails::Initializer.run do |config|
   config.gem 'rubyzip', :lib => 'zip/zip', :version => '~>0.9.1'
   config.gem 'ruport', :version => '~>1.6.1'
   config.gem 'bj', :version => '~>1.0.1'
+  config.gem 'main', :version => '~>2.8.0' # BJ braucht main 2.8.0!!! Die neueren führen zu Exception!
   config.gem 'FooBarWidget-daemon_controller', :lib => 'daemon_controller', :version => '~>0.2.1'
   config.gem 'image_science', :version => '~>1.2.1'
   config.gem 'haml', :version => '~>2.2.5'
