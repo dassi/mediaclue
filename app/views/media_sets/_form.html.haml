@@ -12,7 +12,7 @@
       %span.explanation für diese Kollektion
     %br
     - ms_dom_id = dom_id(@media_set)
-    = f.text_field 'tag_names', :class => 'media_tags mandatory', :id => ms_dom_id, :onfocus => "open_tag_list('#{ms_dom_id}');"
+    = f.text_field 'tag_names', :class => 'media_tags mandatory', :id => ms_dom_id, :onfocus => "open_tag_list('#{ms_dom_id}');", :autocomplete => 'off'
     %div{:id => "tag_link_list_#{ms_dom_id}", :style => 'display: none', :class => 'slide_in'}
       = close_tag_link_list(ms_dom_id)
       Fach-Schlagworte
