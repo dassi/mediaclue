@@ -1,4 +1,4 @@
--height = slide_small.thumbnails.detect{|thumb| thumb.thumbnail == 'small'} ? slide_small.thumbnails.detect{|thumb| thumb.thumbnail == 'small'}.height : 170
+-height = slide_small.image_thumbnail(:small).height || 170
 -margin_top = (170 - height) / 2
 
 - css_class = 'draggable' if @enable_ordering
