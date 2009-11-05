@@ -10,9 +10,9 @@ class MediaController < ApplicationController
     find_options[:conditions] = {}
     find_options[:limit] = MAX_SEARCH_RESULTS
     
-    find_options[:conditions][:media_sets] = {}
     
     if search_query.my_media_only?
+      find_options[:conditions][:media_sets] ||= {} # Lazy erstellen, da ein leerer Hash Rails nicht gerne hat beim Umsetzen in SQL
       find_options[:conditions][:media_sets][:owner_id] = current_user.id
     end
 
@@ -20,6 +20,7 @@ class MediaController < ApplicationController
       klasses = search_query.media_types_classes.collect(&:to_s)
 
       # Filtern, falls nicht alle angewählt sind
+      find_options[:conditions][:media] ||= {}
       find_options[:conditions][:media][:type] = klasses
       
     end
