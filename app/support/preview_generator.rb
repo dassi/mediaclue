@@ -5,8 +5,8 @@ class PreviewGenerator
 
   # TODO: Hier nicht doppelspurig fahren mit dem openoffice_server Script
   # Und den Pfad variabel halten, in constants
-  PIDFILE="#{OOO_HOME}/openoffice-headless.pid"
-  LOGFILE="#{OOO_HOME}/openoffice-headless.log"
+  PIDFILE="tmp/pids/openoffice-headless.pid"
+  LOGFILE="log/openoffice-headless.log"
                     
   attr_accessor :medium
   
@@ -20,9 +20,10 @@ class PreviewGenerator
         :identifier => 'OpenOffice server',
         :start_command => './script/openoffice_server start',
         :stop_command => './script/openoffice_server stop',
+        :start_timeout => 15,
         # :before_start => method(:before_start),
         :ping_command => './script/openoffice_server status',
-        :ping_interval => 5,
+        :ping_interval => 15,
         :pid_file => PIDFILE,
         :log_file => LOGFILE)
     

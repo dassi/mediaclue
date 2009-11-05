@@ -2,20 +2,24 @@
 # openoffice headless server script
 #
 OOO_HOME=/Applications/office/OpenOffice.org.app/Contents
-PIDFILE=$OOO_HOME/openoffice-headless.pid
-LOGFILE=$OOO_HOME/openoffice-headless.log
+THIS_PATH=`pwd`
+PIDFILE=$THIS_PATH/tmp/pids/openoffice-headless.pid
+LOGFILE=$THIS_PATH/log/openoffice-headless.log
 
 case "$1" in
 start)
 if [ -f $PIDFILE ] ; then
-ps -ef | grep -i soffice | grep -v grep > /dev/null
+ps -A | grep -i soffice | grep -v grep > /dev/null
 if [ $? -eq 0 ] ; then
 echo "OpenOffice headless is already running pid $(cat $PIDFILE)."
 exit
 fi
 fi
 echo "Starting OpenOffice headless server..."
-$OOO_HOME/program/soffice.bin -headless -nofirststartwizard -accept="socket,host=localhost,port=8100;urp;StarOffice.Service" & > $LOGFILE 2>&1
+
+# Change directory, needed on OSX
+cd $OOO_HOME/program
+./soffice.bin -headless -nofirststartwizard -accept="socket,host=localhost,port=8100;urp;StarOffice.Service" & > $LOGFILE 2>&1
 echo $! | tee $PIDFILE
 ;;
 
@@ -31,7 +35,7 @@ echo "No openoffice to stop."
 
 status)
 echo "Processes named soffice:"
-ps | grep -i soffice | grep -v grep
+ps -A | grep -i soffice | grep -v grep
 if [ -f $PIDFILE ] ; then
 echo "OpenOffice headless running pid $(cat $PIDFILE)."
 else
