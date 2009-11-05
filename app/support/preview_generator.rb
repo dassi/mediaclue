@@ -75,32 +75,32 @@ class PreviewGenerator
   end
 
 
-  def convert_document_cover_to_thumbnail(preview_name, size_string)
+  def convert_document_cover_to_thumbnail(preview_name, max_dimension)
     ensure_openoffice_ready
 
     filename = create_generated_filename(source_file, preview_name, 'jpg')
 
-    image_thumbnail = ImageThumbnail.new(:medium => @medium, :filename => filename, :name => preview_name.to_s)
+    image_thumbnail = ImageThumbnail.new(:medium => @medium, :filename => filename, :name => preview_name.to_s, :height => max_dimension, :width => max_dimension)
     generated_file = image_thumbnail.full_filename
     FileUtils.mkdir_p(File.dirname(generated_file))
     
     temp_pdf_file = create_pdf_temp_file
-    Bj.submit(image_resize_command(temp_pdf_file + '[0]', generated_file, size_string))
+    Bj.submit(image_resize_command(temp_pdf_file + '[0]', generated_file, max_dimension))
 
     image_thumbnail.save!
   end
 
 
   # Vereinfachte Variante von convert_document_cover_to_thumbnail für PDF
-  def convert_pdf_cover_to_thumbnail(preview_name, size_string)
+  def convert_pdf_cover_to_thumbnail(preview_name, max_dimension)
 
     filename = create_generated_filename(source_file, preview_name, 'jpg')
 
-    image_thumbnail = ImageThumbnail.new(:medium => @medium, :filename => filename, :name => preview_name.to_s)
+    image_thumbnail = ImageThumbnail.new(:medium => @medium, :filename => filename, :name => preview_name.to_s, :height => max_dimension, :width => max_dimension)
     generated_file = image_thumbnail.full_filename
     
     FileUtils.mkdir_p(File.dirname(generated_file))
-    Bj.submit image_resize_command(source_file + '[0]', generated_file, size_string)
+    Bj.submit image_resize_command(source_file + '[0]', generated_file, max_dimension)
 
     image_thumbnail.save!
   end
@@ -121,14 +121,14 @@ class PreviewGenerator
   end
 
   
-  def convert_image_to_thumbnail(preview_name, size_string)
+  def convert_image_to_thumbnail(preview_name, max_dimension)
 
     filename = create_generated_filename(source_file, preview_name, 'jpg')
-    image_thumbnail = ImageThumbnail.new(:medium => @medium, :filename => filename, :name => preview_name.to_s)
+    image_thumbnail = ImageThumbnail.new(:medium => @medium, :filename => filename, :name => preview_name.to_s, :height => max_dimension, :width => max_dimension)
     generated_file = image_thumbnail.full_filename
     
     FileUtils.mkdir_p(File.dirname(generated_file))
-    Bj.submit image_resize_command(source_file, generated_file, size_string)
+    Bj.submit image_resize_command(source_file, generated_file, max_dimension)
     
     image_thumbnail.save!
     
@@ -140,7 +140,9 @@ class PreviewGenerator
   end
 
   
-  def image_resize_command(source_file, generated_file, size_string)
+  def image_resize_command(source_file, generated_file, max_dimension)
+    size_string = "#{max_dimension}x#{max_dimension}>"
+
     "convert #{source_file} -resize \"#{size_string}\" #{generated_file}"
   end
 
@@ -192,20 +194,20 @@ class PreviewGenerator
     
     case @medium
     when Image
-      @generated_previews << convert_image_to_thumbnail('thumbnail', '85x85>') if all or preview_names.include?('thumbnail')
-      @generated_previews << convert_image_to_thumbnail('small', '150x150>') if all or preview_names.include?('small')
-      @generated_previews << convert_image_to_thumbnail('medium', '350x350>') if all or preview_names.include?('medium')
-      @generated_previews << convert_image_to_thumbnail('big', '800x800>') if all or preview_names.include?('big')
-      @generated_previews << convert_image_to_thumbnail('pdfslideshow', '1400x1400>') if all or preview_names.include?('pdfslideshow')
+      @generated_previews << convert_image_to_thumbnail('thumbnail', 85) if all or preview_names.include?('thumbnail')
+      @generated_previews << convert_image_to_thumbnail('small', 150) if all or preview_names.include?('small')
+      @generated_previews << convert_image_to_thumbnail('medium', 350) if all or preview_names.include?('medium')
+      @generated_previews << convert_image_to_thumbnail('big', 800) if all or preview_names.include?('big')
+      @generated_previews << convert_image_to_thumbnail('pdfslideshow', 1400) if all or preview_names.include?('pdfslideshow')
     when Document
       if @medium.pdf?
         @generated_previews << convert_pdf_to_flash_preview('normal')
-        @generated_previews << convert_pdf_cover_to_thumbnail('thumbnail', '85x85>') if all or preview_names.include?('thumbnail')
-        @generated_previews << convert_pdf_cover_to_thumbnail('medium', '350x350>') if all or preview_names.include?('medium')
+        @generated_previews << convert_pdf_cover_to_thumbnail('thumbnail', 85) if all or preview_names.include?('thumbnail')
+        @generated_previews << convert_pdf_cover_to_thumbnail('medium', 350) if all or preview_names.include?('medium')
       elsif not @medium.zip?
         @generated_previews << convert_document_to_flash_preview('flash_normal') if all or preview_names.include?('flash_normal')
-        @generated_previews << convert_document_cover_to_thumbnail('thumbnail', '85x85>') if all or preview_names.include?('thumbnail')
-        @generated_previews << convert_document_cover_to_thumbnail('medium', '350x350>') if all or preview_names.include?('medium')
+        @generated_previews << convert_document_cover_to_thumbnail('thumbnail', 85) if all or preview_names.include?('thumbnail')
+        @generated_previews << convert_document_cover_to_thumbnail('medium', 350) if all or preview_names.include?('medium')
       end
     end
     
