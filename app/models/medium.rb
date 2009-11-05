@@ -320,6 +320,9 @@ class Medium < ActiveRecord::Base
     if find_options[:conditions].is_a?(Hash)
       find_options[:conditions] = sanitize_sql_hash_for_conditions(find_options[:conditions])
     end
+
+    # MediaSet immer includen, weil da conditions durch die find_options reinkommen können
+    find_options[:include] = :media_sets
     
     all_found_media = self.find_with_ferret(query, options, find_options)
     
@@ -331,6 +334,10 @@ class Medium < ActiveRecord::Base
    
   # Sucht alle Medien auf welchen der user Leseberechtigung hat
   def self.find_all_for_user(user, find_options = {})
+
+    # MediaSet immer includen, weil da conditions durch die find_options reinkommen können
+    find_options[:include] = :media_sets
+
     all_found_media = self.find(:all, find_options)
     
     # Rechte prüfen, auf jedem gefundenen Medium

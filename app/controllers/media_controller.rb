@@ -10,10 +10,10 @@ class MediaController < ApplicationController
     find_options[:conditions] = {}
     find_options[:limit] = MAX_SEARCH_RESULTS
     
-    find_options[:conditions][:media] = {}
+    find_options[:conditions][:media_sets] = {}
     
     if search_query.my_media_only?
-      find_options[:conditions][:media][:owner_id] = current_user.id
+      find_options[:conditions][:media_sets][:owner_id] = current_user.id
     end
 
     if not search_query.all_media_types?
@@ -27,7 +27,7 @@ class MediaController < ApplicationController
     search_with_ferret = (not search_query.ferret_query.blank?)
 
     find_options_for_medium = find_options.dup
-    find_options_for_medium[:conditions].delete(:media_sets)
+    # find_options_for_medium[:conditions].delete(:media_sets)
     
     find_options_for_media_set = find_options.dup
     # find_options_for_media_set[:conditions].delete(:media)
@@ -39,20 +39,24 @@ class MediaController < ApplicationController
         
       media = Medium.find_with_ferret_for_user(search_query.ferret_query, current_user, ferret_options, find_options_for_medium)
       
-      if not search_query.my_media_only?
-        media_from_sets = MediaSet.find_media_with_ferret_for_user(search_query.ferret_query, current_user, ferret_options, find_options_for_media_set)
-      else
-        media_from_sets = []
-      end
+      media_from_sets = MediaSet.find_media_with_ferret_for_user(search_query.ferret_query, current_user, ferret_options, find_options_for_media_set)
+
+      # if not search_query.my_media_only?
+      #   media_from_sets = MediaSet.find_media_with_ferret_for_user(search_query.ferret_query, current_user, ferret_options, find_options_for_media_set)
+      # else
+      #   media_from_sets = []
+      # end
       
     else
       media = Medium.find_all_for_user(current_user, find_options_for_medium)
 
-      if not search_query.my_media_only?
-        media_from_sets = MediaSet.find_all_media_for_user(current_user, find_options_for_media_set)
-      else
-        media_from_sets = []
-      end
+      media_from_sets = MediaSet.find_all_media_for_user(current_user, find_options_for_media_set)
+
+      # if not search_query.my_media_only?
+      #   media_from_sets = MediaSet.find_all_media_for_user(current_user, find_options_for_media_set)
+      # else
+      #   media_from_sets = []
+      # end
       
     end
 
