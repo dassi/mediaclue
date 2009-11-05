@@ -5,8 +5,9 @@ class Document < Medium
                    'application/vnd.ms-powerpoint',
                    'application/zip',                               
                    # 'application/x-zip',
-                   'application/vnd.oasis.opendocument.text',
-                   'application/vnd.oasis.opendocument.spreadsheet']
+                   'application/vnd.oasis.opendocument.text',         # OpenOffice Text-Dokument
+                   'application/vnd.oasis.opendocument.spreadsheet',  # OpenOffice Tabellen-Dokument
+                   'application/x-shockwave-flash']
   
   def self.type_display_name
     "Dokument"
