@@ -1,6 +1,7 @@
 %h3
   Diashow von Bildern der Kollektion
   =h @media_set.caption
+  %span.explanation (Leertaste = Play/Pause&nbsp;&nbsp;&nbsp;Pfeiltasten = Vor/Zurück)
 - div_id = "mediaplayer"
 %div{:id => div_id}
 
@@ -14,7 +15,7 @@
   so.addVariable('shuffle', 'false');
   so.addVariable('repeat', 'list');
   so.addVariable('transition', 'slowfade');
-  so.addVariable('showicons', 'true');
+  so.addVariable('showicons', 'false');
   so.addVariable('shownavigation', 'true');
   // so.addVariable('overstretch', 'true');
   so.write('#{div_id}');
