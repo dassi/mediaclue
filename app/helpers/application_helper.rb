@@ -33,8 +33,10 @@ module ApplicationHelper
     content_tag('em', '[Vorschau nicht verfügbar]')
   end
   
-  def options_for_viewer
-    [['nur Besitzer', 'owner']].concat(@user_groups.collect {|g| ["Gruppe #{g.full_name.titlecase}", g.id]})
+  def options_for_user_group_select
+    groups = UserGroup.all.collect {|g| [g.full_name.titlecase, g.id]}
+
+    groups
   end
   
   # generiert eine id für html-elemente aus db-objekten

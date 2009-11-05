@@ -49,10 +49,29 @@
           =media_form.select :source, Medium::SOURCE_SELECTIONS
 
         -if current_user.is_owner_of?(form)
+          - group_permission_radio_button_id = "group_permission_radio_button_#{form.id}"
+          - groups_select_id = "groups_select_#{form.id}"
+
           .edit_media_viewers
-            Sichtbar für
-            %br
-            = media_form.select :viewers, options_for_viewer
+            %fieldset
+              %legend
+                Sichtbar für
+              = media_form.radio_button('permission_type', 'owner', :onclick => "$('#{groups_select_id}').hide()")
+              Nur Besitzer
+              &nbsp;
+              &nbsp;
+              = media_form.radio_button('permission_type', 'all', :onclick => "$('#{groups_select_id}').hide()")
+              Alle
+              &nbsp;
+              &nbsp;
+              = media_form.radio_button('permission_type', 'groups', :id => group_permission_radio_button_id, :onclick => "$('#{groups_select_id}').show()")
+              Diese Gruppen:
+              =# media_form.select :read_permitted_user_group_ids, options_for_user_group_select, {}, {:multiple => true, :style => 'vertical-align:top'}
+              -# Katastrophe! Rails hat den Bug, dass bei :multiple => true nur der stinknormale select_tag helper korrekte HTML-Namen vergibt. Die anderen Form-Helpers vergessen das [] anzuhängen
+              - hidden = form.permission_type != 'groups'
+              -# :onchange => "$('#{group_permission_radio_button_id}').checked = true"
+              = select_tag("media_set[media_attributes][#{form.id}][read_permitted_user_group_ids][]", options_for_select(options_for_user_group_select, form.read_permitted_user_group_ids), :multiple => true, :style => "vertical-align:top;#{'display:none' if hidden}", :size => 6, :id => groups_select_id)
+              
         
         - if FEATURE_METADATA
           - unless form.meta_data.blank?

@@ -19,7 +19,7 @@ class Medium < ActiveRecord::Base
   has_many :media_set_memberships, :dependent => :destroy
   has_many :media_sets, :through => :media_set_memberships
                                                  
-  has_many :user_group_permissions, :dependent => :destroy
+  has_many :user_group_permissions, :dependent => :destroy, :autosave => true
   has_many :read_permitted_user_groups, :through => :user_group_permissions, :source => :user_group, :conditions => {:user_group_permissions => {:read => true}}
   has_many :write_permitted_user_groups, :through => :user_group_permissions, :source => :user_group, :conditions => {:user_group_permissions => {:write => true}}
 
@@ -106,7 +106,7 @@ class Medium < ActiveRecord::Base
   public ##########################################################################################
 
 
-  ##### BEGIN Kopiert von AttachmentFu. Braucht Überarbeitung #####################################
+  ##### BEGIN Attachment-Code. Braucht Überarbeitung #####################################
 
   # Copies the given file path to a new tempfile, returning the closed tempfile.
   def self.copy_to_temp_file(file, temp_base_name)
@@ -178,12 +178,6 @@ class Medium < ActiveRecord::Base
   end
 
 
-  # # Gets the data from the latest temp file.  This will read the file into memory.
-  # def temp_data
-  #   save_attachment? ? File.read(temp_path) : nil
-  # end
-
-
   # Copies the given file to a randomly named Tempfile.
   def copy_to_temp_file(file)
     self.class.copy_to_temp_file file, random_tempfile_filename
@@ -222,19 +216,6 @@ class Medium < ActiveRecord::Base
     logger.info "Exception destroying  #{full_filename.inspect}: [#{$!.class.name}] #{$1.to_s}"
     logger.warn $!.backtrace.collect { |b| " > #{b}" }.join("\n")
   end
-
-
-  # # Renames the given file before saving
-  # def rename_file
-  #   return unless @old_filename && @old_filename != full_filename
-  #   if save_attachment? && File.exists?(@old_filename)
-  #     FileUtils.rm @old_filename
-  #   elsif File.exists?(@old_filename)
-  #     FileUtils.mv @old_filename, full_filename
-  #   end
-  #   @old_filename =  nil
-  #   true
-  # end
 
   
   # Saves the file to the file system
@@ -310,7 +291,7 @@ class Medium < ActiveRecord::Base
   end
   
 
-  ##### END Kopiert von AttachmentFu. #################################################
+  ######################################################
 
   
   # Sucht Medien via Ferret, auf welchen der user Leseberechtigung hat
@@ -355,8 +336,7 @@ class Medium < ActiveRecord::Base
   end
   
   def self.class_by_content_type(content_type)
-    self.sub_classes.each { |sub_class| return sub_class if sub_class::CONTENT_TYPES.include? content_type }
-    nil
+    self.sub_classes.detect{ |sub_class| sub_class::CONTENT_TYPES.include?(content_type) }
   end
 
   # Liefert weitere erlaubte Dateiendungen. Für den Fall das die MIME-Library nicht ganz aktuell ist.
@@ -425,47 +405,17 @@ class Medium < ActiveRecord::Base
     media_sets.find :all, :conditions => {:state => 'defined'}
   end
   
-  # Viewers von Form
-  # TODO: Es tönt hier nach Mehrzahl "viewers", ist es aber nicht. So machen, dass es mehrere sein können!
-  def viewers=(allowed_viewers)
-
-# TODO
-
-# #    is_public = false
-#     
-#     # Alle "viewer" Rollen entfernen
-#     has_viewers.each { |viewer| accepts_no_role 'viewer', viewer }
-#     
-#     case allowed_viewers[0,5]
-# #    when 'owner'
-#       # Alle Viewer-Rollen entfernen
-# #      has_viewers.each { |viewer| accepts_no_role 'viewer', viewer }
-#       
-# #    when 'other'
-# #      is_public = true
-#       
-#     when 'group'
-#       group_id = allowed_viewers.split('-').last
-#       group = UserGroup.find(group_id)
-#       accepts_role 'viewer', group if group
-#     end
-#     
-#     nil
+  # Gibt in lesbarer Form die Leserechte zurück
+  def read_permissions_description
+    case self.permission_type
+    when 'all'
+      'Alle'
+    when 'owner'
+      'Nur Besitzer'
+    when 'groups'
+      self.read_permitted_user_groups.collect(&:full_name).join(', ')
+    end
   end
-    
-  # Viewers für Form
-  def viewers
-    # TODO umschreiben nach read_permitted_groups
-    # has_viewers.collect { |v| v.is_a?(UserGroup) ? "group-#{v.id}" : "owner" }.first
-  end
-
-  # Namen berechtigten Viewers (Besitzer, Gruppen, oder alle)
-  def viewer_names
-    # TODO umschreiben mit read_permitted_groups etc.
-    # result = has_viewers.collect { |viewer| (viewer.is_a?(UserGroup) ? 'Gruppe ' : '') + viewer.full_name.titlecase }.join(', ')
-    # result = 'nur Besitzer' if result.empty?
-    # result
-  end  
 
   def self.type_display_name
     "Medium"
@@ -489,12 +439,17 @@ class Medium < ActiveRecord::Base
     @tag_names ||= tags.to_s
   end
 
-  # def original_file_extension
-  #   File.extension(original_filename)
-  # end
-  
   def can_view?(user)
-    (self.owner == user) or (self.read_permitted_user_groups.any? { |g| g.member?(user) })
+    case self.permission_type
+    when 'all'
+      true
+    when 'owner'
+      (self.owner == user)
+    when 'groups'
+      (self.owner == user) || (self.read_permitted_user_groups.any? { |g| g.member?(user) })
+    else
+      false
+    end
   end
 
   def can_edit?(user)
@@ -520,6 +475,23 @@ class Medium < ActiveRecord::Base
   
   def recreate_previews
     self.create_previews_offloaded
+  end
+
+  
+  # Spezialisierter Setter
+  def read_permitted_user_group_ids=(ids)
+  
+    # TODO! Wenn einmal auch write-Permissions tatsächlich verwendet werden, dann ist diese Funktion nicht mehr korrekt
+    # Dann müsste man statt blanko löschen, jeden einzelnen Eintrag suchen updaten, und restliche löschen, oder so ähnlich
+    
+    self.user_group_permissions.clear
+
+    if ids && ids.any?
+      for group_id in ids
+        self.user_group_permissions.build(:user_group_id => group_id.to_i, :read => true)
+      end
+    end
+    
   end
   
 end

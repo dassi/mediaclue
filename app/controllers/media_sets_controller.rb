@@ -120,7 +120,7 @@ class MediaSetsController < ApplicationController
     permit :edit, @media_set do
       @media_set.define! unless @media_set.media.empty?
       @media = @media_set.media_for_user_as_owner(current_user)
-      @user_groups = UserGroup.find :all
+      # @user_groups = UserGroup.find :all
     end
   end
 
@@ -134,7 +134,7 @@ class MediaSetsController < ApplicationController
         flash[:notice] = 'Kollektion erfolgreich erstellt.'
         format.html { redirect_to(@media_set) }
       else
-        @user_groups = UserGroup.find :all
+        # @user_groups = UserGroup.find :all
         format.html { render :action => "new" }
       end
     end
@@ -168,7 +168,7 @@ class MediaSetsController < ApplicationController
             redirect_to(@media_set) 
           }
         else
-          @user_groups = UserGroup.find :all
+          # @user_groups = UserGroup.find :all
           format.html { 
             render :action => 'edit'
           }
@@ -185,7 +185,10 @@ class MediaSetsController < ApplicationController
       @media_set.destroy
 
       respond_to do |format|
-        format.html { redirect_to(media_sets_url) }
+        format.html do
+          flash[:notice] = 'Kollektion gelöscht'
+          redirect_to(media_sets_url)
+        end
   #       format.xml  { head :ok }
       end
     end
@@ -463,7 +466,9 @@ class MediaSetsController < ApplicationController
     # pseudo-Attribute für Vererbung müssen aus params entfernt werden, auch wenn keine Medien im Set,
     # da keine setter-Methode im MediaSet-Model vorhanden
     media_set_source  = media_set_params.delete(:source)
-    media_set_viewers = media_set_params.delete(:viewers)
+    # media_set_viewers = media_set_params.delete(:viewers)
+    media_set_permission_type = media_set_params.delete(:permission_type)
+    media_set_read_permitted_user_group_ids = media_set_params.delete(:read_permitted_user_group_ids)
 
     media_attributes = media_set_params[:media_attributes]
     return params if media_attributes.blank?
@@ -473,7 +478,8 @@ class MediaSetsController < ApplicationController
 
     media_attributes.each do |k, m| 
       m[:source] = media_set_source if not media_set_source.blank?
-      m[:viewers] = media_set_viewers if not media_set_viewers.blank?
+      m[:permission_type] = media_set_permission_type if not media_set_permission_type.blank?
+      m[:read_permitted_user_group_ids] = media_set_read_permitted_user_group_ids if not media_set_read_permitted_user_group_ids.blank?
                                                
       if not media_set_tag_names.blank?
         case params[:inherit_tags]

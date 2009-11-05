@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091023165257) do
+ActiveRecord::Schema.define(:version => 20091105132230) do
 
   create_table "bj_config", :primary_key => "bj_config_id", :force => true do |t|
     t.text "hostname"
@@ -80,10 +80,10 @@ ActiveRecord::Schema.define(:version => 20091023165257) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "original_filename"
-    t.boolean  "is_public"
     t.string   "source"
     t.text     "meta_data"
     t.integer  "owner_id"
+    t.string   "permission_type",   :default => "owner"
   end
 
   create_table "media_set_memberships", :force => true do |t|

@@ -130,8 +130,8 @@ describe MediaSetsController, "parameter inheritance" do
   
   before(:each) do
     @params = { :media_set => { :source => "dummy", 
-                                :media_attributes => { :'1' => { :source => nil, :viewers => nil },
-                                                       :'2' => { :source => nil, :viewers => nil },
+                                :media_attributes => { :'1' => { :source => nil, :permission_type => nil },
+                                                       :'2' => { :source => nil, :permission_type => nil },
                                                      }
                               }
               }
@@ -172,20 +172,20 @@ describe MediaSetsController, "parameter inheritance" do
     inherited_params[:media_set][:media_attributes][:'2'][:source].should eql("inherited value")
   end
 
-  it "should replace viewers params on medias if nil" do
-    @params[:media_set][:viewers] = "inherited value"
+  it "should replace permission_type params on medias if nil" do
+    @params[:media_set][:permission_type] = "inherited value"
     inherited_params = controller.send(:inherit_media_params_from_media_set)
-    inherited_params[:media_set][:media_attributes][:'1'][:viewers].should eql("inherited value")
-    inherited_params[:media_set][:media_attributes][:'2'][:viewers].should eql("inherited value")
+    inherited_params[:media_set][:media_attributes][:'1'][:permission_type].should eql("inherited value")
+    inherited_params[:media_set][:media_attributes][:'2'][:permission_type].should eql("inherited value")
   end
 
-  it "should replace undefined viewers params on medias" do
-    @params[:media_set][:viewers] = "inherited value"
-    @params[:media_set][:media_attributes][:'1'][:viewers] = ''
-    @params[:media_set][:media_attributes][:'2'][:viewers] = ''
+  it "should replace undefined permission_type params on medias" do
+    @params[:media_set][:permission_type] = "inherited value"
+    @params[:media_set][:media_attributes][:'1'][:permission_type] = ''
+    @params[:media_set][:media_attributes][:'2'][:permission_type] = ''
     inherited_params = controller.send(:inherit_media_params_from_media_set)
-    inherited_params[:media_set][:media_attributes][:'1'][:viewers].should eql("inherited value")
-    inherited_params[:media_set][:media_attributes][:'2'][:viewers].should eql("inherited value")
+    inherited_params[:media_set][:media_attributes][:'1'][:permission_type].should eql("inherited value")
+    inherited_params[:media_set][:media_attributes][:'2'][:permission_type].should eql("inherited value")
   end
 
   # it "should _NOT_ overwrite already defined viewers params on medias" do
@@ -197,14 +197,26 @@ describe MediaSetsController, "parameter inheritance" do
   #   inherited_params[:media_set][:media_attributes][:'2'][:viewers].should eql("old value 2")
   # end
 
-  it "should overwrite already defined viewers params on medias" do
-    @params[:media_set][:viewers] = "inherited value"
-    @params[:media_set][:media_attributes][:'1'][:viewers] = "old value 1"
-    @params[:media_set][:media_attributes][:'2'][:viewers] = "old value 2"
+  it "should overwrite already defined permission_type params on medias" do
+    @params[:media_set][:permission_type] = "inherited value"
+    @params[:media_set][:media_attributes][:'1'][:permission_type] = "old value 1"
+    @params[:media_set][:media_attributes][:'2'][:permission_type] = "old value 2"
     inherited_params = controller.send(:inherit_media_params_from_media_set)
-    inherited_params[:media_set][:media_attributes][:'1'][:viewers].should eql("inherited value")
-    inherited_params[:media_set][:media_attributes][:'2'][:viewers].should eql("inherited value")
+    inherited_params[:media_set][:media_attributes][:'1'][:permission_type].should eql("inherited value")
+    inherited_params[:media_set][:media_attributes][:'2'][:permission_type].should eql("inherited value")
   end
+
+
+  it "should replace read_permitted_user_group_ids params on medias if nil" do
+    inherited_value = [1,2]
+    @params[:media_set][:read_permitted_user_group_ids] = inherited_value
+    inherited_params = controller.send(:inherit_media_params_from_media_set)
+    inherited_params[:media_set][:media_attributes][:'1'][:read_permitted_user_group_ids].should eql(inherited_value)
+    inherited_params[:media_set][:media_attributes][:'2'][:read_permitted_user_group_ids].should eql(inherited_value)
+  end
+
+
+
 
   it "should inherit subject tags from media_set to medias, if option is set to 'subjects'" do
     tags_from_media_set =  'tags for, media_set; "Bildnerisches Gestalten" Chemie'

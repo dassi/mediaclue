@@ -10,7 +10,7 @@
     - label_and_values << ['Schlagworte', formatted_tag_list(@medium)]
     - label_and_values << ['Besitzer', @medium.owner_name || no_data_text]
     - label_and_values << ['Quelle/Copyright', @medium.formatted_source || no_data_text]
-    - label_and_values << ['Sichtbar für', @medium.viewer_names]
+    - label_and_values << ['Sichtbar für', @medium.read_permissions_description]
     - label_and_values << ['Originaler Dateiname', @medium.original_filename]
     - label_and_values << ['Abmessungen', @medium.dimensions] if @medium.respond_to? :dimensions
     - label_and_values << ['Format', @medium.format]

@@ -44,27 +44,35 @@
     %br
     = f.text_field 'sort_path'
 
+  %br
   - field_set_tag 'Schnell-Zuweisungen für alle Medien' do
     %span.explanation Diese Einstellungen werden beim Speichern für alle Medien dieser Kollektion übernommen, können nachträglich aber auch pro Medium abgeändert werden.
-    %p
-      %label{:for => 'source'} 
-        Quelle/Copyright 
-      %br
-      = select_tag 'media_set[source]', options_from_collection_for_select([['', nil]].concat(Medium::SOURCE_SELECTIONS), :last, :first, nil)
-    %p
-      %label{:for => 'source'} 
-        Sichtbar für
-      %br
-      = select_tag 'media_set[viewers][]', options_from_collection_for_select([['', nil]].concat(options_for_viewer), :last, :first, nil)
-    %p
-      Schlagworte kopieren aus der Kollektion:
-      %br
-      = radio_button_tag('inherit_tags', 'none')
-      Keine
-      &nbsp;&nbsp;
-      = radio_button_tag('inherit_tags', 'subjects', true)
-      Nur Fach-Schlagworte
-      &nbsp;&nbsp;
-      = radio_button_tag('inherit_tags', 'all')
-      Alle Schlagworte
+    %table.list
+      %tr
+        %td Quelle/Copyright:&nbsp;
+        %td= select_tag 'media_set[source]', options_from_collection_for_select([['', nil]].concat(Medium::SOURCE_SELECTIONS), :last, :first, nil)
+      %tr
+        %td Sichtbar für:
+        %td
+          = radio_button_tag('media_set[permission_type]', 'owner')
+          Nur Besitzer
+          &nbsp;&nbsp;
+          = radio_button_tag('media_set[permission_type]', 'all')
+          Alle
+          &nbsp;&nbsp;
+          = radio_button_tag('media_set[permission_type]', 'groups', false, :id => 'media_set_group_permission_radio_button')
+          Diese Gruppen:
+          - options = options_for_user_group_select
+          = select_tag("media_set[read_permitted_user_group_ids][]", options_for_select(options), :multiple => true, :style => "vertical-align:top", :size => [6, options.size].min, :onchange => "$('media_set_group_permission_radio_button').checked = true")
+      %tr
+        %td Schlagworte aus Kollektion hinzufügen:
+        %td
+          = radio_button_tag('inherit_tags', 'none')
+          Keine
+          &nbsp;&nbsp;
+          = radio_button_tag('inherit_tags', 'subjects', true)
+          Nur Fach-Schlagworte
+          &nbsp;&nbsp;
+          = radio_button_tag('inherit_tags', 'all')
+          Alle Schlagworte
   

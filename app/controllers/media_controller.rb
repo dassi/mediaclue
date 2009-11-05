@@ -118,7 +118,7 @@ class MediaController < ApplicationController
     @medium = Medium.find params[:id]
     permit :edit, @medium do
       @tag_string  = @medium.tag_names
-      @user_groups = UserGroup.find :all    
+      # @user_groups = UserGroup.find :all    
     end
   end  
 
@@ -131,7 +131,7 @@ class MediaController < ApplicationController
         flash[:notice] = 'Medium wurde erfolgreich erstellt.'
         format.html { redirect_to @medium }
       else
-        @user_groups = UserGroup.find :all
+        # @user_groups = UserGroup.find :all
         format.html { render :action => "new" }
       end
     end
@@ -157,7 +157,7 @@ class MediaController < ApplicationController
               end
             end
           else
-            @user_groups = UserGroup.find :all
+            # @user_groups = UserGroup.find :all
             format.html { render :action => "edit" }
           end
         end
@@ -172,7 +172,10 @@ class MediaController < ApplicationController
       @medium.destroy
 
       respond_to do |format|
-        format.html { redirect_to media_sets_url }
+        format.html do
+          flash[:notice] = 'Medium gelöscht'
+          redirect_to media_sets_url
+        end
       end
     end
   end
