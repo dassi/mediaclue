@@ -36,6 +36,6 @@
       %li= link_to('Ansicht "Leuchtpult gross"', media_set_path(@media_set, :style => 'lightbox', :size => 'big'))
       %br
     -if @composing_media_set
-      %li= link_to 'Sammelkollektion als neue Kollektion speichern', edit_media_set_path(@composing_media_set)
+      %li= link_to 'Zwischenablage als neue Kollektion speichern', edit_media_set_path(@composing_media_set)
 
   =render :partial => 'media_sets/collection_box', :object => @composing_media_set if @composing_media_set

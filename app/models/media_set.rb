@@ -54,7 +54,7 @@ class MediaSet < ActiveRecord::Base
   state :created        # "Erzeugt"
   state :uploading      # "Aktuelle Hochlade Kollektion"
   state :search_result  # "Letztes Suchergebnis"
-  state :composing      # "Sammelkollektion"
+  state :composing      # "Zwischenablage"
   state :owning         # "Meine Medien"
   state :defining       # "noch zu vervollständigen"
   state :defined        # "Vollständig definiert, alles OK"
@@ -152,7 +152,7 @@ class MediaSet < ActiveRecord::Base
       when 'uploading'
         caption = 'Aktuelle Hochlade-Kollektion' + state_name_postfix
       when 'composing'
-        caption = 'Sammelkollektion' + state_name_postfix
+        caption = 'Zwischenablage' + state_name_postfix
       when 'search_result'
         caption = 'Letztes Suchresultat'
       when 'owning'

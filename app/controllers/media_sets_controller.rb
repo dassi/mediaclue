@@ -354,7 +354,7 @@ class MediaSetsController < ApplicationController
     if permit?(:edit, media_set)
       added_media = add_media_to_media_set(media_set, media)
 
-      # OPTIMIZE: Unschön, dass hier die JS-Repsonse mit der Funktion "Zu Sammelkollektion" fix verbunden ist. Man kann eben auch in andere MediaSet adden.
+      # OPTIMIZE: Unschön, dass hier die JS-Repsonse mit der Funktion "Zu Zwischenablage" fix verbunden ist. Man kann eben auch in andere MediaSet adden.
       respond_to do |format|
         format.js do
           render :update do |page|

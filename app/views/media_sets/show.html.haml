@@ -66,7 +66,7 @@
 
       -if @media_set.defined? or @media_set.defining?
         %li= link_to 'Weitere Medien in diese Kollektion hochladen', uploader_media_set_path(@media_set) 
-        %li= link_to 'Diese Kollektion zur Sammelkollektion machen', set_collection_media_set_path(@media_set) 
+        %li= link_to 'Diese Kollektion zur Zwischenablage machen', set_collection_media_set_path(@media_set) 
 
   %h3 Download
   %ul
@@ -88,11 +88,11 @@
     -#ditto: %li= link_to_remote('...zu anderer Kollektion hinzufügen', :url => add_media_media_set_path(@media_set), :submit => 'multi_action_form', :confirm => "Selektierte Medien wirklich aus dieser Kollektion entfernen (Medien selbst werden nicht gelöscht)?")
 
     - if @composing_media_set and !@media_set.composing?
-      %li= link_to_remote('...zur Sammelkollektion hinzufügen', :url => add_media_media_set_path(@composing_media_set), :submit => 'multi_action_form')
-      %li= link_to_remote('...in Sammelkollektion verschieben', :url => move_media_media_set_path(@media_set, :target_media_set_id => @composing_media_set), :submit => 'multi_action_form')
+      %li= link_to_remote('...zur Zwischenablage hinzufügen', :url => add_media_media_set_path(@composing_media_set), :submit => 'multi_action_form')
+      %li= link_to_remote('...in Zwischenablage verschieben', :url => move_media_media_set_path(@media_set, :target_media_set_id => @composing_media_set), :submit => 'multi_action_form')
 
   - if @composing_media_set and !@media_set.composing?
-    %h3 Sammelkollektion
+    %h3 Zwischenablage
     %ul
       %li= link_to 'Als Kollektion speichern', edit_media_set_path(@composing_media_set)
       %li= link_to 'Zur aktuellen Kollektion hinzufügen', merge_media_set_path(@media_set, :source_media_set_id => @composing_media_set)

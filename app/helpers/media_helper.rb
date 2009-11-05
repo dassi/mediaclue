@@ -18,11 +18,11 @@ module MediaHelper
   end
     
   def medium_add_to_collection_button(collection_media_set, medium)
-    link_to_remote image_tag('plus.gif', :class => 'icon'), {:url => add_media_media_set_path(collection_media_set, :medium_id => medium), :method => :put}, {:title => 'Medium der Sammelkollektion hinzufügen'} if collection_media_set
+    link_to_remote image_tag('plus.gif', :class => 'icon'), {:url => add_media_media_set_path(collection_media_set, :medium_id => medium), :method => :put}, {:title => 'Medium der Zwischenablage hinzufügen'} if collection_media_set
   end
     
   def medium_remove_from_collection_button(collection_media_set, medium, options = {})
-    link_to_remote image_tag('minus.gif', :class => 'icon'), {:url => remove_media_media_set_path(collection_media_set, options.merge(:medium_id => medium)), :method => :put, :confirm => "Medium '#{medium.name}' wirklich entfernen?"}, {:title => 'Medium aus der Sammelkollektion entfernen'}
+    link_to_remote image_tag('minus.gif', :class => 'icon'), {:url => remove_media_media_set_path(collection_media_set, options.merge(:medium_id => medium)), :method => :put, :confirm => "Medium '#{medium.name}' wirklich entfernen?"}, {:title => 'Medium aus der Zwischenablage entfernen'}
   end
   
   def medium_remove_from_set_button(member_media_set, medium)
