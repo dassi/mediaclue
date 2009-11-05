@@ -50,14 +50,6 @@ class Medium < ActiveRecord::Base
   after_attachment_saved :import_meta_data if FEATURE_METADATA
     
   
-  # Auswahl für Quelle/Copytright
-  # TODO: Als Model License auslagern
-  SOURCE_SELECTIONS = [
-    ['Unbekannt', 'unknown'],
-    ['Netzklau (nur für persönlichen Gebrauch)', 'personal'],
-    ['Schulcopyright (offiziell für Schulzwecke lizensiert)', 'school'],
-    ['Frei (Creative Commons Licence)', 'free']
-  ]
 
   protected #######################################################################################
 
@@ -391,7 +383,7 @@ class Medium < ActiveRecord::Base
 
   # Quelle in verständlichem Text
   def formatted_source
-    source_selection = Medium::SOURCE_SELECTIONS.find {|s| s.last == self.source }
+    source_selection = MEDIUM_SOURCES.find {|s| s.last == self.source }
     source_selection.try(:first)
   end
   

@@ -46,7 +46,7 @@
         .edit_media_source
           Quelle/Copyright
           %br
-          =media_form.select :source, Medium::SOURCE_SELECTIONS
+          =media_form.select :source, MEDIUM_SOURCES, :include_blank => true
 
         -if current_user.is_owner_of?(form)
           - group_permission_radio_button_id = "group_permission_radio_button_#{form.id}"

@@ -39,6 +39,16 @@ SUBJECT_SELECTIONS = [
 'Theater'
 ]
 
+# Auswahl für Quelle/Copyright
+# TODO: Evt. als Model License auslagern
+MEDIUM_SOURCES = [
+  ['Unbekannt', 'unknown'],
+  ['Netzklau (nur für persönlichen Gebrauch)', 'personal'],
+  ['Schulcopyright (offiziell für Schulzwecke lizensiert)', 'school'],
+  ['Frei (Creative Commons Licence)', 'free']
+]
+
+
 JUMPLOADER_VERSION = [2, 12, 8]
 
 # Meta-Daten extrahieren und darstellen?

@@ -50,7 +50,7 @@
     %table.list
       %tr
         %td Quelle/Copyright:&nbsp;
-        %td= select_tag 'media_set[source]', options_from_collection_for_select([['', nil]].concat(Medium::SOURCE_SELECTIONS), :last, :first, nil)
+        %td= select_tag 'media_set[source]', options_from_collection_for_select([['', nil]].concat(MEDIUM_SOURCES), :last, :first, nil)
       %tr
         %td Sichtbar für:
         %td
