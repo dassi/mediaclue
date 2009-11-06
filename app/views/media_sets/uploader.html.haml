@@ -1,14 +1,3 @@
--# OPTIMIZE: uploaderFileAdded is only used as a workaround, because appletInitialized doesn't seem to work reliable (on Safari)
-:javascript
-  function appletInitialized(applet) {
-    setAuthenticityToken(applet, "#{@authenticity_token}");
-    setPostAttribute("importMetadata", "1", applet);
-  }
-
-  function uploaderFileAdded(uploader, file) {
-    appletInitialized(uploader);
-  }
-
 %h1
   Medien hochladen
   - if @media_set.defined?
@@ -17,6 +6,8 @@
   %span{:style => 'float:right', :class => 'smalltext'}
     = link_to_function 'Hilfe anzeigen' do |page|
       - page.visual_effect(:toggle_blind, 'help', :duration => 0.5)
+
+-# =link_to_function 'Test', 'setPostAttribute("test_var", "abc");'
 
 #help{:style => 'display: none'}
   %p 
@@ -33,9 +24,9 @@
   %p Zur Zeit können Sie Medien in den folgenden Formaten hochladen:
   %ul
     %li Bilder: GIF, PNG, JPEG, TIFF
-    %li Audio-Clips: MP3
+    %li Audio-Clips: MP3, M4A, WAV
     %li Video-Clips: Quicktime MOV, Flash FLV
-    %li Dokumente: ZIP, PDF, DOC, XLS, PPT
+    %li Dokumente: ZIP, PDF, Word, Excel, PowerPoint, OpenOffice
 
   %h2 Dateien hochladen
   Ziehen Sie Dateien oder einen Ordner in den Upload-Bereich ("Dateien hier her ziehen"). Die Dateien erscheinen als Vorschau. Drücken Sie dann den Hochlade-Knopf (Pfeil nach oben)
@@ -48,16 +39,20 @@
 
 
 - jar_file = "jumploader_z-#{JUMPLOADER_VERSION.join('_')}.jar"
-- post_url = "#{public_url}#{upload_media_set_path(@media_set, :format => :js)}"
+-# post_url = "#{public_url}#{upload_media_set_path(@media_set, :format => :js)}"
+- post_url = "#{upload_media_set_path(@media_set, :format => :js)}"
 
-%object{ :id => 'jumpLoaderApplet', :classid => 'java:jmaster.jumploader.app.JumpLoaderApplet.class', :type => 'application/x-java-applet', :width => '100%', :height => 440}
-  %param{:name => 'codebase', :value => "#{public_url}/applets/" }/
-  %param{:name => 'archive', :value => "#{JUMPLOADER_TRANSLATIONS_ZIP},#{jar_file}" }/
-  %param{:name => 'mayscript', :value => 'true' }/
+/ %object{:name => 'jumpLoaderApplet', :id => 'jumpLoaderApplet', :classid => 'java:jmaster.jumploader.app.JumpLoaderApplet.class', :type => 'application/x-java-applet', :width => '100%', :height => 440}
+/   %param{:name => 'codebase', :value => "#{public_url}/applets/" }/
+/   %param{:name => 'archive', :value => "#{JUMPLOADER_TRANSLATIONS_ZIP},#{jar_file}" }/
+/   %param{:name => 'mayscript', :value => 'true' }/
+
+-# mayscript ist sehr wichtig! Das ist die Aktivierung von LiveConnect (Java/JavaScript Bridge). Funktioniert nicht auf allen Browsern ganz gleich. Best aber mit "true"
+%applet{:name => 'jumpLoaderApplet', :code => 'jmaster.jumploader.app.JumpLoaderApplet.class', :width => '100%', :height => 440, :archive => "/applets/#{jar_file},/applets/#{JUMPLOADER_TRANSLATIONS_ZIP}", :mayscript => 'true'}
 
   %param{:name => 'ac_mode', :value => 'embedded' }/
   %param{:name => 'ac_fireAppletInitialized', :value => 'true' }/
-  %param{:name => 'ac_fireUploaderFileStatusChanged', :value => 'true' }/
+  / %param{:name => 'ac_fireUploaderFileStatusChanged', :value => 'true' }/
   %param{:name => 'ac_fireUploaderFileAdded', :value => 'true' }/
   -#%param{:name => 'ac_fireUploaderStatusChanged', :value => 'true' }/
 
@@ -69,18 +64,18 @@
   %param{:name => 'uc_partitionLength', :value => 1024**3 }/
   %param{:name => 'uc_directoriesEnabled', :value => 'true' }/
   %param{:name => 'uc_fileNamePolicy', :value => 'name' }/                                                                                                                 
-  
+
   -# Man könnte die Option useJMimeMagic verwenden, dieses detektiert allerdings sehr unvollständig.
   -# Z.B. habe ich MP3 Files und M4A Files die als content/unknown gelten! Fazit: Option zur Zeit nicht brauchbar
   -# mime_pattern = '^' + Medium.all_media_content_types.collect { |mt| "(#{Regexp::escape(mt)})" }.join('|') + '$'
   -#%param{:name => "uc_mimeTypePattern", :value => mime_pattern }/    
   -#%param{:name => "uc_useJMimeMagic", :value => 'true' }/
-  
+
   -# Filetyp-Filter anhand Dateiendung:
   - pattern = "^.+\.(#{@allowed_upload_extensions.collect {|e| ["(#{e.to_s})", "(#{e.to_s.upcase})"] }.flatten.join('|')})$"
   %param{:name => "uc_fileNamePattern", :value => pattern }/
   %param{:name => "vc_fileNamePattern", :value => pattern }/
-  
+
   - if MAX_FILE_SIZE
     %param{:name => 'uc_maxFileLength', :value => MAX_FILE_SIZE }/
 
@@ -96,12 +91,98 @@
   - if LOCAL_DEVELOPMENT
     %param{:name => 'gc_loggingLevel', :value => "DEBUG" }/
 
+
+-# OPTIMIZE: uploaderFileAdded is only used as a workaround, because appletInitialized doesn't seem to work reliable (on Safari)
+:javascript
+  function appletInitialized(applet) {
+    setAuthenticityToken(applet, "#{@authenticity_token}");
+    setPostAttribute("importMetadata", "1", applet);
+  }
+
+  function uploaderFileAdded(uploader, file) {
+    appletInitialized(uploader);
+  }
+
+  /* function uploaderFileStatusChanged( uploader, file )
+  {
+    var response = file.getResponseContent();
+    if (response)
+    {
+      window.eval(String.interpret(response));
+    }
+  } */
+
+  function setAuthenticityToken(applet, authenticity_token)
+  {
+    setPostAttribute("authenticity_token", authenticity_token, applet);
+  }
+
+  function setPostAttribute(attributeName, value, uploader) {
+    if (uploader === undefined || uploader === null) {
+      uploader = document.jumpLoaderApplet.getUploader();
+    }
+    var attrSet = uploader.getAttributeSet();
+    var attr = attrSet.createStringAttribute(attributeName, value);
+    attr.setSendToServer(true);
+  }
+
+  /**
+   * dump attributes of uploader into html
+   */
+  function dumpAttributes( attrSet, removeFunctionName ) {
+    var n = attrSet.getAttributeCount();
+    var content = "";
+    if( n > 0 ) {
+      content = "<table class='dataTableInner'>";
+      content += "<tr>" +
+        "<td class='dataColumnHeader'>#<\/td>" +
+        "<td class='dataColumnHeader'>Name<\/td>" +
+        "<td class='dataColumnHeader'>Value<\/td>" +
+        "<td class='dataColumnHeader'>Send<\/td>" +
+        "<td class='dataColumnHeader'>Action<\/td>" +
+        "<\/tr>";
+      for( i = 0; i < n; i++ ) {
+        var attr = attrSet.getAttributeAt( i );
+        content += "<tr class='dataRow" + ( i % 2 == 0 ? "Even" : "Odd" ) + "'>";
+        content += "<td class='dataRownum'>" + ( i + 1 ) + "<\/td>";
+        content += "<td class='dataText'>" + attr.getName() + "<\/td>";
+        content += "<td class='dataText'>" + attr.getStringValue() + "<\/td>";
+        content += "<td class='dataText'>" + attr.isSendToServer() + "<\/td>";
+        content += "<td class='dataText'><a href='javascript:" +
+          removeFunctionName + "(" + i + ")'>remove<\/a><\/td>";
+        content += "<\/tr>";
+      }
+      content += "<\/table>";
+    } else {
+      content = "No attributes";
+    }
+    return content;
+  }
+
+  /**
+   * dump attributes of uploader into html
+   */
+  function dumpUploaderAttributes() {
+    var uploader = document.jumpLoaderApplet.getUploader();
+    var attrSet = uploader.getAttributeSet();
+    var content = dumpAttributes( attrSet, "removeUploaderAttribute" );
+    document.getElementById( "uploaderAttributes" ).innerHTML = content;
+   }
+
 - if FEATURE_METADATA
   = check_box_tag 'metadata_import', '1', true, :onclick => 'setPostAttribute("importMetadata", this.checked ? this.value : null)'
   Metadaten (EXIF etc.) importieren
 
+.right
+  =link_to_function 'Jumploader-Info', 'alert(document.jumpLoaderApplet.getAppletInfo())'
+  
+
 %br
 %br
+
+/ =link_to_function 'Refresh', 'dumpUploaderAttributes()'
+/ #uploaderAttributes
+
 -if @media_set.defined?
   %h2
     Medien werden in bestehende Kollektion hochgeladen:
