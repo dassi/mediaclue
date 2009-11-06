@@ -136,4 +136,6 @@ else
 end
                           
 # DATABASE_NAME = ActiveRecord::Base.connection.current_database unless SUPRESS_EARLY_DB_CONNECTION
-                                                                    
+
+# Haml soll nur doppelte Anführungszeichen in HTML verwenden.                                                                    
+Haml::Template.options[:attr_wrapper] = '"'
