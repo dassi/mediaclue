@@ -20,6 +20,7 @@ function append_link_value(dom_id, value) {
 
 function reset_search_field() {
   $('search_fulltext').value='';
+  $('search_fulltext').focus();
   trigger_search_lookahead();
 }
 
