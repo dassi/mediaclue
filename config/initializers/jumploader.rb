@@ -20,4 +20,7 @@ if not File.exists?(jumploader_translations_zip_filepath)
   Zip::ZipFile.open(jumploader_translations_zip_filepath, Zip::ZipFile::CREATE) do |zipfile|
     zipfile.add 'messages.properties', jumploader_translations
   end
+  
+  File.chmod(0644, jumploader_translations_zip_filepath)
+  
 end

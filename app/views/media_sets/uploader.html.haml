@@ -48,7 +48,7 @@
 /   %param{:name => 'mayscript', :value => 'true' }/
 
 -# mayscript ist sehr wichtig! Das ist die Aktivierung von LiveConnect (Java/JavaScript Bridge). Funktioniert nicht auf allen Browsern ganz gleich. Best aber mit "true"
-%applet{:name => 'jumpLoaderApplet', :code => 'jmaster.jumploader.app.JumpLoaderApplet.class', :width => '100%', :height => 440, :archive => "/applets/#{jar_file},/applets/#{JUMPLOADER_TRANSLATIONS_ZIP}", :mayscript => 'true'}
+%applet{:name => 'jumpLoaderApplet', :code => 'jmaster.jumploader.app.JumpLoaderApplet.class', :width => '100%', :height => 440, :archive => "/applets/#{JUMPLOADER_TRANSLATIONS_ZIP},/applets/#{jar_file}", :mayscript => 'true'}
 
   %param{:name => 'ac_mode', :value => 'embedded' }/
   %param{:name => 'ac_fireAppletInitialized', :value => 'true' }/
