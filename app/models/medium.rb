@@ -5,7 +5,9 @@ class Medium < ActiveRecord::Base
   acts_as_ferret :remote => true, :fields => {:name => { :boost => 2 },
                                               :desc => { :boost => 2 },
                                               :tag_names => { :boost => 3 },
-                                              :meta_data => { }}
+                                              :meta_data_values_for_ferret => { }}
+
+  serialize :meta_data, Hash
 
   # Pagination, Anzahl pro Seite
   @@per_page = 20
@@ -14,7 +16,7 @@ class Medium < ActiveRecord::Base
   attr_writer :tag_names
   
   # Flag, ob wir Metadaten extrahieren beim Speichern
-  attr_accessor :is_importing_metadata 
+  attr_accessor :is_importing_metadata, :temp_path 
 
   has_many :media_set_memberships, :dependent => :destroy
   has_many :media_sets, :through => :media_set_memberships
@@ -38,16 +40,13 @@ class Medium < ActiveRecord::Base
 
   ##############################################################
   before_validation :set_size_from_temp_path
-  after_validation :process_attachment  # Das raufgeladene File bearbeiten
-  after_save :after_process_attachment  # Das File speichern und temporäre Daten löschen
+  after_save :save_to_storage  # Das File speichern und temporäre Daten löschen. Muss NACH dem speichern passieren, weil die ID gebraucht wird für Pfad
   after_destroy :destroy_file
 
-  # attr_accessible :uploaded_data
-  define_callbacks :after_attachment_saved
+  define_callbacks :after_save_to_storage
   ##############################################################
 
-  after_attachment_saved :create_previews_offloaded
-  after_attachment_saved :import_meta_data if FEATURE_METADATA
+  after_save_to_storage :create_previews_offloaded
     
   
 
@@ -57,7 +56,7 @@ class Medium < ActiveRecord::Base
     super
     
     # Setzt default Flag, ob Metadaten aus dem File importiert werden sollen
-    @is_importing_metadata ||= true
+    self.is_importing_metadata = true if self.is_importing_metadata.nil?
     
   end
   
@@ -79,20 +78,47 @@ class Medium < ActiveRecord::Base
   end
   
   # Importiert Metadaten aus der angehängten Datei. Benutzt gem MiniExiftool
-  def import_meta_data
-    if self.is_importing_metadata
-      begin
-        self.meta_data = MiniExiftool.new(self.full_filename).to_yaml
-      rescue MiniExiftool::Error
-        self.meta_data = 'Fehler beim Metadaten-Import'
+  def import_meta_data(filepath)
+    exif_data = MiniExiftool.new(filepath, :convert_encoding => false, :composite => false).to_hash
+
+    # Entfernen von unerwünschten EXIF-Tags
+    for unwanted_exif_tag in UNWANTED_EXIF_TAGS
+      exif_data.delete_if do |key, value|
+        case unwanted_exif_tag
+        when Regexp
+          key =~ unwanted_exif_tag
+        when String
+          key == unwanted_exif_tag
+        end
       end
     end
+    
+    # Entfernen von binären EXIF-Values
+    # Exiftool schreibt z.B. "(Binary data 93321 bytes, use -b option to extract)" wenn es ein Binärdatenfeld ist
+    exif_data.delete_if { |key, value| value =~ /^\(Binary data/ } 
+    
+    self.preprocess_meta_data(exif_data)
+    
+    self.meta_data = exif_data
+  rescue MiniExiftool::Error => e
+    logger.error('Fehler beim Metadaten-Import: ' + e.message)
+  end
+  
+  # Standard-Implementation. Soll von Subklassen überschrieben werden.
+  # Bearbeitet EXIF-Daten, bevor sie gespeichert werden
+  def preprocess_meta_data(exif_data_hash)
+    # nichts tun
   end
   
   # Erzeugt die nötigen Preview-Dokumente. Delegiert an PreviewGenerator
   def create_previews_offloaded
     self.previews.clear
     PreviewGenerator.new(self).generate
+    true
+  end
+
+  def meta_data_values_for_ferret
+    meta_data.values.join(' ')
   end
   
   public ##########################################################################################
@@ -111,11 +137,12 @@ class Medium < ActiveRecord::Base
 
   # Writes the given data to a new tempfile, returning the closed tempfile.
   def self.write_to_temp_file(data, temp_base_name)
-    returning Tempfile.new(temp_base_name, TEMP_PATH) do |tmp|
-      tmp.binmode
-      tmp.write data
-      tmp.close
-    end
+    tempfile = Tempfile.new(temp_base_name, TEMP_PATH)
+    tempfile.binmode
+    tempfile.write(data)
+    tempfile.close
+    
+    tempfile.path
   end
 
 
@@ -142,31 +169,19 @@ class Medium < ActiveRecord::Base
       file_data.rewind
       data = file_data.read
       if data.present?
-        temp_paths.unshift(write_to_temp_file(data))
+        # temp_paths.unshift(write_to_temp_file(data))
+        self.temp_path = write_to_temp_file(data)
         @need_to_save_attachment = true
       end
     else
       if file_data.present?
-        self.temp_paths.unshift(file_data)
+        # self.temp_paths.unshift(file_data)
+        self.temp_path = file_data.respond_to?(:path) ? file_data.path : file_data.to_s
         @need_to_save_attachment = true
       end
     end
-  end
-
-
-  # Gets the latest temp path from the collection of temp paths.  While working with an attachment,
-  # multiple Tempfile objects may be created for various processing purposes (resizing, for example).
-  # An array of all the tempfile objects is stored so that the Tempfile instance is held on to until
-  # it's not needed anymore.  The collection is cleared after saving the attachment.
-  def temp_path
-    p = temp_paths.first
-    p.respond_to?(:path) ? p.path : p.to_s
-  end
-
-
-  # Gets an array of the currently used temp paths.  Defaults to a copy of #full_filename.
-  def temp_paths
-    @temp_paths ||= (new_record? || !File.exist?(full_filename) ? [] : [copy_to_temp_file(full_filename)])
+    
+    process_attachment
   end
 
 
@@ -186,18 +201,10 @@ class Medium < ActiveRecord::Base
     "#{rand Time.now.to_i}#{filename || 'attachment'}"
   end
 
-
-  # Creates a temp file from the currently saved file.
-  def create_temp_file
-    copy_to_temp_file full_filename
-  end
-
-
   # before_validation callback.
   def set_size_from_temp_path
     self.size = File.size(temp_path) if need_to_save_attachment?
   end
-
 
   # Destroys the file.  Called in the after_destroy callback
   def destroy_file
@@ -212,37 +219,28 @@ class Medium < ActiveRecord::Base
   
   # Saves the file to the file system
   def save_to_storage
-    # TODO: This overwrites the file if it exists, maybe have an allow_overwrite option?
-    FileUtils.mkdir_p(File.dirname(full_filename))
-    File.cp(temp_path, full_filename)
-    # File.chmod(attachment_options[:chmod] || 0644, full_filename)
-    File.chmod(0644, full_filename)
-    @old_filename = nil
-    true
+
+    if need_to_save_attachment?
+      FileUtils.mkdir_p(File.dirname(full_filename))
+      File.cp(temp_path, full_filename)
+      File.chmod(0644, full_filename)
+
+      @need_to_save_attachment = false
+      callback :after_save_to_storage
+    end
+
   end
 
-  
-  def current_data
-    File.file?(full_filename) ? File.read(full_filename) : nil
-  end
 
-
-  # Gets the full path to the filename in this format:
-  #
-  #   # This assumes a model name like MyModel
-  #   # public/#{table_name} is the default filesystem path 
-  #   RAILS_ROOT/public/my_models/5/blah.jpg
-  #
-  # Overwrite this method in your model to customize the filename.
-  # The optional thumbnail argument will output the thumbnail's filename.
+  # Liefert den absoluten Pfad der Datei
   def full_filename
     File.join(RAILS_ROOT, MEDIA_STORAGE_PATH_PREFIX, *partitioned_path(self.filename))
   end
 
 
-  # by default paritions files into directories e.g. 0000/0001/image.jpg
-  # to turn this off set :partition => false
+  # Liefert ein Pfad-Segment nach dem Muster 0000/0001/image.jpg
   def partitioned_path(*args)
+    raise 'ID muss beim Pfad generieren vorhanden sein!' if id.nil?
     ("%08d" % id).scan(/..../) + args
   end
 
@@ -262,18 +260,7 @@ class Medium < ActiveRecord::Base
 
   # Subklassen können diese Method überschreiben, um das Attachment zu bearbeiten auf Bedarf, bevor es gespeichert wird
   def process_attachment
-    # @saved_attachment = save_attachment?
-  end
-
-  # Cleans up after processing.  Thumbnails are created, the attachment is stored to the backend, and the temp_paths are cleared.
-  def after_process_attachment
-    if need_to_save_attachment?
-      save_to_storage
-      @temp_paths.clear if @temp_paths
-      @need_to_save_attachment = false
-      # @saved_attachment = nil
-      callback :after_attachment_saved
-    end
+    import_meta_data(self.temp_path) if FEATURE_METADATA && self.is_importing_metadata
   end
 
 
@@ -485,5 +472,6 @@ class Medium < ActiveRecord::Base
     end
     
   end
+  
   
 end

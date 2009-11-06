@@ -30,7 +30,18 @@
   - if FEATURE_METADATA
     - if not @medium.meta_data.blank?
       %h2 Meta-Daten
-      =simple_format @medium.meta_data
+      %table.properties
+        - for key, value in @medium.meta_data
+          %tr
+            %td=h key
+            %td
+              - case value
+              - when Array
+                =simple_format value.join("\n")
+              - when String
+                =simple_format value
+              - else
+                =h value.to_s
   
 
 #right

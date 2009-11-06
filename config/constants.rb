@@ -75,3 +75,19 @@ OOO_HOME='/Applications/office/OpenOffice.org.app/Contents'
                      
 # Login nur via HTTPS
 LOGIN_WITH_HTTPS_ONLY = false
+
+# Exif-Tags, welche rausgefiltert werden. Auch regular expressions möglich!
+UNWANTED_EXIF_TAGS = [
+  'FileName',
+  'FileSize',
+  'FileType',
+  'Directory',
+  'ExifToolVersion',
+  'MIMEType',
+  'CRC',
+  /^Apple.*/,
+  'MatrixStructure',
+  /.*Date$/,
+  /.*Time$/,
+  /GUID/
+  ]

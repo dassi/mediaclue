@@ -3,11 +3,15 @@ class Image < Medium
   CONTENT_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/tiff']  
   
   protected #######################################################################################
+
+  def preprocess_meta_data(exif_data_hash)
+    # nichts tun
+  end
   
   public ##########################################################################################
 
   def self.with_image(file, &block)
-    ::ImageScience.with_image file, &block
+    ::ImageScience.with_image(file, &block)
   end
   
   def dimensions        
@@ -41,13 +45,13 @@ class Image < Medium
   def process_attachment
     super
 
-    # return unless @saved_attachment
-    
     with_image do |img|
       self.width  = img.width
       self.height = img.height
-      resize_image_or_thumbnail! img
+      # resize_image_or_thumbnail! img
     end
+    
+    true
   end
 
   # Resizes the given processed img object with either the attachment resize options or the thumbnail resize options.
@@ -57,21 +61,21 @@ class Image < Medium
     # end
   end
 
-  # Performs the actual resizing operation for a thumbnail
-  def resize_image(img, size)
-    temp_paths.unshift write_to_temp_file(filename)
-    grab_dimensions = lambda do |img|
-      self.width  = img.width  if respond_to?(:width)
-      self.height = img.height if respond_to?(:height)
-      img.save self.temp_path
-      self.size = File.size(self.temp_path)
-    end
-
-    img.resize(size[0], size[1], &grab_dimensions)
-  end
+  # # Performs the actual resizing operation for a thumbnail
+  # def resize_image(img, size)
+  #   self.temp_path = write_to_temp_file(filename)
+  #   grab_dimensions = lambda do |img|
+  #     self.width  = img.width  if respond_to?(:width)
+  #     self.height = img.height if respond_to?(:height)
+  #     img.save self.temp_path
+  #     self.size = File.size(self.temp_path)
+  #   end
+  # 
+  #   img.resize(size[0], size[1], &grab_dimensions)
+  # end
   
   def with_image(&block)
-    self.class.with_image(temp_path, &block)
+    self.class.with_image(self.temp_path, &block)
   end
                                
 

@@ -17,20 +17,21 @@ describe Medium do
   
   it 'should do importing meta data if option is_importing_metadata is set' do
     exiftool_mock = mock(MiniExiftool)
-    exiftool_mock.should_receive(:to_yaml).and_return('xyz: blabla')
-    MiniExiftool.should_receive(:new).and_return(exiftool_mock)
+    hash_mock = {}
+    filepath = 'some/path/to/file.jpg'
 
-    @medium.should_receive(:need_to_save_attachment?).and_return(true)
-    # @medium.stub!(:valid?).and_return(true)
-    @medium.stub!(:set_size_from_temp_path).and_return(true)
+    exiftool_mock.should_receive(:to_hash).and_return(hash_mock)
+
+    MiniExiftool.should_receive(:new).with(filepath, an_instance_of(Hash)).and_return(exiftool_mock)
+
     @medium.stub!(:filename).and_return('blabla.jpg')
-    @medium.should_receive(:save_to_storage).and_return(true)
+    @medium.should_receive(:temp_path).and_return(filepath)
     
     @medium.is_importing_metadata = true
     @medium.should_receive(:meta_data=)
 
     @medium.name = 'test_medium'
-    @medium.save!
+    @medium.send(:process_attachment)
   end
 
   it 'should not import meta data if option is_importing_metadata is not set' do
