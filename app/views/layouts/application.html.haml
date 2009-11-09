@@ -42,8 +42,10 @@
         #flash{:class => "error"}= flash[:error]
       #hauptinhalt
         = yield
-        %br{:class => "clear"}
-      %br{:class => "clear"}
+        .clear
+      .clear
       #footer
         %p
           mediaclue wurde entwickelt von: <a href="http://www.kshp.ch" target="_blank">Gymnasium Hohe Promenade</a> &amp; <a href="http://www.mindclue.ch" target="_blank">mindclue gmbh</a>
+          | Version:
+          = REVISION
