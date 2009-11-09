@@ -37,7 +37,6 @@ h3.first
 img
   border: none
 
-
 img.icon
   vertical-align: text-bottom
 
@@ -116,16 +115,14 @@ table.list
   color: #fff
   font-size: 9pt
 
+  a
+    text-decoration: none
+    font-weight: bold
+    color: #fff
 
-#menu a
-  text-decoration: none
-  font-weight: bold
-  color: #fff
-
-
-#menu a:hover
-  text-decoration: underline
-  color: #fff
+  a:hover
+    text-decoration: underline
+    color: #fff
 
 
 #homelink
@@ -141,10 +138,9 @@ table.list
   padding-right: 20px
   font-size: 11px
 
-
-#service img
-  vertical-align: middle
-  padding-right: 12px
+  img
+    vertical-align: middle
+    padding-right: 12px
 
 
 #container
@@ -161,10 +157,9 @@ table.list
   background: #fff
   padding: 5px 0 5px 20px
 
-
-#header .title
-  color: black
-  font-size: 180%
+  .title
+    color: black
+    font-size: 180%
 
 
 #spalte1
@@ -175,67 +170,60 @@ table.list
   margin-left: 15px
   font-size: 11px
 
+  a
+    display: block
+    border-bottom: #fff 1px solid
+    padding: 7px
+    color: #FFFFFF
+    text-decoration: none
+    font-family: Verdana, Arial, Helvetica, sans-serif
 
-#spalte1 a
-  display: block
-  border-bottom: #fff 1px solid
-  padding: 7px
-  color: #FFFFFF
-  text-decoration: none
-  font-family: Verdana, Arial, Helvetica, sans-serif
-
-
-#spalte1 a:hover
-  color: #0093D3
-  background-color: #fff
+  a:hover
+    color: #0093D3
+    background-color: #fff
 
 
 #hauptinhalt
   margin-top: 5px
   margin-left: 10px
   margin-right: 10px
-  margin-bottom: 15px
+  margin-bottom: 5px
   padding: 0 15px
   background: #FFFFFF
   border: dotted #F9b200 1px
   line-height: 150%
 
+  ul li, #spalte2 ul li
+    list-style: none
+    list-style-image: url(bilder/arrow.png)
 
-#hauptinhalt ul li, #spalte2 ul li
-  list-style: none
-  list-style-image: url(bilder/arrow.png)
+  p.bodytext a.download , #spalte2 p.bodytext a.download
+    background-image: url(bilder/download.png)
+    background-repeat: no-repeat
+    padding-left: 18px
 
+  h2
+    color: #0099FF
+    font-size: 130%
 
-#hauptinhalt p.bodytext a.download , #spalte2 p.bodytext a.download
-  background-image: url(bilder/download.png)
-  background-repeat: no-repeat
-  padding-left: 18px
-
-
-#hauptinhalt h2
-  color: #0099FF
-  font-size: 130%
-
-
-#hauptinhalt h3
-  color: #0099FF
-  font-size: 110%
+  h3
+    color: #0099FF
+    font-size: 110%
 
 
 #footer
+  color: #666666
   padding: 0 10px 0 20px
   background-color: #e8e5df
   border-top: 1px solid #fff
 
+  p
+    margin: 0
+    padding: 10px 0
 
-#footer p
-  margin: 0
-  padding: 10px 0
-
-
-#footer a
-  color: #666666
-  text-decoration: none
+  a
+    color: #666666
+    text-decoration: underline
 
 
 #flash.notice
@@ -318,30 +306,26 @@ select
   margin: 10px 0 10px 0
 
 
-.box h2
+h2
   font-size: 1.1em
   margin: 0px 0 0px 0
   padding: 0px 0 5px 0
 
+  a
+    margin: 10px 0 10px 0
+    color: #93B300
+    font-size: 10px
 
-.box a
-  margin: 10px 0 10px 0
-  color: #93B300
-  font-size: 10px
+  p
+    margin: 5px 0 10px 0
+    line-height: 15px
 
+  ul
+    padding: 0 0 7px 20px
+    margin: 10px 0 10px 0
 
-.box p
-  margin: 5px 0 10px 0
-  line-height: 15px
-
-
-.box ul
-  padding: 0 0 7px 20px
-  margin: 10px 0 10px 0
-
-
-.box li
-  margin-top: 5px
+  li
+    margin-top: 5px
 
 
 
@@ -356,30 +340,30 @@ select
   margin: 3px
   font-size: 90%
 
-.pagination a
-  padding: 2px 5px 2px 5px
-  margin: 2px
-  border: 1px solid #F9B200
-  text-decoration: none
-  color: #7af
+  a
+    padding: 2px 5px 2px 5px
+    margin: 2px
+    border: 1px solid #F9B200
+    text-decoration: none
+    color: #7af
 
-.pagination a:hover, .pagination a:active
-  border: 1px solid #F9B200
-  color: #000
+  a:hover, a:active
+    border: 1px solid #F9B200
+    color: #000
 
-.pagination span.current
-  padding: 2px 5px 2px 5px
-  margin: 2px
-  border: 1px solid #F9B200
-  font-weight: bold
-  background-color: #F9B200
-  color: #FFF
+  span.current
+    padding: 2px 5px 2px 5px
+    margin: 2px
+    border: 1px solid #F9B200
+    font-weight: bold
+    background-color: #F9B200
+    color: #FFF
 
-.pagination span.disabled
-  padding: 2px 5px 2px 5px
-  margin: 2px
-  border: 1px solid #eee
-  color: #ddd
+  span.disabled
+    padding: 2px 5px 2px 5px
+    margin: 2px
+    border: 1px solid #eee
+    color: #ddd
 
 
 
@@ -395,29 +379,25 @@ select
   margin-bottom: 20px
   background-color: #f0f0f0
 
+  h2
+    text-align: left
+    font-weight: normal
+    padding: 5px 2px 5px 2px
+    font-size: 12px
+    margin: -7px
+    background-color: #c00
+    color: #fff
 
-#errorExplanation h2
-  text-align: left
-  font-weight: normal
-  padding: 5px 2px 5px 2px
-  font-size: 12px
-  margin: -7px
-  background-color: #c00
-  color: #fff
+  p
+    color: #333
+    margin-bottom: 0
 
+  ul
+    margin: 0
+    padding-left: 20px
 
-#errorExplanation p
-  color: #333
-  margin-bottom: 0
-
-
-#errorExplanation ul li
-  list-style: square
-
-
-#errorExplanation ul
-  margin: 0
-  padding-left: 20px
+    li
+      list-style: square
 
 
 #help
@@ -484,11 +464,11 @@ div.draggable
   margin-right: 15px
   float: left
 
-.media_lightbox_small div.slidefg
-  height: 170px
+  div.slidefg
+    height: 170px
 
-.media_lightbox_small div.remove_button
-  padding-top: 1px
+  div.remove_button
+    padding-top: 1px
 
 .media_lightbox_big
   width: 380px
@@ -496,11 +476,11 @@ div.draggable
   margin-right: 30px
   float: left
 
-.media_lightbox_big div.slidefg
-  height: 380px
+  div.slidefg
+    height: 380px
 
-.media_lightbox_big div.remove_button
-  padding-top: 2px
+  div.remove_button
+    padding-top: 2px
 
 
 input.media_name
@@ -600,7 +580,6 @@ div.slide_in
   left: 0px
   top: 0px
   z-index: 200
-
 
 
 #collection_box
