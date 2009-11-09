@@ -151,5 +151,9 @@ module ApplicationHelper
 #     "alert(params);alert(window.screenTop);alert(window.screenLeft);" + \
     "window.open('#{url}','popup',params);return false;"
   end
+
+  def browser_title
+    "mediaclue - #{PROJECT_NAME}"
+  end
   
 end
