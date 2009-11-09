@@ -8,17 +8,17 @@ describe Tag, "validations" do
   end
 
   it "should be valid with name" do
-    tag = Tag.new :name => 'test'
+    tag = Tag.new :name => 'test123'
     tag.should be_valid
   end
 
   it "should evaluate tag_name_valid? correctly" do
-    tag = Tag.new :name => 'test'
+    tag = Tag.new :name => 'test456'
     tag.tag_name_valid?.should be_true
   end
 
   it "should only allow unique names" do
-    tag = Tag.create :name => 'test'
+    tag = Tag.create :name => 'test2341234'
     tag.should be_valid
     tag = Tag.create :name => 'Test'
     tag.should_not be_valid
