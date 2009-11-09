@@ -91,3 +91,6 @@ UNWANTED_EXIF_TAGS = [
   /.*Time$/,
   /GUID/
   ]
+
+# Projekt-Logo im Header  
+LOGO_FILENAME = 'logo_small.png'
