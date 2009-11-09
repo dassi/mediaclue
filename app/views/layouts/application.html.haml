@@ -12,12 +12,12 @@
       #header
 
         .left
-          = link_to(image_tag('logo.png', :width => 132, :height => 70, :style => 'vertical-align:text-bottom'), root_url)
+          = link_to(image_tag('logo_small.png', :width => 90, :height => 49, :style => 'vertical-align:text-bottom'), root_url)
           %span{:class => "title"}
             = PROJECT_NAME
         #service
           - if logged_in?
-            Benutzer:&nbsp;
+            Angemeldet als:&nbsp;
             = current_user.full_name
           &nbsp;&nbsp;
           - if logged_in?
@@ -43,6 +43,7 @@
       .clear
       #footer
         %p
-          mediaclue wurde entwickelt von: <a href="http://www.kshp.ch" target="_blank">Gymnasium Hohe Promenade</a> &amp; <a href="http://www.mindclue.ch" target="_blank">mindclue gmbh</a>
+          = link_to(image_tag('logo_m_icon.png', :width => 20, :height => 20, :style => 'vertical-align:middle'), 'http://www.mediaclue.ch', :target => '_blank')
+          mediaclue | Entwickelt von <a href="http://www.kshp.ch" target="_blank">Gymnasium Hohe Promenade</a> &amp; <a href="http://www.mindclue.ch" target="_blank">mindclue gmbh</a>
           | Version:
           = REVISION
