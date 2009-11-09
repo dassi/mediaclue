@@ -7,9 +7,6 @@ URL_TO_EXTERNAL_HELP = 'http://www.mediaclue.ch/'
 MEDIA_STORAGE_PATH_PREFIX = 'public/m/'
 PREVIEWS_STORAGE_PATH_PREFIX = 'public/m/previews/'
 
-# # LDAP Group-ID, welche die Medien per default als viewer zugeordnet werden sollten (Gruppe "Lehrer")
-# DEFAULT_GROUP_ID = nil
-
 # Liste der Tags die als Schulfach gelten
 SUBJECT_SELECTIONS = [
 'Biologie',
@@ -53,6 +50,15 @@ JUMPLOADER_VERSION = [2, 13, 0]
 
 # Meta-Daten extrahieren und darstellen?
 FEATURE_METADATA = true
+
+# An einem LDAP-Server authentifizieren
+FEATURE_LDAP_AUTHENTICATION = true
+
+# Für Server-Konfiguration siehe config/ldap.yml (Wird auch von ActiveLdap gem verwendet)
+LDAP_USERS_DN_PREFIX = 'cn=users'
+LDAP_GROUPS_DN_PREFIX = 'cn=groups'
+LDAP_USERNAME_ATTRIBUTE = 'uid'
+LDAP_IMPORTED_USER_GROUPS = ['lehrer']
 
 # Global gültige Beschränkung der Dateigrösse
 # = nil, falls keine Beschränkung

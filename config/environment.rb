@@ -77,6 +77,11 @@ Rails::Initializer.run do |config|
   config.gem 'FooBarWidget-daemon_controller', :lib => 'daemon_controller', :version => '~>0.2.1'
   config.gem 'image_science', :version => '~>1.2.1'
   config.gem 'haml', :version => '~>2.2.5'
+  
+  if FEATURE_LDAP_AUTHENTICATION
+    config.gem 'ruby-ldap', :version => '=0.9.9', :lib => false
+    config.gem 'activeldap', :version => '~>1.2.0', :lib => 'active_ldap'
+  end    
 
   # Only load the plugins named here, in the order given. By default, all plugins
   # in vendor/plugins are loaded in alphabetical order.
@@ -139,3 +144,10 @@ end
 
 # Haml soll nur doppelte Anführungszeichen in HTML verwenden.                                                                    
 Haml::Template.options[:attr_wrapper] = '"'
+
+# Konfig-Konstanten für LDAP implizit erzeugen, aus der Konfiguration des ActiveLdap gems in ldap.yml
+if FEATURE_LDAP_AUTHENTICATION
+  require 'support/ldap_models.rb'
+  LDAP_HOST = ActiveLdap::Base.configuration('host')
+  LDAP_BASE_DN = ActiveLdap::Base.configuration('base')
+end

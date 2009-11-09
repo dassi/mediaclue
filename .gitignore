@@ -1,6 +1,7 @@
 # config/
 config/database.yml
 config/ferret_server.yml
+config/ldap.yml
 config/deploy*
 
 # log/

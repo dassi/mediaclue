@@ -1,0 +1,23 @@
+development:
+  host: 127.0.0.1
+  port: 389
+  base: dc=ldap,dc=server,dc=domain
+  bind_dn: cn=admin,dc=ldap,dc=server,dc=domain
+  password: secret
+  adapter: net_ldap
+
+test:
+  host: 127.0.0.1
+  port: 389
+  base: dc=ldap,dc=server,dc=domain
+  bind_dn: cn=admin,dc=ldap,dc=server,dc=domain
+  password: secret
+  adapter: net_ldap
+
+production:
+  host: ldap.hopro.edu
+  port: 389
+  # method: :tls
+  base: dc=ldap,dc=server,dc=domain
+  allow_anonymous: true
+  adapter: net_ldap

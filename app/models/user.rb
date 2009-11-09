@@ -31,23 +31,36 @@ class User < ActiveRecord::Base
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   def self.authenticate(login, password)    
+
+    authenticated = false
+    
     user = find_by_login(login)
 
     if user
-      # Lokales Passwort?
+      # Zuerst probieren mit lokalem Passwort...
       if user.authenticated?(password)
-        return user
-      else
-        return nil
+        authenticated = true
+      elsif FEATURE_LDAP_AUTHENTICATION # ... sonst versuche mit LDAP, dann ist der User per LDAP authentifiziert
+        begin
+          the_ldap_user = LdapUser.find(login)
+          the_ldap_user.bind(password)
+          the_ldap_user.remove_connection
+          authenticated = true
+        rescue ActiveLdap::AuthenticationError, ActiveLdap::LdapError::UnwillingToPerform, ActiveLdap::EntryNotFound
+          # Kontrolliert abfangen und weitermachen
+        end
       end
-    else
-      # Kein Username gefunden
-      return nil
     end
 
-    # Zur Sicherheit, wenn oben kein return erfolgen würde, dann sicher nicht authentifizieren
-    return nil
+    if authenticated
+      return user
+    else
+      return nil
+    end
     
+  rescue Exception => e
+    logger.error('Authentication-Exception: ' + e.message)
+    return nil
   end
 
   # Encrypts some data with the salt.
