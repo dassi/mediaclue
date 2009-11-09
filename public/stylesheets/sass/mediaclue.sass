@@ -1,3 +1,6 @@
+// 
+!color_background = #f9b200
+
 html
   font-family: Verdana, Arial, Helvetica, sans-serif
 
@@ -111,7 +114,7 @@ table.list
   padding: 5px 2px 3px 20px
   border-bottom: solid 1px #fff
   border-TOP: solid 1px #FFF
-  background-color: #f9b200
+  background-color = !color_background
   color: #fff
   font-size: 9pt
 
@@ -147,7 +150,7 @@ table.list
   width: 1000px
   background-color: #e8e5df
   margin: 0 auto
-  border-right: solid #F9b200 8px
+  border-right = "solid 8px #{!color_background}"
   border-left: solid #fff 2px
   text-align: left
   height: 100%
@@ -170,7 +173,7 @@ table.list
   margin-bottom: 5px
   padding: 0 15px 3px 15px
   background: #FFFFFF
-  border: dotted #F9b200 1px
+  border = "dotted 1px #{!color_background}"
   line-height: 150%
 
   ul li
@@ -322,20 +325,20 @@ select
   a
     padding: 2px 5px 2px 5px
     margin: 2px
-    border: 1px solid #F9B200
+    border = "1px solid #{!color_background}"
     text-decoration: none
     color: #7af
 
   a:hover, a:active
-    border: 1px solid #F9B200
+    border = "1px solid #{!color_background}"
     color: #000
 
   span.current
     padding: 2px 5px 2px 5px
     margin: 2px
-    border: 1px solid #F9B200
+    border = "1px solid #{!color_background}"
     font-weight: bold
-    background-color: #F9B200
+    background-color = !color_background
     color: #FFF
 
   span.disabled
