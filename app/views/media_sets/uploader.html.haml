@@ -7,7 +7,7 @@
     = link_to_function 'Hilfe anzeigen' do |page|
       - page.visual_effect(:toggle_blind, 'help', :duration => 0.5)
 
--# =link_to_function 'Test', 'setPostAttribute("test_var", "abc");'
+-# =link_to_function 'Test', 'initializeJumploader();'
 
 #help{:style => 'display: none'}
   %p 
@@ -39,21 +39,21 @@
 
 
 - jar_file = "jumploader_z-#{JUMPLOADER_VERSION.join('_')}.jar"
--# post_url = "#{public_url}#{upload_media_set_path(@media_set, :format => :js)}"
-- post_url = "#{upload_media_set_path(@media_set, :format => :js)}"
+- post_url = "#{public_url}#{upload_media_set_path(@media_set, :format => :js)}"
 
-/ %object{:name => 'jumpLoaderApplet', :id => 'jumpLoaderApplet', :classid => 'java:jmaster.jumploader.app.JumpLoaderApplet.class', :type => 'application/x-java-applet', :width => '100%', :height => 440}
-/   %param{:name => 'codebase', :value => "#{public_url}/applets/" }/
-/   %param{:name => 'archive', :value => "#{JUMPLOADER_TRANSLATIONS_ZIP},#{jar_file}" }/
-/   %param{:name => 'mayscript', :value => 'true' }/
+-# Allenfall besser mit object-Tag?
+-# %object{:name => 'jumpLoaderApplet', :id => 'jumpLoaderApplet', :classid => 'java:jmaster.jumploader.app.JumpLoaderApplet.class', :type => 'application/x-java-applet', :width => '100%', :height => 440}
+-#   %param{:name => 'codebase', :value => "#{public_url}/applets/" }/
+-#   %param{:name => 'archive', :value => "#{JUMPLOADER_TRANSLATIONS_ZIP},#{jar_file}" }/
+-#   %param{:name => 'mayscript', :value => 'true' }/
 
 -# mayscript ist sehr wichtig! Das ist die Aktivierung von LiveConnect (Java/JavaScript Bridge). Funktioniert nicht auf allen Browsern ganz gleich. Best aber mit "true"
-%applet{:name => 'jumpLoaderApplet', :code => 'jmaster.jumploader.app.JumpLoaderApplet.class', :width => '100%', :height => 440, :archive => "/applets/#{JUMPLOADER_TRANSLATIONS_ZIP},/applets/#{jar_file}", :mayscript => 'true'}
+%applet{:name => 'jumpLoaderApplet', :id => 'jumpLoaderApplet', :code => 'jmaster.jumploader.app.JumpLoaderApplet.class', :width => '100%', :height => 440, :archive => "/applets/#{JUMPLOADER_TRANSLATIONS_ZIP},/applets/#{jar_file}", :mayscript => 'true'}
 
   %param{:name => 'ac_mode', :value => 'embedded' }/
   %param{:name => 'ac_fireAppletInitialized', :value => 'true' }/
-  / %param{:name => 'ac_fireUploaderFileStatusChanged', :value => 'true' }/
-  %param{:name => 'ac_fireUploaderFileAdded', :value => 'true' }/
+  -#%param{:name => 'ac_fireUploaderFileStatusChanged', :value => 'true' }/
+  -#%param{:name => 'ac_fireUploaderFileAdded', :value => 'true' }/
   -#%param{:name => 'ac_fireUploaderStatusChanged', :value => 'true' }/
 
   %param{:name => 'uc_urlEncodeParameters', :value => 'true' }/    
@@ -92,16 +92,20 @@
     %param{:name => 'gc_loggingLevel', :value => "DEBUG" }/
 
 
--# OPTIMIZE: uploaderFileAdded is only used as a workaround, because appletInitialized doesn't seem to work reliable (on Safari)
 :javascript
   function appletInitialized(applet) {
-    setAuthenticityToken(applet, "#{@authenticity_token}");
-    setPostAttribute("importMetadata", "1", applet);
+    /* Hier darf nicht direkt mit applet kommuniziert werden, Safari mag das nicht!!! Deshalb auslagern mit Timeout! */
+    setTimeout('initializeJumploader()', 1000);
+  }
+  
+  function initializeJumploader() {
+    setAuthenticityToken("#{@authenticity_token}");
+    setPostAttribute("importMetadata", "1");
   }
 
-  function uploaderFileAdded(uploader, file) {
-    appletInitialized(uploader);
-  }
+  /* function uploaderFileAdded(uploader, file) {
+    initializeJumploader();
+  } */
 
   /* function uploaderFileStatusChanged( uploader, file )
   {
@@ -112,62 +116,24 @@
     }
   } */
 
-  function setAuthenticityToken(applet, authenticity_token)
+  function setAuthenticityToken(authenticity_token)
   {
-    setPostAttribute("authenticity_token", authenticity_token, applet);
+    setPostAttribute("authenticity_token", authenticity_token);
+  }
+  
+  function jumploader() {
+    return $("jumpLoaderApplet").getUploader();
   }
 
   function setPostAttribute(attributeName, value, uploader) {
     if (uploader === undefined || uploader === null) {
-      uploader = document.jumpLoaderApplet.getUploader();
+      uploader = jumploader();
     }
     var attrSet = uploader.getAttributeSet();
     var attr = attrSet.createStringAttribute(attributeName, value);
     attr.setSendToServer(true);
   }
 
-  /**
-   * dump attributes of uploader into html
-   */
-  function dumpAttributes( attrSet, removeFunctionName ) {
-    var n = attrSet.getAttributeCount();
-    var content = "";
-    if( n > 0 ) {
-      content = "<table class='dataTableInner'>";
-      content += "<tr>" +
-        "<td class='dataColumnHeader'>#<\/td>" +
-        "<td class='dataColumnHeader'>Name<\/td>" +
-        "<td class='dataColumnHeader'>Value<\/td>" +
-        "<td class='dataColumnHeader'>Send<\/td>" +
-        "<td class='dataColumnHeader'>Action<\/td>" +
-        "<\/tr>";
-      for( i = 0; i < n; i++ ) {
-        var attr = attrSet.getAttributeAt( i );
-        content += "<tr class='dataRow" + ( i % 2 == 0 ? "Even" : "Odd" ) + "'>";
-        content += "<td class='dataRownum'>" + ( i + 1 ) + "<\/td>";
-        content += "<td class='dataText'>" + attr.getName() + "<\/td>";
-        content += "<td class='dataText'>" + attr.getStringValue() + "<\/td>";
-        content += "<td class='dataText'>" + attr.isSendToServer() + "<\/td>";
-        content += "<td class='dataText'><a href='javascript:" +
-          removeFunctionName + "(" + i + ")'>remove<\/a><\/td>";
-        content += "<\/tr>";
-      }
-      content += "<\/table>";
-    } else {
-      content = "No attributes";
-    }
-    return content;
-  }
-
-  /**
-   * dump attributes of uploader into html
-   */
-  function dumpUploaderAttributes() {
-    var uploader = document.jumpLoaderApplet.getUploader();
-    var attrSet = uploader.getAttributeSet();
-    var content = dumpAttributes( attrSet, "removeUploaderAttribute" );
-    document.getElementById( "uploaderAttributes" ).innerHTML = content;
-   }
 
 - if FEATURE_METADATA
   = check_box_tag 'metadata_import', '1', true, :onclick => 'setPostAttribute("importMetadata", this.checked ? this.value : null)'
@@ -175,13 +141,9 @@
 
 .right
   =link_to_function 'Jumploader-Info', 'alert(document.jumpLoaderApplet.getAppletInfo())'
-  
 
 %br
 %br
-
-/ =link_to_function 'Refresh', 'dumpUploaderAttributes()'
-/ #uploaderAttributes
 
 -if @media_set.defined?
   %h2
