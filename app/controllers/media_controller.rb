@@ -87,7 +87,7 @@ class MediaController < ApplicationController
 
   
   def show    
-    @medium = Medium.find params[:id]
+    @medium = Medium.find(params[:id])
     permit :view, @medium do
       if params[:format]
         params[:format].downcase!
@@ -107,18 +107,14 @@ class MediaController < ApplicationController
 
   def new
     @medium = Medium.new
-
-    respond_to do |format|
-      format.html # new.html.haml
-    end
   end
 
 
-  def edit
-    @medium = Medium.find params[:id]
+  def edit(medium = nil)
+    @medium = medium || Medium.find(params[:id])
     permit :edit, @medium do
-      @tag_string  = @medium.tag_names
-      # @user_groups = UserGroup.find :all    
+      # Explizit render, weil wir auch von update hierher kommen
+      render :action => "edit"
     end
   end  
 
@@ -126,40 +122,32 @@ class MediaController < ApplicationController
   def create
     @medium = Medium.new params[:medium]
 
-    respond_to do |format|
-      if @medium.save
-        flash[:notice] = 'Medium wurde erfolgreich erstellt.'
-        format.html { redirect_to @medium }
-      else
-        # @user_groups = UserGroup.find :all
-        format.html { render :action => "new" }
-      end
+    if @medium.save
+      flash[:notice] = 'Medium wurde erfolgreich erstellt.'
+      redirect_to(@medium)
+    else
+      render(:action => "new")
     end
   end  
 
 
   def update
-    @medium = Medium.find params[:id]
+    @medium = Medium.find(params[:id])
     permit :edit, @medium do
       if @medium
         # Hinweis: Die Parameter kommen deshalb im Kontext eines media_sets, weil das Formular für ein Medium
         # generell auch als Teilformular eines MediaSets dienen muss.
         medium_params = params[:media_set][:media_attributes][params[:id]]
 
-        respond_to do |format|
-          if @medium.update_attributes(medium_params)
-            flash[:notice] = 'Medium wurde erfolgreich aktualisiert.'
-            format.html do
-              if params[:back_url].present?
-                redirect_to params[:back_url]
-              else
-                redirect_to medium_url(@medium)
-              end
-            end
+        if @medium.update_attributes(medium_params)
+          flash[:notice] = 'Medium wurde erfolgreich aktualisiert.'
+          if params[:back_url].present?
+            redirect_to params[:back_url]
           else
-            # @user_groups = UserGroup.find :all
-            format.html { render :action => "edit" }
+            redirect_to medium_url(@medium)
           end
+        else
+          edit(@medium)
         end
       end
     end
@@ -167,16 +155,12 @@ class MediaController < ApplicationController
 
 
   def destroy
-    @medium = Medium.find params[:id]
+    @medium = Medium.find(params[:id])
     permit :edit, @medium do
       @medium.destroy
 
-      respond_to do |format|
-        format.html do
-          flash[:notice] = 'Medium gelöscht'
-          redirect_to media_sets_url
-        end
-      end
+      flash[:notice] = 'Medium gelöscht'
+      redirect_to media_sets_url
     end
   end
 
@@ -259,7 +243,7 @@ class MediaController < ApplicationController
   end
   
   def generate_previews
-    @medium = Medium.find params[:id]
+    @medium = Medium.find(params[:id])
 
     permit :edit, @medium do
       @medium.recreate_previews

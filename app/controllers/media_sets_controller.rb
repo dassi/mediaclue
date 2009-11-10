@@ -42,15 +42,13 @@ class MediaSetsController < ApplicationController
   # GET /media_sets
   # GET /media_sets.xml
   def index
-    respond_to do |format|
-      format.html
-    end
+
   end
 
   # GET /media_sets/1
   # GET /media_sets/1.xml
   def show
-    @media_set = MediaSet.find params[:id]
+    @media_set = MediaSet.find(params[:id])
 
     permit :view, @media_set do
       session[:per_page] = params[:per_page] if params[:per_page]
@@ -94,6 +92,9 @@ class MediaSetsController < ApplicationController
 
       if @composing_media_set.nil? or (@composing_media_set and permit?(:edit, @composing_media_set)) 
         respond_to do |format|
+          format.html do
+            render :action => action, :layout => layout
+          end
           # Wir leiten alle AJAX-Calls auf show weiter als normale requests. Als convenience, damit man auch per AJAX
           # den Befehl auslösen kann. Wird verwendet bei "Diashow für selektierte Bilder"
           format.js do
@@ -101,9 +102,6 @@ class MediaSetsController < ApplicationController
               # Achtung! Redirect in RJS mit Parametern ist ziemlich hässlich. Es muss zwingend :escape => false gesetzt werden!
               page.redirect_to url_for(:controller => 'media_sets', :action => 'show', :style => params[:style], :selected_media => params[:selected_media], :escape => false)
             end
-          end
-          format.html do
-            render :action => action, :layout => layout
           end
           format.zip  { send_file @media_set.to_zip_for_user(current_user), :type => 'application/zip', :disposition => 'attachment' }
           format.pdf  { send_file @media_set.to_pdf_for_user(current_user), :type => 'application/pdf', :disposition => 'attachment' }
@@ -115,12 +113,14 @@ class MediaSetsController < ApplicationController
   
 
   # GET /media_sets/1/edit
-  def edit
-    @media_set = MediaSet.find params[:id]
+  def edit(media_set = nil)
+    @media_set = media_set || MediaSet.find(params[:id])
     permit :edit, @media_set do
       @media_set.define! unless @media_set.media.empty?
       @media = @media_set.media_for_user_as_owner(current_user)
-      # @user_groups = UserGroup.find :all
+
+      # Explizit rendern, weil wir auch von update hierher kommen
+      render :action => 'edit'
     end
   end
 
@@ -129,50 +129,41 @@ class MediaSetsController < ApplicationController
   def create
     @media_set = MediaSet.new(params[:media_set])
     
-    respond_to do |format|
-      if @media_set.save
-        flash[:notice] = 'Kollektion erfolgreich erstellt.'
-        format.html { redirect_to(@media_set) }
-      else
-        # @user_groups = UserGroup.find :all
-        format.html { render :action => "new" }
-      end
+    if @media_set.save
+      flash[:notice] = 'Kollektion erfolgreich erstellt.'
+      redirect_to(@media_set)
+    else
+      render :action => "new"
     end
+    
   end
 
   # PUT /media_sets/1
   # PUT /media_sets/1.xml
   def update
-    @media_set = MediaSet.find params[:id]
+    @media_set = MediaSet.find(params[:id])
+
+    # Button "Abbrechen" abfangen
     if params['cancel']
       redirect_to(@media_set) 
       return
     end
 
-    @media = @media_set.media_for_user_as_owner(current_user)
-    
     permit :edit, @media_set do
-      respond_to do |format|
         
-        # "vererbe" einige am media_set formular setzbare Parameter an die anhängigen Medien 
-        params = inherit_media_params_from_media_set
-        
-        # mass assignment von media_set parametern enthält nested parameter media_attributes zum update der 
-        # in media enthaltenen medien. Dies geschieht z.Zt. _ohne_ Prüfung von permissions, da attacks unwahrscheinlich sind !
-        # TODO: Ebendiese Rechte prüfen!
-        if @media_set.update_attributes(params[:media_set])
-          # Dem Medienset neu den Status "defined" verleihen
-          @media_set.store! unless @media_set.defined?
-          flash[:notice] = 'Kollektion erfolgreich gespeichert.'
-          format.html { 
-            redirect_to(@media_set) 
-          }
-        else
-          # @user_groups = UserGroup.find :all
-          format.html { 
-            render :action => 'edit'
-          }
-        end
+      # "vererbe" einige am media_set formular setzbare Parameter an die anhängigen Medien 
+      params = inherit_media_params_from_media_set
+      
+      # mass assignment von media_set parametern enthält nested parameter media_attributes zum update der 
+      # in media enthaltenen medien. Dies geschieht z.Zt. _ohne_ Prüfung von permissions, da attacks unwahrscheinlich sind !
+      # TODO: Ebendiese Rechte prüfen!
+      if @media_set.update_attributes(params[:media_set])
+        # Dem Medienset neu den Status "defined" verleihen
+        @media_set.store! unless @media_set.defined?
+        flash[:notice] = 'Kollektion erfolgreich gespeichert.'
+        redirect_to(@media_set)
+      else
+        edit(@media_set)
       end
     end
   end
@@ -180,17 +171,11 @@ class MediaSetsController < ApplicationController
   # DELETE /media_sets/1
   # DELETE /media_sets/1.xml
   def destroy
-    @media_set = MediaSet.find params[:id]
+    @media_set = MediaSet.find(params[:id])
     permit :edit, @media_set do
       @media_set.destroy
-
-      respond_to do |format|
-        format.html do
-          flash[:notice] = 'Kollektion gelöscht'
-          redirect_to(media_sets_url)
-        end
-  #       format.xml  { head :ok }
-      end
+      flash[:notice] = 'Kollektion gelöscht'
+      redirect_to(media_sets_url)
     end
   end
 
@@ -284,7 +269,7 @@ class MediaSetsController < ApplicationController
   
   
   def set_collection
-    @media_set = MediaSet.find params[:id]
+    @media_set = MediaSet.find(params[:id])
     permit :edit, @media_set do
       # Wenn leer, dann löschen, sonst zurücksetzen auf "defined"
       if current_user.composing_media_set.media.empty?
@@ -307,7 +292,7 @@ class MediaSetsController < ApplicationController
   # Bereitet das hinzufügen von Medien aus einen bestimmten Set in das Composing Set vor
   def compose
     @title = 'Neue Kollektion zusammenstellen'
-    @media_set = MediaSet.find params[:id]
+    @media_set = MediaSet.find(params[:id])
     permit :edit, @media_set do
       @media = @media_set.images
     end
@@ -315,7 +300,7 @@ class MediaSetsController < ApplicationController
   
   
   def order
-    @media_set = MediaSet.find params[:id]
+    @media_set = MediaSet.find(params[:id])
     permit :edit, @media_set do
       if params[:style] == 'lightbox'
         @media = @media_set.images_for_user_as_viewer(current_user)
@@ -327,16 +312,13 @@ class MediaSetsController < ApplicationController
       action = params[:style] ? "show_#{params[:style]}" : 'show'
       @size = params[:size]
 
-      respond_to do |format|
-#        format.html(&render_block)
-        format.html { render :action => action }
-      end  
+      render :action => action
     end
   end
     
   
   def update_positions
-    @media_set = MediaSet.find params[:id]
+    @media_set = MediaSet.find(params[:id])
     permit :edit, @media_set do
       params[:media_list].each_with_index do |id, position|     
         membership = @media_set.media_set_memberships.find_by_medium_id(id)
@@ -375,7 +357,7 @@ class MediaSetsController < ApplicationController
 
   # Medien aus Set entfernen
   def remove_media
-    media_set = MediaSet.find params[:id]
+    media_set = MediaSet.find(params[:id])
     media = Medium.find(params[:selected_media] || params[:medium_id]).to_a
 
     if media_set && media.any? && permit?(:edit, media_set)

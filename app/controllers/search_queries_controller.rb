@@ -9,12 +9,8 @@ class SearchQueriesController < ApplicationController
     permit :edit, @search_query do
       @search_query.destroy
 
-      respond_to do |format|
-        format.html do
-          flash[:notice] = 'Suchanfrage gelöscht'
-          redirect_to media_sets_url
-        end
-      end
+      flash[:notice] = 'Suchanfrage gelöscht'
+      redirect_to media_sets_url
     end
   end
   
