@@ -4,7 +4,7 @@ development:
   base: dc=ldap,dc=server,dc=domain
   bind_dn: cn=admin,dc=ldap,dc=server,dc=domain
   password: secret
-  adapter: net_ldap
+  adapter: ldap
 
 test:
   host: 127.0.0.1
@@ -12,7 +12,7 @@ test:
   base: dc=ldap,dc=server,dc=domain
   bind_dn: cn=admin,dc=ldap,dc=server,dc=domain
   password: secret
-  adapter: net_ldap
+  adapter: ldap
 
 production:
   host: ldap.hopro.edu
@@ -20,4 +20,4 @@ production:
   # method: :tls
   base: dc=ldap,dc=server,dc=domain
   allow_anonymous: true
-  adapter: net_ldap
+  adapter: ldap
