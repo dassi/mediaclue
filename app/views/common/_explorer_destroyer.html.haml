@@ -1,0 +1,61 @@
+:javascript
+
+  // EXPLORER DESTROYER
+  // explorerdestroyer.com
+
+  // This function does the actual browser detection
+  function hasIE_hasIE() {
+    var ua = navigator.userAgent.toLowerCase();
+    return ((ua.indexOf('msie') != -1) && (ua.indexOf('opera') == -1) && 
+            (ua.indexOf('webtv') == -1) &&
+            (location.href.indexOf('seenIEPage') == -1));
+  }
+
+  function hasIE_showLayer(whichLayer)
+  {
+    if (document.getElementById)
+      {
+        var style2 = document.getElementById(whichLayer).style;
+        style2.display = "block";
+      }
+    else if (document.all)
+      {
+        var style2 = document.all[whichLayer].style;
+        style2.display = "block";
+      }
+    else if (document.layers)
+      {
+        var style2 = document.layers[whichLayer].style;
+        style2.display = "block";
+      }
+  }
+
+  // Hides and shows sections of the page based on whether or not it's
+  // running in IE
+  function hasIE_hideAndShow() {
+    if (hasIE_hasIE()) {
+      hasIE_showLayer("hasIE_level1");
+    }
+  }
+
+  
+#hasIE_level1{:style => "display: none;"}
+
+  %div{:style => "padding: 20px; background-color: #ffffbb; font-family: arial; font-size: 15px; font-weight: normal; color: #111111; line-height: 17px;"}
+
+    %div{:style => "width: 650px; margin: 0 auto 0 auto;"}
+
+      %div{:style => "padding-left: 8px; padding-top: 0px; float: right;"}
+
+      = link_to image_tag('firefox.gif'), 'http://www.mozilla-europe.org/de/firefox/', :target => '_blank'
+      %p
+        %strong Es scheint, dass Sie den Internet Explorer Browser verwenden. mediaclue empfiehlt dringend, einen anderen Browser zu verwenden.
+      %p  
+        Der Internet Explorer ist bekannt als Problem-Browser. Experten sind sich einig, dass der Internet Explorer keine gute Wahl ist.
+        Bitte verwenden Sie deshalb z.B. den Firefox Browser, Google Chrome, Apple Safari oder Opera.
+      %p
+        Firefox können Sie hier runterladen:
+        = link_to 'Gehezu Firefox...', 'http://www.mozilla-europe.org/de/firefox/', :target => '_blank'
+        
+:javascript
+  hasIE_hideAndShow();

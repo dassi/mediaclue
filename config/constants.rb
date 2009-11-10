@@ -54,6 +54,9 @@ FEATURE_METADATA = true
 # An einem LDAP-Server authentifizieren
 FEATURE_LDAP_AUTHENTICATION = true
 
+# Zeigt einen Hinweis an, dass der Internet Explorer keine gute Wahl ist
+FEATURE_DISLIKE_INTERNET_EXPLORER = true
+
 # Für Server-Konfiguration siehe config/ldap.yml (Wird auch von ActiveLdap gem verwendet)
 LDAP_USERS_DN_PREFIX = 'cn=users'
 LDAP_GROUPS_DN_PREFIX = 'cn=groups'
