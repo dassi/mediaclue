@@ -6,6 +6,7 @@
     - width = 580
     - height = (width * (30 / 21)).to_i
     %div{:class => 'flash_preview', :id => div_id}
+      = no_flash_text
 
     :javascript
       var so = new SWFObject('#{fullview.flash_preview.public_filename}','ply','#{width}','#{height}','9','#ffffff');

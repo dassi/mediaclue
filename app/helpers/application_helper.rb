@@ -33,6 +33,10 @@ module ApplicationHelper
     content_tag('em', '[Vorschau nicht verfügbar]')
   end
   
+  def no_flash_text
+    content_tag('em', '[Flash nicht installiert, Ansicht nicht verfügbar]')
+  end
+  
   def options_for_user_group_select
     groups = UserGroup.all.collect {|g| [g.full_name.titlecase, g.id]}
 

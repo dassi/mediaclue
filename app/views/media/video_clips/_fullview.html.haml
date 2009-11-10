@@ -1,6 +1,7 @@
 %h3 Video Clip
 - div_id = "mediaplayer#{fullview.id}"
 %div{:id => div_id}
+  = no_flash_text
 
 :javascript
   var so = new SWFObject('/mediaplayer/player.swf','ply','580','400','9','#ffffff');

@@ -13,6 +13,7 @@
         - div_id = "previewplayer#{preview.id}"
         %p Kurzvorschau (Ausschnitt):
         %div{:id => div_id}
+          = no_flash_text
 
         :javascript
           var so = new SWFObject('#{preview.flash_preview.public_filename}','ply','#{width}','#{height}','9','#ffffff');
