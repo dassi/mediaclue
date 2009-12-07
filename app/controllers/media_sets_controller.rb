@@ -313,18 +313,24 @@ class MediaSetsController < ApplicationController
 
   # Medium zu Set hinzufügen
   def add_media
-    media_set = MediaSet.find(params[:id])
-    media = Medium.find(params[:selected_media] || params[:medium_id]).to_a
+    source_media_set = MediaSet.find(params[:id])
+    target_media_set = MediaSet.find(params[:target_media_set_id])
+
+    if params[:selected_media] or params[:medium_id]
+      media = source_media_set.media.find(params[:selected_media] || params[:medium_id]).to_a
+    else
+      media = source_media_set.media
+    end
     
-    if permit?(:edit, media_set)
-      added_media = add_media_to_media_set(media_set, media)
+    if permit?(:edit, target_media_set)
+      added_media = add_media_to_media_set(target_media_set, media)
 
       # OPTIMIZE: Unschön, dass hier die JS-Repsonse mit der Funktion "Zu Zwischenablage" fix verbunden ist. Man kann eben auch in andere MediaSet adden.
       respond_to do |format|
         format.js do
           render :update do |page|
             for medium in added_media
-              page.insert_html :bottom, 'collected_media', :partial => "media/#{medium.template_path}/collection_item", :object => medium, :locals => {:media_set => media_set}
+              page.insert_html :bottom, 'collected_media', :partial => "media/#{medium.template_path}/collection_item", :object => medium, :locals => {:media_set => target_media_set}
             end
           end
         end
@@ -338,7 +344,7 @@ class MediaSetsController < ApplicationController
   # Medien aus Set entfernen
   def remove_media
     media_set = MediaSet.find(params[:id])
-    media = Medium.find(params[:selected_media] || params[:medium_id]).to_a
+    media = media_set.media.find(params[:selected_media] || params[:medium_id]).to_a
 
     if media_set && media.any? && permit?(:edit, media_set)
 
@@ -395,7 +401,12 @@ class MediaSetsController < ApplicationController
   def move_media
     source_media_set = MediaSet.find(params[:id])
     target_media_set = MediaSet.find(params[:target_media_set_id])
-    media = Medium.find(params[:selected_media] || params[:medium_id]).to_a
+
+    if params[:selected_media] or params[:medium_id]
+      media = source_media_set.media.find(params[:selected_media] || params[:medium_id]).to_a
+    else
+      media = source_media_set.media
+    end
     
 
     if target_media_set && source_media_set && media.any? && permit?(:edit, target_media_set) && permit?(:edit, source_media_set)
@@ -435,7 +446,7 @@ class MediaSetsController < ApplicationController
 
       respond_to do |format|
         format.html do
-          flash[:notice] = 'Kollektionen verschmelzt. Ergebnis-Menge ist in dieser Kollektion.'
+          # flash[:notice] = 'Kollektionen verschmelzt. Ergebnis-Menge ist in dieser Kollektion.'
           redirect_to media_set_path(target_media_set)
         end
       end

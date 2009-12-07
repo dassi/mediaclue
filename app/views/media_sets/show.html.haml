@@ -73,9 +73,9 @@
     %li= per_page_select(@media_set, @per_page)
     %li= link_to 'Zeige Bilder in Ansicht "Leuchtpult klein"', media_set_path(@media_set, :style => 'lightbox', :size => 'small')
     %li= link_to 'Zeige Bilder in Ansicht "Leuchtpult gross"', media_set_path(@media_set, :style => 'lightbox', :size => 'big')
-    %li= link_to 'Zeige Bilder als Diashow', media_set_path(@media_set, :style => 'slideshow')
+    -# %li= link_to 'Zeige Bilder als Diashow', media_set_path(@media_set, :style => 'slideshow')
 
-  %h3 Selektierte Medien...
+  %h3 Selektierte oder alle Medien...
   %ul
     %li= link_to_remote('...als Diashow anzeigen', :url => media_set_path(@media_set, :style => 'slideshow'), :submit => 'multi_action_form', :method => :get)
     %li= link_to_remote('...aus dieser Kollektion entfernen', :url => remove_media_media_set_path(@media_set), :submit => 'multi_action_form', :confirm => "Selektierte Medien wirklich aus dieser Kollektion entfernen (Medien selbst werden nicht gelöscht)?")
@@ -83,15 +83,15 @@
     -#ditto: %li= link_to_remote('...zu anderer Kollektion hinzufügen', :url => add_media_media_set_path(@media_set), :submit => 'multi_action_form', :confirm => "Selektierte Medien wirklich aus dieser Kollektion entfernen (Medien selbst werden nicht gelöscht)?")
 
     - if @composing_media_set and !@media_set.composing?
-      %li= link_to_remote('...in Zwischenablage kopieren', :url => add_media_media_set_path(@composing_media_set), :submit => 'multi_action_form')
-      %li= link_to_remote('...in Zwischenablage verschieben', :url => move_media_media_set_path(@media_set, :target_media_set_id => @composing_media_set), :submit => 'multi_action_form')
+      %li= link_to_remote('...in Zwischenablage kopieren', :url => add_media_media_set_path(@media_set, :target_media_set_id => @composing_media_set), :submit => 'multi_action_form')
+      %li= link_to_remote('...in Zwischenablage verschieben', :url => move_media_media_set_path(@media_set, :target_media_set_id => @composing_media_set), :submit => 'multi_action_form', :confirm => 'Die Medien werden aus der Kollektion entfernt. In die Zwischenablage verschieben?')
 
   - if @composing_media_set and !@media_set.composing?
     %h3 Zwischenablage
     %ul
       %li= link_to 'Als neue Kollektion speichern', edit_media_set_path(@composing_media_set)
       %li= link_to 'Zur aktuellen Kollektion hinzufügen', merge_media_set_path(@media_set, :source_media_set_id => @composing_media_set)
-      %li= link_to_remote('Zwischenablage leeren', {:url => remove_all_media_media_set_path(@composing_media_set, :div_prefix => 'collection'), :method => :post, :confirm => 'Zwischenablage leeren?'})
+      %li= link_to_remote('Zwischenablage leeren', :url => remove_all_media_media_set_path(@composing_media_set, :div_prefix => 'collection'), :method => :post, :confirm => 'Zwischenablage leeren?')
     =render :partial => 'media_sets/collection_box', :object => @composing_media_set if @composing_media_set
 
 
