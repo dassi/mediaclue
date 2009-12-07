@@ -18,7 +18,7 @@ describe Tag, "validations" do
   end
 
   it "should only allow unique names" do
-    tag = Tag.create :name => 'test2341234'
+    tag = Tag.create :name => 'test'
     tag.should be_valid
     tag = Tag.create :name => 'Test'
     tag.should_not be_valid
