@@ -120,6 +120,18 @@ class Medium < ActiveRecord::Base
   def meta_data_values_for_ferret
     meta_data.values.join(' ')
   end
+
+  # Hilfsfunktion. Erzeugt einen YAML String aus einem Hash, mit sortierten keys.
+  def hash_to_sorted_yaml(hash)
+    return nil if hash.nil?
+    YAML::quick_emit(hash.object_id) do |out|
+      out.map(hash.taguri, hash.to_yaml_style) do |map|
+        hash.sort.each do |k, v|
+          map.add(k, v)
+        end
+      end
+    end
+  end
   
   public ##########################################################################################
 
@@ -472,6 +484,13 @@ class Medium < ActiveRecord::Base
     end
     
   end
-  
+
+  # Accessors für virtuelles Attribut meta_data_yaml für die Bearbeitung der Metadaten in einem Form
+  def meta_data_yaml
+    self.hash_to_sorted_yaml(self.meta_data)
+  end
+  def meta_data_yaml=(yaml)
+    self.meta_data = YAML::load(yaml)
+  end
   
 end

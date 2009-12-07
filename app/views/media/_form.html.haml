@@ -73,11 +73,13 @@
               = select_tag("media_set[media_attributes][#{form.id}][read_permitted_user_group_ids][]", options_for_select(options_for_user_group_select, form.read_permitted_user_group_ids), :multiple => true, :style => "vertical-align:top;#{'display:none' if hidden}", :size => 6, :id => groups_select_id)
               
         
-        / - if FEATURE_METADATA
-        /   - unless form.meta_data.blank?
-        /     Meta-Daten
-        /     .edit_media_meta_data
-        /       =simple_format form.meta_data
+        - if FEATURE_METADATA
+          .edit_media_meta_data
+            - meta_data_div_id = "meta_data_div_#{form.id}"
+            = link_to_function('Meta-Daten ein-/ausblenden', "$('#{meta_data_div_id}').toggle()")
+            %div{:id => meta_data_div_id, :style => 'display:none'}
+              Meta-Daten
+              = media_form.text_area :meta_data_yaml, :id => meta_data_div_id, :style => 'height:300px'
     .clear
 
   =spiffy_bottom
