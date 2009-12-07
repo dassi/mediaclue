@@ -267,26 +267,6 @@ class MediaSetsController < ApplicationController
     end
   end
   
-  
-  def set_collection
-    @media_set = MediaSet.find(params[:id])
-    permit :edit, @media_set do
-      # Wenn leer, dann löschen, sonst zurücksetzen auf "defined"
-      if current_user.composing_media_set.media.empty?
-        current_user.composing_media_set.destroy
-      else
-        current_user.composing_media_set.define! 
-      end
-      @media_set.compose!
-    end   
-    
-    # # Composing MediaSet des Users in Session merken
-    # session[:composing_media_set_id] = current_user.composing_media_set.id
-        
-    # Redirect zum aktuellen Suchresultat-MediaSet
-    redirect_to media_set_url(@media_set)
-  end
-  
 
   # GET /media_sets/1/compose
   # Bereitet das hinzufügen von Medien aus einen bestimmten Set in das Composing Set vor
@@ -381,6 +361,35 @@ class MediaSetsController < ApplicationController
       render :nothing => true
     end
   end
+
+
+  # Alle Medien aus Set entfernen
+  def remove_all_media
+    media_set = MediaSet.find(params[:id])
+    media = media_set.media.to_a
+
+    if media_set && media.any? && permit?(:edit, media_set)
+
+      removed_media = remove_media_from_media_set(media_set, media)
+      
+      respond_to do |format|
+        format.html do
+          redirect_to media_set_path(media_set)
+        end
+        
+        format.js do
+          render :update do |page|
+            for medium in removed_media
+              page.remove [params[:div_prefix], "medium_#{medium.id}"].compact.join('_')
+            end
+          end
+        end
+      end
+    else
+      render :nothing => true
+    end
+  end
+
   
   # Medien aus Set entfernen
   def move_media

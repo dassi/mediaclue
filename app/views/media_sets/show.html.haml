@@ -29,18 +29,14 @@
   - if not @media.empty?
     %p= will_paginate @media if @paginate
     #media_list.media
-      %div{:style => 'float:right'}
-        Selektion:
-        = link_to_function 'Alle' do |page|
-          - page.select('input[type=checkbox][name="selected_media[]"]').each do |item|
-            - item.checked = true
-        = link_to_function 'Keine' do |page|
-          - page.select('input[type=checkbox][name="selected_media[]"]').each do |item|
-            - item.checked = false
-      .clear
       - form_tag(nil, :id => 'multi_action_form') do
         = render :partial => 'media/list_item', :locals => {:member_media_set => @media_set, :composing_media_set => @composing_media_set, :size => :small}, :collection => @media
     =sortable_element 'media_list', :tag => 'div', :url => update_positions_media_set_path(@media_set), :scroll => true if @enable_ordering
+    %div{:style => 'float:right'}
+      = link_to_function 'Selektion aufheben' do |page|
+        - page.select('input[type=checkbox][name="selected_media[]"]').each do |item|
+          - item.checked = false
+    .clear
     %p= will_paginate @media if @paginate
   - else
     %p Keine Medien
@@ -66,7 +62,6 @@
 
       -if @media_set.defined? or @media_set.defining?
         %li= link_to 'Weitere Medien in diese Kollektion hochladen', uploader_media_set_path(@media_set) 
-        %li= link_to 'Diese Kollektion zur Zwischenablage machen', set_collection_media_set_path(@media_set) 
 
   %h3 Download
   %ul
@@ -88,14 +83,15 @@
     -#ditto: %li= link_to_remote('...zu anderer Kollektion hinzufügen', :url => add_media_media_set_path(@media_set), :submit => 'multi_action_form', :confirm => "Selektierte Medien wirklich aus dieser Kollektion entfernen (Medien selbst werden nicht gelöscht)?")
 
     - if @composing_media_set and !@media_set.composing?
-      %li= link_to_remote('...zur Zwischenablage hinzufügen', :url => add_media_media_set_path(@composing_media_set), :submit => 'multi_action_form')
+      %li= link_to_remote('...in Zwischenablage kopieren', :url => add_media_media_set_path(@composing_media_set), :submit => 'multi_action_form')
       %li= link_to_remote('...in Zwischenablage verschieben', :url => move_media_media_set_path(@media_set, :target_media_set_id => @composing_media_set), :submit => 'multi_action_form')
 
   - if @composing_media_set and !@media_set.composing?
     %h3 Zwischenablage
     %ul
-      %li= link_to 'Als Kollektion speichern', edit_media_set_path(@composing_media_set)
+      %li= link_to 'Als neue Kollektion speichern', edit_media_set_path(@composing_media_set)
       %li= link_to 'Zur aktuellen Kollektion hinzufügen', merge_media_set_path(@media_set, :source_media_set_id => @composing_media_set)
+      %li= link_to_remote('Zwischenablage leeren', {:url => remove_all_media_media_set_path(@composing_media_set, :div_prefix => 'collection'), :method => :post, :confirm => 'Zwischenablage leeren?'})
     =render :partial => 'media_sets/collection_box', :object => @composing_media_set if @composing_media_set
 
 
