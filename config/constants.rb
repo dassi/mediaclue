@@ -4,7 +4,7 @@ PROJECT_NAME = 'Digitale Sammlung XY'
 # Generiert ein Link im Menu zu einer externen Hilfe-Seite (FAQ etc.)
 URL_TO_EXTERNAL_HELP = 'http://www.mediaclue.ch/'
 
-MEDIA_STORAGE_PATH_PREFIX = 'public/m/'
+MEDIA_STORAGE_PATH_PREFIX = 'public/m/files/'
 PREVIEWS_STORAGE_PATH_PREFIX = 'public/m/previews/'
 
 # Liste der Tags die als Schulfach gelten
@@ -40,6 +40,7 @@ SUBJECT_SELECTIONS = [
 # TODO: Evt. als Model License auslagern
 MEDIUM_SOURCES = [
   ['Unbekannt', 'unknown'],
+  ['Rechte beim Besitzer', 'owner'],
   ['Netzklau (nur für persönlichen Gebrauch)', 'personal'],
   ['Schulcopyright (offiziell für Schulzwecke lizensiert)', 'school'],
   ['Frei (Creative Commons Licence)', 'free']
