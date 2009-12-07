@@ -82,7 +82,7 @@
   -#%param{:name => 'uc_sendImageMetadata', :value => 'true' }/
 
   %param{:name => 'vc_lookAndFeel', :value => 'system' }/           
-  %param{:name => 'vc_uploadViewStartUploadButtonText', :value => '1. Dateien hochladen...' }/
+  %param{:name => 'vc_uploadViewStartUploadButtonText', :value => 'Schritt 1: Dateien hochladen...' }/
   %param{:name => 'vc_uploadViewStopUploadButtonText', :value => 'Abbrechen' }/
   -#%param{:name => 'vc_thumbHeight', :value => '30' }/
   -#%param{:name => 'vc_mainViewFileTreeViewWidthPercent', :value => "33" }/
@@ -150,8 +150,8 @@
     Medien werden in bestehende Kollektion hochgeladen:
     = @media_set.caption
   =# render :partial => 'media_sets/collection_box', :object => @media_set
-  = button_to "2. Kollektion #{@media_set.caption} bearbeiten...", edit_media_set_path(@media_set), :method => :get
+  = button_to "Schritt 2: Kollektion #{@media_set.caption} bearbeiten...", edit_media_set_path(@media_set), :method => :get
 -elsif @media_set.uploading?
-  %h2 Medien werden in neue Kollektion hochgeladen
+  %h2 Medien werden in eine neue Kollektion hochgeladen
   =# render :partial => 'media_sets/collection_box', :object => @media_set
-  = button_to "2. Neue Kollektion vervollständigen...", edit_media_set_path(@media_set), :method => :get
+  = button_to "Schritt 2: Neue Kollektion bearbeiten...", edit_media_set_path(@media_set), :method => :get
