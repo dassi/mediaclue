@@ -39,12 +39,6 @@ Website: www.mediaclue.ch
 * Rails-fähiger Server, zum Beispiel Linux-Server mit Apache und Passenger-Modul.
 * Ruby 1.8.7 empfohlen (geht vermutlich auch mit 1.8.6)
 
-=== Verwendete plugins
-
-* acts_as_authenticated
-* acts_as_state_machine
-* has_many_polymorphs
-
 === Benötigte gems
 
 * siehe environment.rb

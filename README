@@ -1,1 +1,46 @@
-Bitte lesen: doc/README_FOR_APP
+== mediaclue
+
+Mediaclue is a digital assets management application. It is mainly targeted for schools.
+mediaclue was developed from mindclue gmbh (www.mindclue.ch) in cooperation with
+Gymnasium Hohe Promenade, Zürich (www.kshp.ch).
+
+Official website: http://www.mediaclue.ch
+
+== Features
+
+* Very sophisticated, user friendly upload process, suitable for uploading multiple files and folders at once. Made possible through the integration of the Jumploader java applet (www.jumploader.com).
+* Suitable for many document types. Images, office documents, movies, zip packages, raw data files etc.
+* Let users organize their collected media in collections. A media can be in more than one collection. You can even add media from other users to your collections (given that you have access permission to it).
+* Generates previews of a number of widely used document formats: Virtually all image formats, Word, Excel, PowerPoint, OpenOffice documents, flash movies, quicktime movies, etc.
+* Let user tag their media collections and media items. Has special mandatory tags for the lesson subject (school).
+* Built-in search engine, searches through tags and descriptions of collections and media.
+* Lets users save their search queries, for simplifying recurring search tasks.
+* Lets users download a on-the-fly packaged ZIP file, with all the documents of a collection.
+* Lets users download a on-the-fly generated PDF file, for offline slideshow presentation (Images only).
+* Visually sort your media in a collection with drag & drop
+* Lets users order their collections on their personal overview page.
+* Automatically shows a list of my collections, grouped by the most used tags.
+* Etc.
+
+== Some interesting technical information
+
+* Developed with Ruby on Rails
+* Autostarts an OpenOffice server instance in the background for document conversion.
+* Uses ImageMagick for thumbnail generation.
+* Uses "Background Job" gem (bj) for offloading conversion tasks.
+* Uses pdf2swf, to convert PDF documents (originals or intermediate from conversion) into a flash based preview
+* Uses JWPlayer flash player for preview of video and audio files.
+* Uses ferret as search engine.
+* Keeps original file stored on disk. Separates generated preview files in an other folder structure. Making it easy for backing up the original files.
+
+== Prerequisites on the client side (browser)
+
+* Enabled Java applets (For uploader)
+* Enabled Flash applets (For previews and slideshows)
+* Enabled JavaScript
+
+== Code status & technical stuff
+
+So far, all comments and application texts are in german. This will be the case until eventually someone will pick up the task to use the localization features of Rails and translate mediaclue.
+
+Further reading for more technical stuff concerning the soure code, see the file doc/README_FOR_APP
