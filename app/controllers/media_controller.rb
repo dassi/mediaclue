@@ -214,7 +214,7 @@ class MediaController < ApplicationController
       # Redirect zum aktuellen Suchresultat-MediaSet
       redirect_to media_set_url(media_set)
     else
-      flash[:notice] = 'Keine Medien gefunden'
+      flash[:error] = 'Keine Medien gefunden'
       redirect_to media_path
     end
   end

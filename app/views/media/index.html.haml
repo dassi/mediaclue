@@ -79,5 +79,5 @@
   - else
     %table.list= render :partial => 'search_queries/list_item', :collection => current_user.search_queries
 
-%script
-  document.search_form.search_fulltext.focus()
+:javascript
+  $('search_fulltext').focus()
