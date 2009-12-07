@@ -31,7 +31,7 @@
     - if not @medium.meta_data.blank?
       %h2 Meta-Daten
       %table.properties
-        - for key, value in @medium.meta_data
+        - for key, value in @medium.meta_data.sort
           %tr
             %td=h key
             %td
