@@ -5,7 +5,7 @@ ActionController::Routing::Routes.draw do |map|
                 :member => {:generate_previews => :get}
   map.resources :media_sets,
                 :collection => {:browse => :get},
-                :member => {:uploader => :get, :uploader_window => :get, :upload => :post, :compose => :get,
+                :member => {:uploader => :get, :uploader_window => :get, :upload => :post,
                             :order => :get, :update_positions => :post,
                             :add_media => [:put, :post], :remove_media => [:put, :post], :move_media => [:post], :merge => :get,
                             :remove_all_media => :post}

@@ -267,17 +267,6 @@ class MediaSetsController < ApplicationController
     end
   end
   
-
-  # GET /media_sets/1/compose
-  # Bereitet das hinzufügen von Medien aus einen bestimmten Set in das Composing Set vor
-  def compose
-    @title = 'Neue Kollektion zusammenstellen'
-    @media_set = MediaSet.find(params[:id])
-    permit :edit, @media_set do
-      @media = @media_set.images
-    end
-  end
-  
   
   def order
     @media_set = MediaSet.find(params[:id])
