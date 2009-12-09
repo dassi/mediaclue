@@ -1,2 +1,17 @@
 %h3 Bild
 =medium_image_tag fullview, :big
+- if fullview.has_geo_information
+  %h3 Geo-Informationen
+  %table.properties
+    %tr
+      %td.label Längengrad
+      %td.value= fullview.longitude || no_data_text
+    %tr
+      %td.label Breitengrad
+      %td.value= fullview.latitude || no_data_text
+    %tr
+      %td.label Höhe
+      %td.value= fullview.altitude || no_data_text
+    %tr
+      %td.label Kartenansicht
+      %td.value= link_to('Link zu Google Maps', fullview.url_to_google_maps, :target => '_blank')

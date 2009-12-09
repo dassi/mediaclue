@@ -1,3 +1,5 @@
+require 'uri'
+
 class Image < Medium  
 
   CONTENT_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/tiff']  
@@ -77,7 +79,25 @@ class Image < Medium
   def with_image(&block)
     self.class.with_image(self.temp_path, &block)
   end
-                               
 
+  def has_geo_information
+    not ((longitude && latitude) || altitude).nil?
+  end
+  
+  def longitude
+    self.meta_data['GPSLongitude'] && self.meta_data['GPSLongitude'].gsub(' deg', '°')
+  end
+
+  def latitude
+    self.meta_data['GPSLatitude'] && self.meta_data['GPSLatitude'].gsub(' deg', '°')
+  end
+  
+  def altitude
+    self.meta_data['GPSAltitude']
+  end
+  
+  def url_to_google_maps
+    URI::escape("http://maps.google.ch/maps?q=#{self.latitude},#{self.longitude}")
+  end
 
 end

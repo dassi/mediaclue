@@ -79,7 +79,9 @@ class Medium < ActiveRecord::Base
   
   # Importiert Metadaten aus der angehängten Datei. Benutzt gem MiniExiftool
   def import_meta_data(filepath)
-    exif_data = MiniExiftool.new(filepath, :convert_encoding => false, :composite => false).to_hash
+    # Mögliche Optionen:
+    #   :composite => false
+    exif_data = MiniExiftool.new(filepath, :convert_encoding => false).to_hash
 
     # Entfernen von unerwünschten EXIF-Tags
     for unwanted_exif_tag in UNWANTED_EXIF_TAGS
@@ -491,6 +493,13 @@ class Medium < ActiveRecord::Base
   end
   def meta_data_yaml=(yaml)
     self.meta_data = YAML::load(yaml)
+  end
+
+
+  # Liest die Metadaten vom Originalfile erneut ein
+  def reread_meta_data
+    import_meta_data(self.full_filename)
+    save!
   end
   
 end

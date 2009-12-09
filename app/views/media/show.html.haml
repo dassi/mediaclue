@@ -33,8 +33,8 @@
       %table.properties
         - for key, value in @medium.meta_data.sort
           %tr
-            %td=h key
-            %td
+            %td.label=h key
+            %td.value
               - case value
               - when Array
                 =simple_format value.join("\n")
@@ -51,6 +51,8 @@
       %li= link_to 'Bearbeiten', edit_medium_path(@medium)
       %li= link_to 'Löschen', medium_path(@medium), :confirm => 'Sind Sie sicher? Das Medium wird aus der Mediendatenbank gelöscht und auch aus allen Mediensets entfernt! Dieser Vorgang kann nicht rückgängig gemacht werden.', :method => :delete
       %li= link_to 'Vorschau erneut generieren', generate_previews_medium_path(@medium), :confirm => 'Sind Sie sicher? Die aktuellen Vorschauen werden gelöscht und neue werden generiert. Dieser Vorgang kann einige Zeit in Anspruch nehmen.'
+      - if FEATURE_METADATA
+        %li= link_to 'Meta-Daten erneut von Original einlesen', read_meta_data_medium_path(@medium), :confirm => 'Sind Sie sicher? Die aktuellen Meta-Daten werden dabei überschrieben.'
     %li= medium_download_link(@medium)
     
 

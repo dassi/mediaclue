@@ -253,4 +253,11 @@ class MediaController < ApplicationController
     redirect_to :action => 'show'
   end
   
+  def read_meta_data
+    @medium = Medium.find(params[:id])
+    @medium.reread_meta_data
+    flash[:notice] = 'Metadaten eingelesen'
+    redirect_to :action => 'show'
+  end
+  
 end
