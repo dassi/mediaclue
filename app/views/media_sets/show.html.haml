@@ -18,6 +18,7 @@
       - label_and_values << ['Erstellt am', @media_set.created_at.to_formatted_s(:german)]
       - label_and_values << ['Zuletzt bearbeitet am', @media_set.updated_at.to_formatted_s(:german)]
       - label_and_values << ['Persönliche Einsortierung', @media_set.sort_path.present? ? @media_set.sort_path : no_data_text]
+      - label_and_values << ['Bewertung', (image_tag('star.png') * @media_set.rating) + (image_tag('bullet_gray.png') * (3 - @media_set.rating)) ]
       - for label, value in label_and_values
         %tr
           %td.label= label

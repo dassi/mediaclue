@@ -43,6 +43,11 @@
           = used_sort_pathes.join(', ')
     %br
     = f.text_field 'sort_path'
+  %p
+    %label{:for => 'rating'}
+      Bewertung
+    %br
+    = f.select 'rating', [['', 0], ['* (gut)', 1], ['* * (sehr gut)', 2], ['* * * (ausgezeichnet)', 3]]
 
   %br
   - field_set_tag 'Schnell-Zuweisungen für alle Medien' do

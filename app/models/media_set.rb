@@ -34,6 +34,7 @@ class MediaSet < ActiveRecord::Base
 
   validates_associated :media, :message => "Mindestens ein enthaltenes Medium ist ungültig"
   validates_presence_of :name, :on => :update
+  validates_numericality_of :rating, :only_integer => true, :greater_than_or_equal_to => 0, :less_than_or_equal_to => 3, :allow_nil => false
 
   after_save :save_media, :save_new_tags
 
