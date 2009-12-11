@@ -443,7 +443,11 @@ class Medium < ActiveRecord::Base
     self.hash_to_sorted_yaml(self.meta_data)
   end
   def meta_data_yaml=(yaml)
-    self.meta_data = YAML::load(yaml)
+    data = YAML::load(yaml)
+    # Sicherstellen, dass nur Hashes geschrieben werden. Sonst Daten ignorieren
+    if data.is_a?(Hash)
+      self.meta_data = data
+    end
   end
 
 
