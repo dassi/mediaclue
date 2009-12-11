@@ -17,7 +17,7 @@
     - label_and_values << ['Grösse', number_to_human_size(@medium.size, :precision => 2)]
     - label_and_values << ['Erstellt am', @medium.created_at.to_formatted_s(:german)]
     - label_and_values << ['Zuletzt bearbeitet am', @medium.updated_at.to_formatted_s(:german)]
-    - label_and_values << ['Enthalten in Kollektionen', @medium.defined_media_sets.collect {|ms| link_to(ms.name, ms) }.join(', ') ]
+    - label_and_values << ['Enthalten in Kollektionen', @medium.media_sets_for_user_as_viewer(current_user).collect {|ms| link_to(ms.name, ms) }.join(', ') ]
     - for label, value in label_and_values
       %tr
         %td.label= label
