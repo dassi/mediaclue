@@ -15,10 +15,11 @@
       - label_and_values = []
       - label_and_values << ['Schlagworte', formatted_tag_list(@media_set)]
       - label_and_values << ['Besitzer', @media_set.owner_name || no_data_text]
+      - label_and_values << ['Sichtbar für', @media_set.read_permissions_description]
       - label_and_values << ['Erstellt am', @media_set.created_at.to_formatted_s(:german)]
       - label_and_values << ['Zuletzt bearbeitet am', @media_set.updated_at.to_formatted_s(:german)]
       - label_and_values << ['Persönliche Einsortierung', @media_set.sort_path.present? ? @media_set.sort_path : no_data_text]
-      - label_and_values << ['Bewertung', (image_tag('star.png') * @media_set.rating) + (image_tag('bullet_gray.png') * (3 - @media_set.rating)) ]
+      - label_and_values << ['Bewertung', render_rating(@media_set) ]
       - for label, value in label_and_values
         %tr
           %td.label= label
@@ -29,8 +30,8 @@
   
   - if not @media.empty?
     %p= will_paginate @media if @paginate
-    #media_list.media
-      - form_tag(nil, :id => 'multi_action_form') do
+    - form_tag(nil, :id => 'multi_action_form') do
+      #media_list.media
         = render :partial => 'media/list_item', :locals => {:member_media_set => @media_set, :composing_media_set => @composing_media_set, :size => :small}, :collection => @media
     =sortable_element 'media_list', :tag => 'div', :url => update_positions_media_set_path(@media_set), :scroll => true if @enable_ordering
     %div{:style => 'float:right'}
@@ -47,22 +48,18 @@
 
 
 #right
-  %h3.first Bearbeitung
-  %ul
-    -if current_user.can_edit?(@media_set)
+  -if current_user.can_edit?(@media_set)
+    %h3.first Bearbeitung
+    %ul
       -if @media_set.defined? or @media_set.defining?
         %li= link_to 'Kollektion bearbeiten', edit_media_set_path(@media_set) 
         %li= link_to 'Kollektion löschen', media_set_path(@media_set), :confirm => 'Sind Sie sicher? Die Kollektion wird gelöscht. Die enthaltenen Medien werden jedoch nicht gelöscht.', :method => :delete
-      -elsif @media_set.search_result?
-        %li= link_to 'Suchresultat als Kollektion speichern', edit_media_set_path(@media_set)
+        %li= link_to 'Weitere Medien in diese Kollektion hochladen', uploader_media_set_path(@media_set) 
       -elsif @media_set.composing? or @media_set.uploading?
         %li= link_to 'Als neue Kollektion speichern', edit_media_set_path(@media_set)
 
       -if not @enable_ordering
         %li= link_to 'Medien ordnen', order_media_set_path(@media_set)
-
-      -if @media_set.defined? or @media_set.defining?
-        %li= link_to 'Weitere Medien in diese Kollektion hochladen', uploader_media_set_path(@media_set) 
 
   %h3 Download
   %ul

@@ -1,7 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
 
   map.resources :media,
-                :collection => {:search => [:post, :get]},
                 :member => {:generate_previews => :get, :read_meta_data => :get}
   map.resources :media_sets,
                 :collection => {:browse => :get},
@@ -39,7 +38,9 @@ ActionController::Routing::Routes.draw do |map|
   #   end
 
   # You can have the root of your site routed with map.root -- just remember to delete public/index.html.
-  map.root :controller => "media_sets", :protocol => 'http://'
+  map.root :controller => 'media_sets', :protocol => 'http://'
+  map.search 'search', :controller => 'search', :action => 'index'
+  map.search_result 'search/result', :controller => 'search', :action => 'result'
 
   # See how all your routes lay out with "rake routes"
 

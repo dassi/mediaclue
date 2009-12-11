@@ -86,7 +86,7 @@ class MediaSetsController < ApplicationController
         @paginate = false
       end
       
-      @composing_media_set = current_user.composing_media_set
+      @composing_media_set = clipboard_media_set
 
       action = ['show', @style, @size].compact.join('_')
 
@@ -117,7 +117,7 @@ class MediaSetsController < ApplicationController
     @media_set = media_set || MediaSet.find(params[:id])
     permit :edit, @media_set do
       @media_set.define! unless @media_set.media.empty?
-      @media = @media_set.media_for_user_as_owner(current_user)
+      @media = @media_set.media_for_user_as_editor(current_user)
 
       # Explizit rendern, weil wir auch von update hierher kommen
       render :action => 'edit'
@@ -457,9 +457,12 @@ class MediaSetsController < ApplicationController
     # pseudo-Attribute für Vererbung müssen aus params entfernt werden, auch wenn keine Medien im Set,
     # da keine setter-Methode im MediaSet-Model vorhanden
     media_set_source  = media_set_params.delete(:source)
-    # media_set_viewers = media_set_params.delete(:viewers)
-    media_set_permission_type = media_set_params.delete(:permission_type)
-    media_set_read_permitted_user_group_ids = media_set_params.delete(:read_permitted_user_group_ids)
+
+    # media_set_permission_type = media_set_params.delete(:permission_type)
+    media_set_permission_type = media_set_params[:permission_type]
+
+    # media_set_read_permitted_user_group_ids = media_set_params.delete(:read_permitted_user_group_ids)
+    media_set_read_permitted_user_group_ids = media_set_params[:read_permitted_user_group_ids]
 
     media_attributes = media_set_params[:media_attributes]
     return params if media_attributes.blank?
@@ -467,10 +470,26 @@ class MediaSetsController < ApplicationController
     # echtes Attribut für Vererbung muss nicht aus params entfernt werden, da media_set auch tags hat
     media_set_tag_names = media_set_params[:tag_names]
 
-    media_attributes.each do |k, m| 
-      m[:source] = media_set_source if not media_set_source.blank?
-      m[:permission_type] = media_set_permission_type if not media_set_permission_type.blank?
-      m[:read_permitted_user_group_ids] = media_set_read_permitted_user_group_ids if not media_set_read_permitted_user_group_ids.blank?
+    # Flag vorberechnen
+    overwrite_groups = (media_set_permission_type == 'groups') && (media_set_read_permitted_user_group_ids.present? && media_set_read_permitted_user_group_ids.any?)
+    overwrite_permission_type = media_set_permission_type.present?
+    overwrite_source = media_set_source.present?
+    
+    # Gehe durch alle Attribute für die einzelnen Medien, und überschreibe diese allfällig
+    media_attributes.each do |id, m|
+      
+      # Sicherheitsbarriere gegen attribute injection
+      next if not current_user.can_edit?(Medium.find(id))
+      
+      m[:source] = media_set_source if overwrite_source
+
+      if overwrite_permission_type
+        m[:permission_type] = media_set_permission_type 
+
+        if overwrite_groups
+          m[:read_permitted_user_group_ids] = media_set_read_permitted_user_group_ids.dup
+        end
+      end
                                                
       if not media_set_tag_names.blank?
         case params[:inherit_tags]

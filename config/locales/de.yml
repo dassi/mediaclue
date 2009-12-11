@@ -110,6 +110,14 @@ de:
       last_word_connector: " und "
 
   activerecord:
+    models:
+      user: Benutzer
+      media_set: Kollektion
+      medium: Medium
+      image: Bild
+      audio_clip: Audio Clip
+      video_clip: Video Clip
+      document: Dokument
     errors:
       template:
         header:

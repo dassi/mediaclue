@@ -10,7 +10,7 @@ describe MediaSetsController, "GET 'update'" do
     @media_set = MediaSet.create
     MediaSet.stub!(:find).and_return(@media_set)
     @medium = Image.new
-    @media_set.stub!(:media_for_user_as_owner).and_return([@medium])
+    @media_set.stub!(:media_for_user_as_editor).and_return([@medium])
     @medium.stub!(:public_filename).and_return('Bild1')
   end
 
@@ -136,6 +136,9 @@ describe MediaSetsController, "parameter inheritance" do
                               }
               }
     controller.params = @params
+    logged_in_user
+    permit_everything
+    Medium.stub!(:find).and_return(mock_medium)
   end
   
   it "should replace source params on medias if nil" do
@@ -210,6 +213,7 @@ describe MediaSetsController, "parameter inheritance" do
   it "should replace read_permitted_user_group_ids params on medias if nil" do
     inherited_value = [1,2]
     @params[:media_set][:read_permitted_user_group_ids] = inherited_value
+    @params[:media_set][:permission_type] = 'groups'
     inherited_params = controller.send(:inherit_media_params_from_media_set)
     inherited_params[:media_set][:media_attributes][:'1'][:read_permitted_user_group_ids].should eql(inherited_value)
     inherited_params[:media_set][:media_attributes][:'2'][:read_permitted_user_group_ids].should eql(inherited_value)

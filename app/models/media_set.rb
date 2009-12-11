@@ -6,10 +6,12 @@ end
 class MediaSet < ActiveRecord::Base
 
   include Authorization::ModelMethods
+  include Authorization::GroupPermissions
   
-  acts_as_ferret :remote => true, :fields => {:name => { },
-                                              :desc => { },
-                                              :tag_names => { :boost => 2 }}
+  acts_as_ferret :remote => true, :boost => :rating,
+                 :fields => {:name => { :boost => 2 },
+                             :desc => { },
+                             :tag_names => { :boost => 3 }}
 
   belongs_to :owner, :class_name => "User", :foreign_key => "owner_id"
   
@@ -130,9 +132,14 @@ class MediaSet < ActiveRecord::Base
     self.media.reject { |medium| !(user.can_view?(medium)) }
   end
   
-  def media_for_user_as_owner(user)    
-    self.media.reject { |medium| !user.is_owner_of?(medium) }
+  def media_for_user_as_editor(user)
+    self.media.reject { |medium| !(user.can_edit?(medium)) }
   end
+  
+  # Nicht gebraucht
+  # def media_for_user_as_owner(user)    
+  #   self.media.reject { |medium| !user.is_owner_of?(medium) }
+  # end
   
   def owner_name
     owner.try(:full_name)
@@ -218,36 +225,45 @@ class MediaSet < ActiveRecord::Base
     # Media immer includen, weil da conditions durch die find_options reinkommen können
     find_options[:include] = :media
     
-    all_found_media_sets = self.find_with_ferret(query, options, find_options)
+    # Kollektionen suchen. Kollektionen entfernen für die keine Leseberechtigung da ist
+    all_found_media_sets = self.find_with_ferret(query, options, find_options).reject { |ms| !(user.can_view?(ms)) }
     
-    all_found_media = all_found_media_sets.collect(&:media).flatten.uniq
+    # all_found_media = all_found_media_sets.collect(&:media).flatten.uniq
+    
+    media_sets_and_media = {}
+    all_found_media_sets.each do |ms|
+      media_sets_and_media[ms] = ms.media_for_user_as_viewer(user)
+    end
     
     # Rechte prüfen, auf jedem gefundenen Medium
-    viewable_media = all_found_media.select { |m| m.can_view?(user) }
+    # viewable_media = all_found_media.select { |m| m.can_view?(user) }
     
-    viewable_media
+    # viewable_media
+    
+    media_sets_and_media
   end
   
+  # Performantere Variante ohne ferret-Suche
   def self.find_all_media_for_user(user, find_options = {})
     # Media immer includen, weil da conditions durch die find_options reinkommen können
     find_options[:include] = :media
 
-    all_found_media_sets = self.find(:all, find_options)
-    
-    all_found_media = all_found_media_sets.collect(&:media).flatten.uniq
-    
-    # Rechte prüfen, auf jedem gefundenen Medium
-    viewable_media = all_found_media.select { |m| m.can_view?(user) }
-    
-    viewable_media
-  end
-  
-  def can_view?(user)
-    self.owner == user
-  end
+    # Kollektionen suchen. Kollektionen entfernen für die keine Leseberechtigung da ist
+    all_found_media_sets = self.find(:all, find_options).reject { |ms| !(user.can_view?(ms)) }
 
-  def can_edit?(user)
-    self.owner == user
+    # all_found_media = all_found_media_sets.collect(&:media).flatten.uniq
+
+    media_sets_and_media = {}
+    all_found_media_sets.each do |ms|
+      media_sets_and_media[ms] = ms.media_for_user_as_viewer(user)
+    end
+    
+    # # Rechte prüfen, auf jedem gefundenen Medium
+    # viewable_media = all_found_media.select { |m| m.can_view?(user) }
+    # 
+    # viewable_media
+    
+    media_sets_and_media
   end
   
   def images
@@ -277,5 +293,8 @@ class MediaSet < ActiveRecord::Base
   def <=>(other_media_set)
     self.sort_array <=> other_media_set.sort_array
   end
-  
+
+  def clear
+    self.media_set_memberships.clear
+  end
 end

@@ -126,7 +126,7 @@ class User < ActiveRecord::Base
 
   def get_or_create_last_search_query
     if self.last_search_query.nil?
-      self.create_last_search_query
+      self.create_last_search_query(:user => self, :name => 'Letzte Suchanfrage')
       self.save!
     end
     

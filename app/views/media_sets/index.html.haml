@@ -3,7 +3,7 @@
 #column1
   %h2
     Meine Kollektionen
-    %span.explanation (Gruppiert nach persönlicher Einsortierung)
+    %span.explanation (Manuell gruppiert nach persönlicher Einsortierung)
   - media_sets = current_user.defined_media_sets
   - if media_sets.empty?
     = no_data_text
@@ -21,7 +21,7 @@
   - if not media_sets.empty?
     %h2
       Meine Kollektionen
-      %span.explanation (Gruppiert nach häufigsten Schlagworten)
+      %span.explanation (Automatisch gruppiert nach Schlagworten)
     %table.list
       - tagging_ids = current_user.media_sets.collect(&:tagging_ids).flatten
       - top_tags = MediaSet.tag_counts(:at_least => 2, :conditions => ['taggings.id IN (?)', tagging_ids])
@@ -38,7 +38,7 @@
   %h2 
     Automatische Kollektionen 
     %span.explanation  (Werden vom System generisch erstellt)
-  %table.list= render :partial => 'list_item', :collection => [current_user.owner_media_set, current_user.search_result_media_set, current_user.composing_media_set, current_user.uploading_media_set]
+  %table.list= render :partial => 'list_item', :collection => [current_user.owner_media_set, clipboard_media_set, current_user.uploading_media_set]
 
   - media_sets = current_user.media_sets_to_define
   -if not media_sets.empty?

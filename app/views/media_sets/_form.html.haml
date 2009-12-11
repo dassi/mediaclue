@@ -57,7 +57,7 @@
         %td Quelle/Copyright:&nbsp;
         %td= select_tag 'media_set[source]', options_from_collection_for_select([['', nil]].concat(MEDIUM_SOURCES), :last, :first, nil)
       %tr
-        %td Sichtbar für:
+        %td Kollektion und Medien sichtbar für:
         %td
           = radio_button_tag('media_set[permission_type]', 'owner')
           Nur Besitzer

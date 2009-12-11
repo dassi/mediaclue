@@ -16,6 +16,12 @@ class ApplicationController < ActionController::Base
   before_filter { require_dependency 'tag' }
 
   protect_from_forgery
+
+  helper_method :clipboard_media_set
+  
+  def clipboard_media_set
+    current_user.composing_media_set
+  end
  
 
 end

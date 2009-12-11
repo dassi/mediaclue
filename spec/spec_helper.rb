@@ -121,11 +121,23 @@ def mock_search_query(attributes = {})
   mock.stub!(:video_clips=)
   mock.stub!(:documents=)
   mock.stub!(:my_media_only=)
-  mock.stub!(:save!)
+  mock.stub!(:save!)               
+  mock.stub!(:execute).and_return(attributes[:search_result] || mock_search_result(:search_query => mock))
   
   mock
 end
 
+def mock_search_result(attributes = {})
+  attributes.reverse_merge!(:empty? => false,
+                            :media_set => mock_media_set,
+                            :media => [],
+                            :media_sets_and_media => {})
+                            
+  mock = mock_model(SearchResult, attributes)
+  mock.stub!(:search_query).and_return(attributes[:search_query] || mock_search_query(:search_result => mock))
+  
+  mock
+end
 def mock_user(attributes = {})
   attributes.reverse_merge!(:get_or_create_last_search_query => mock_search_query,
                             :last_search_query => mock_search_query,

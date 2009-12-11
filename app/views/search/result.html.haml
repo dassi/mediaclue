@@ -1,0 +1,47 @@
+#left
+  - if not @search_result.empty?
+    %h2 Gefundene Medien
+    #media_list.media
+      - form_tag(nil, :id => 'multi_action_form') do
+        = render :partial => 'list_item', :locals => {:size => :small}, :collection => @search_result.media
+    %h2
+      Gefundene Kollektionen
+      %span.explanation und darin enthaltene Medien
+    - for media_set, media in @search_result.media_sets_and_media
+      %h3
+        = link_to(media_set.caption, media_set_path(media_set))
+        = render_rating(media_set, false)
+      %p= formatted_desc(media_set)
+      #media_list.media
+        - form_tag(nil, :id => 'multi_action_form') do
+          = render :partial => 'list_item', :locals => {:size => :small}, :collection => media
+  - else
+    %p Keine Medien
+
+#right
+  %h3.first Bearbeitung
+  %ul
+    %li= link_to 'Suchresultat als Kollektion speichern', edit_media_set_path(@search_result.media_set)
+
+  %h3 Download
+  %ul
+    %li= link_to 'Alle Medien als ZIP-File herunterladen', media_set_path(@search_result.media_set, :format => :zip)
+    %li= link_to 'Bilder als PDF-Diashow herunterladen', media_set_path(@search_result.media_set, :format => :pdf)
+
+  %h3 Ansicht
+  %ul
+    %li= link_to 'Zeige Bilder in Ansicht "Leuchtpult klein"', media_set_path(@search_result.media_set, :style => 'lightbox', :size => 'small')
+    %li= link_to 'Zeige Bilder in Ansicht "Leuchtpult gross"', media_set_path(@search_result.media_set, :style => 'lightbox', :size => 'big')
+
+  %h3 Selektierte oder alle Medien...
+  %ul
+    %li= link_to_remote('...als Diashow anzeigen', :url => media_set_path(@search_result.media_set, :style => 'slideshow'), :submit => 'multi_action_form', :method => :get)
+    %li= link_to_remote('...in Zwischenablage kopieren', :url => add_media_media_set_path(@search_result.media_set, :target_media_set_id => clipboard_media_set), :submit => 'multi_action_form')
+
+  %h3 Zwischenablage
+  %ul
+    %li= link_to 'Als neue Kollektion speichern', edit_media_set_path(clipboard_media_set)
+    %li= link_to_remote('Zwischenablage leeren', :url => remove_all_media_media_set_path(clipboard_media_set, :div_prefix => 'collection'), :method => :post, :confirm => 'Zwischenablage leeren?')
+  =render :partial => 'media_sets/collection_box', :object => clipboard_media_set
+
+

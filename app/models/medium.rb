@@ -1,10 +1,11 @@
 class Medium < ActiveRecord::Base
     
   include Authorization::ModelMethods
+  include Authorization::GroupPermissions
   
-  acts_as_ferret :remote => true, :fields => {:name => { :boost => 2 },
+  acts_as_ferret :remote => true, :fields => {:name => { :boost => 3 },
                                               :desc => { :boost => 2 },
-                                              :tag_names => { :boost => 3 },
+                                              :tag_names => { :boost => 4 },
                                               :meta_data_values_for_ferret => { }}
 
   serialize :meta_data, Hash
@@ -21,10 +22,6 @@ class Medium < ActiveRecord::Base
   has_many :media_set_memberships, :dependent => :destroy
   has_many :media_sets, :through => :media_set_memberships
                                                  
-  has_many :user_group_permissions, :dependent => :destroy, :autosave => true
-  has_many :read_permitted_user_groups, :through => :user_group_permissions, :source => :user_group, :conditions => {:user_group_permissions => {:read => true}}
-  has_many :write_permitted_user_groups, :through => :user_group_permissions, :source => :user_group, :conditions => {:user_group_permissions => {:write => true}}
-
   belongs_to :owner, :class_name => "User", :foreign_key => "owner_id"
 
   has_many :previews, :dependent => :destroy
@@ -397,18 +394,6 @@ class Medium < ActiveRecord::Base
   def defined_media_sets
     media_sets.find :all, :conditions => {:state => 'defined'}
   end
-  
-  # Gibt in lesbarer Form die Leserechte zurück
-  def read_permissions_description
-    case self.permission_type
-    when 'all'
-      'Alle'
-    when 'owner'
-      'Nur Besitzer'
-    when 'groups'
-      self.read_permitted_user_groups.collect(&:full_name).join(', ')
-    end
-  end
 
   def self.type_display_name
     "Medium"
@@ -432,23 +417,6 @@ class Medium < ActiveRecord::Base
     @tag_names ||= tags.to_s
   end
 
-  def can_view?(user)
-    case self.permission_type
-    when 'all'
-      true
-    when 'owner'
-      (self.owner == user)
-    when 'groups'
-      (self.owner == user) || (self.read_permitted_user_groups.any? { |g| g.member?(user) })
-    else
-      false
-    end
-  end
-
-  def can_edit?(user)
-    (self.owner == user) or (self.write_permitted_user_groups.any? { |g| g.member?(user) })
-  end
-
   def has_preview?
     not self.previews.empty?
   end
@@ -470,23 +438,6 @@ class Medium < ActiveRecord::Base
     self.create_previews_offloaded
   end
 
-  
-  # Spezialisierter Setter
-  def read_permitted_user_group_ids=(ids)
-  
-    # TODO! Wenn einmal auch write-Permissions tatsächlich verwendet werden, dann ist diese Funktion nicht mehr korrekt
-    # Dann müsste man statt blanko löschen, jeden einzelnen Eintrag suchen updaten, und restliche löschen, oder so ähnlich
-    
-    self.user_group_permissions.clear
-
-    if ids && ids.any?
-      for group_id in ids
-        self.user_group_permissions.build(:user_group_id => group_id.to_i, :read => true)
-      end
-    end
-    
-  end
-
   # Accessors für virtuelles Attribut meta_data_yaml für die Bearbeitung der Metadaten in einem Form
   def meta_data_yaml
     self.hash_to_sorted_yaml(self.meta_data)
@@ -501,5 +452,10 @@ class Medium < ActiveRecord::Base
     import_meta_data(self.full_filename)
     save!
   end
+
+  def media_sets_for_user_as_viewer(user)
+    self.defined_media_sets.reject { |media_set| !(user.can_view?(media_set)) }
+  end
   
+    
 end

@@ -7,5 +7,10 @@ module MediaSetsHelper
                       
     "Medien pro Seite: #{select}"
   end
+  
+  def render_rating(media_set, show_spaces = true)
+    r = media_set.rating
+    (image_tag('star.png') * r) + (show_spaces ? (image_tag('bullet_gray.png') * (3 - r)) : '')
+  end
 
 end

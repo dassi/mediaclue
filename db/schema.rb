@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091209131234) do
+ActiveRecord::Schema.define(:version => 20091210165930) do
 
   create_table "bj_config", :primary_key => "bj_config_id", :force => true do |t|
     t.text "hostname"
@@ -57,16 +57,6 @@ ActiveRecord::Schema.define(:version => 20091209131234) do
     t.integer  "exit_status"
   end
 
-  create_table "image_thumbnails", :force => true do |t|
-    t.integer  "size"
-    t.string   "content_type"
-    t.string   "filename"
-    t.integer  "height"
-    t.integer  "width"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "media", :force => true do |t|
     t.string   "type"
     t.string   "name"
@@ -102,7 +92,8 @@ ActiveRecord::Schema.define(:version => 20091209131234) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "sort_path"
-    t.integer  "rating",     :default => 0
+    t.integer  "rating",          :default => 0
+    t.string   "permission_type", :default => "owner"
   end
 
   create_table "previews", :force => true do |t|
@@ -163,7 +154,8 @@ ActiveRecord::Schema.define(:version => 20091209131234) do
 
   create_table "user_group_permissions", :force => true do |t|
     t.integer  "user_group_id"
-    t.integer  "medium_id"
+    t.integer  "object_id"
+    t.string   "object_type"
     t.boolean  "read",          :default => false
     t.boolean  "write",         :default => false
     t.datetime "created_at"

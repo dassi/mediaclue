@@ -1,0 +1,17 @@
+.media_detailed{ :id => "medium_#{list_item.id}"}
+  =spiffy_top
+  .mediumfg
+    .medium_preview.left
+      =render :partial => "media/#{list_item.template_path}/preview", :object => list_item, :locals => {:small_preview => true}
+    .media_info.left
+      .media_name_row
+        .media_name
+          =link_to(h(list_item.name), medium_path(list_item))
+        .media_actions
+          =check_box_tag 'selected_media[]', list_item.id
+        .clear
+      .media_tags= list_item.tags
+      - unless list_item.desc.blank?
+        .media_desc{:style => 'max-height:300px'}= simple_format(list_item.desc)
+    .clear
+  =spiffy_bottom

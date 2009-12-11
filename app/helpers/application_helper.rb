@@ -159,5 +159,6 @@ module ApplicationHelper
   def browser_title
     "mediaclue - #{PROJECT_NAME}"
   end
+
   
 end
