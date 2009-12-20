@@ -1,10 +1,14 @@
 == mediaclue
 
-Mediaclue is a digital assets management application. It is mainly targeted for schools.
-mediaclue was developed from mindclue gmbh (www.mindclue.ch) in cooperation with
+Mediaclue is an open source digital assets management application. It is mainly targeted for schools.
+Mediaclue was developed from mindclue gmbh (www.mindclue.ch) in cooperation with
 Gymnasium Hohe Promenade, Zürich (www.kshp.ch).
 
 Official website: http://www.mediaclue.ch
+
+== Licence
+
+Mediaclue is licensed under the open source GPL license. See file LICENSE.
 
 == Features
 
@@ -44,3 +48,9 @@ Official website: http://www.mediaclue.ch
 So far, all comments and application texts are in german. This will be the case until eventually someone will pick up the task to use the localization features of Rails and translate mediaclue.
 
 Further reading for more technical stuff concerning the soure code, see the file doc/README_FOR_APP
+
+== Credits
+
+* Andreas Brodbeck (andreas.brodbeck at mindclue.ch), main developer and maintainer of the project.
+* Armin Frischknecht (www.hoppingmad.ch), for the design of the layout, the making of the official website www.mediaclue.ch and the advertising in his environment.
+* Andy Rohr, Walid Ahmed. Code contributions in the early stage.
