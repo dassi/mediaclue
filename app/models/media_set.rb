@@ -93,9 +93,7 @@ class MediaSet < ActiveRecord::Base
 
   protected #######################################################################################
   
-  # TODO: Warum brauchts das hier?! Mitunter verlangsamt das extrem das Speichern eines Sets, weil attachment_fu alle Bilder-Thumbnails nochmals erzeugt!!!
-  # Evt. auch ein Fall für neues Feature von Rails 2.3, welches assoziationen mitspeichern kann? Auf jedenfall evt. auch smarter machen und nur geänderte speichern
-  # Gemacht: Prüfung auf changed?, dies muss aber noch verifiziert werden, ob das was bringt
+  # Hinweis: Kein Fall für neues Feature von Rails 2.3, welches Assoziationen mitspeichern kann mit :autosave => true! (Das würde IMMER speichern)
   def save_media
     media.each do |medium|
       medium.save(false) if medium.changed?
@@ -103,7 +101,11 @@ class MediaSet < ActiveRecord::Base
   end
 
   def save_new_tags
-    self.tag_with(@tag_names) if @tag_names
+    self.tag_with(@tag_names) if tags_changed?
+  end
+
+  def tags_changed?
+    @tag_names && (@tag_names != self.tags.to_s)
   end
 
   def validate_new_tag_names

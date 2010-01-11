@@ -494,20 +494,20 @@ class MediaSetsController < ApplicationController
       if not media_set_tag_names.blank?
         case params[:inherit_tags]
         when 'none'
-          # nichts weiter tun
+          tags_to_inherit = []
         when 'subjects'
-          SUBJECT_SELECTIONS.each do |subject|
-            if subject.include?(' ')
-              tag_name = '"' + subject + '"'
-            else
-              tag_name = subject
-            end
-            m[:tag_names] << (' ' + tag_name) if media_set_tag_names.include?(tag_name)
-          end
-          
+          tags_to_inherit = SUBJECT_SELECTIONS & Medium.parse_tags(media_set_tag_names)
         when 'all'
-          m[:tag_names] << (' ' + media_set_tag_names)
+          tags_to_inherit = Medium.parse_tags(media_set_tag_names)
         end
+
+        for tag_name in tags_to_inherit
+          if tag_name.include?(' ')
+            tag_name = '"' + tag_name + '"'
+          end
+          m[:tag_names] << (' ' + tag_name) unless m[:tag_names].include?(tag_name)
+        end
+        
       end
       
     end

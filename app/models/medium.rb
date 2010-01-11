@@ -59,8 +59,11 @@ class Medium < ActiveRecord::Base
   
   # Taggt das Medium, sofern das Pseudo-Attribut tag_names gesetzt wurde
   def save_new_tags
-    # OPTIMIZE? Nur speichern, sofern tag_names sich verändert hat?
-    self.tag_with(@tag_names) if @tag_names
+    self.tag_with(@tag_names) if tags_changed?
+  end
+  
+  def tags_changed?
+    @tag_names && (@tag_names != self.tags.to_s)
   end
 
   def validate_new_tag_names
@@ -445,7 +448,7 @@ class Medium < ActiveRecord::Base
   def meta_data_yaml=(yaml)
     data = YAML::load(yaml)
     # Sicherstellen, dass nur Hashes geschrieben werden. Sonst Daten ignorieren
-    if data.is_a?(Hash)
+    if data.is_a?(Hash) && (data != self.meta_data)
       self.meta_data = data
     end
   end
@@ -460,6 +463,13 @@ class Medium < ActiveRecord::Base
   def media_sets_for_user_as_viewer(user)
     self.defined_media_sets.reject { |media_set| !(user.can_view?(media_set)) }
   end
-  
+
+  # Liefert, ob der Datensatz geändert wurde, und ob er deshalb gespeichert werden muss.
+  # Dies steht über dem üblichen Rails Dirty Mechanismus, weil wir noch weitere virtuelle Daten
+  # speichern.
+  def changed?
+    value = super || tags_changed?
+    value
+  end
     
 end
