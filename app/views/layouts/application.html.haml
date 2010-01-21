@@ -13,10 +13,11 @@
 
         .left
           = link_to(image_tag(LOGO_FILENAME, :style => 'vertical-align:text-bottom'), root_url)
-          %span{:class => "title"}
-            = PROJECT_NAME
         #service
+          = link_to image_tag('home.gif'), root_url
+          Mediendatenbank
           - if logged_in?
+            &nbsp;&mdash;&nbsp;
             Angemeldet als:&nbsp;
             = current_user.full_name
           &nbsp;&nbsp;

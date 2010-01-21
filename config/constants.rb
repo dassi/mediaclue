@@ -103,4 +103,4 @@ UNWANTED_EXIF_TAGS = [
   ]
 
 # Projekt-Logo im Header  
-LOGO_FILENAME = 'logo_small.png'
+LOGO_FILENAME = 'schriftzug.png'
