@@ -1,8 +1,8 @@
 # Name des mediaclue-Projektes. Titel der Applikation.
-PROJECT_NAME = 'Digitale Sammlung XY'
+PROJECT_NAME = 'Mediendatenbank KSHP'
 
 # Generiert ein Link im Menu zu einer externen Hilfe-Seite (FAQ etc.)
-URL_TO_EXTERNAL_HELP = 'http://www.mediaclue.ch/'
+URL_TO_EXTERNAL_HELP = 'https://intranet.kshp.ch/info/mediaclue.html'
 
 MEDIA_STORAGE_PATH_PREFIX = 'public/m/files/'
 PREVIEWS_STORAGE_PATH_PREFIX = 'public/m/previews/'
