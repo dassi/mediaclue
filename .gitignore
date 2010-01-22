@@ -12,6 +12,7 @@ tmp/*
 
 # db
 db/*.sqlite3
+db/*.sql
 
 # media_storage/
 media_storage/**/*
