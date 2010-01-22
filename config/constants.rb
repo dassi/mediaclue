@@ -47,7 +47,7 @@ MEDIUM_SOURCES = [
 ]
 
 
-JUMPLOADER_VERSION = [2, 13, 0]
+JUMPLOADER_VERSION = [2, 15, 0]
 
 # Meta-Daten extrahieren und darstellen?
 FEATURE_METADATA = true
