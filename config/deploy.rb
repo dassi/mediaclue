@@ -115,7 +115,7 @@ after 'deploy:update_code' do
 end
 
 # before 'deploy:restart' do
-#   run "cd #{current_path}; rake kshp:ferret:ensure_index"
+#   run "cd #{current_path}; rake mediaclue:ferret:ensure_index"
 # end
 
 # Tasks für die Applikation, im Namespace KSHP

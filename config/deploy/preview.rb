@@ -25,7 +25,7 @@ set :rails_env, 'production'
 
 before 'deploy:restart' do
   ferret_stop
-  run "cd #{current_path}; rake kshp:ferret:ensure_index"  
+  run "cd #{current_path}; rake mediaclue:ferret:ensure_index"  
   ferret_start
 end
 
