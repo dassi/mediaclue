@@ -1,4 +1,4 @@
-namespace :app do
+namespace :mediaclue do
   namespace :ferret do
     desc 'Stellt sicher, dass der Suchindex vorhanden ist'
     task :ensure_index => :environment do
