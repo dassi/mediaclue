@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>RAILS_ENV</key>
+		<string>production</string>
+	</dict>
+	<key>Label</key>
+	<string>ch.kshp.mdb.preview.ferret.start</string>
+	<key>OnDemand</key>
+	<false/>
+	<key>ProgramArguments</key>
+	<array>
+		<string>script/ferret_server</string>
+    <!-- <string>--root=/Library/WebServer/Documents/mediendatenbank/preview/current</string> -->
+		<string>--environment=production</string>
+		<string>--debug</string>
+		<string>start</string>
+	</array>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>ServiceDescription</key>
+	<string>Ferret Suchmaschine fuer Mediendatenbank Preview-Instanz</string>
+	<key>UserName</key>
+	<string>mindclue</string>
+	<key>WorkingDirectory</key>
+	<string>/Library/WebServer/Documents/mediendatenbank/preview/current</string>
+</dict>
+</plist>

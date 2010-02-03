@@ -1,5 +1,3 @@
-# Mongrel-recipes einbinden
-# require 'mongrel_cluster/recipes'
 # require 'ferret_cap_tasks'
 
 #

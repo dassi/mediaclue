@@ -15,6 +15,7 @@ set :copy_exclude, ['.git', 'tmp', 'log']
 
 set :deploy_to, "#{deploy_to_base_path}/preview"
 
+set :default_environment, {'RAILS_ENV' => 'production'}
 set :rails_env, 'production'
 
 # after 'deploy:update_code' do
@@ -24,9 +25,8 @@ set :rails_env, 'production'
 
 
 before 'deploy:restart' do
-  ferret_stop
+  ferret_restart
   run "cd #{current_path}; rake mediaclue:ferret:ensure_index"  
-  ferret_start
 end
 
 after 'deploy:stop' do
