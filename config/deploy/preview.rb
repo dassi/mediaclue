@@ -10,7 +10,7 @@ set :branch, 'HEAD'
 
 set :deploy_via, :copy
 set :copy_cache, true
-set :copy_exclude, ['.git', 'tmp/*', 'log/*']
+set :copy_exclude, ['.git', 'tmp', 'log']
 
 
 set :deploy_to, "#{deploy_to_base_path}/preview"

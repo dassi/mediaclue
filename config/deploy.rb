@@ -19,7 +19,7 @@ require 'capistrano/ext/multistage'
 set :application, 'mediendatenbank'
 # set :rails_env, 'production'
 set :use_sudo, false
-set :user, 'rails'
+set :user, 'mindclue'
 set :user_group, 'staff'
 
 # set :deploy_to, "/home/rails/#{application}"
@@ -54,8 +54,9 @@ set :user_group, 'staff'
 # gateway_user = ENV['USER'] || 'nobody'
 # set :gateway, "#{gateway_user}@mindclue.nine.ch"
 
-set :gateway, "mindclue@mindclue1.nine.ch"
-server = 'mdb.kshp.ch'
+# set :gateway, "mindclue@mindclue1.nine.ch"
+# server = 'mdb.kshp.ch'
+server = '212.117.123.187'
 
 role :app, server
 role :web, server

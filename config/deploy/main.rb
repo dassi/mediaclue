@@ -14,7 +14,7 @@ set :branch, 'master'
 #set :remote, 'origin'
 # set :deploy_via, :remote_cache
 set :deploy_via, :export
-set :copy_exclude, '.git/* tmp/* log/*'
+# set :copy_exclude, ['.git', 'tmp', 'log']
 
 
 set :deploy_to, "#{deploy_to_base_path}/main"
