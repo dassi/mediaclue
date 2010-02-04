@@ -29,10 +29,6 @@ after 'deploy:update_code' do
   run "ln -nfs #{deploy_to}/shared/media_storage #{release_path}/media_storage"
 end
 
-# Standort der Medien symlinken
-run "ln -nfs #{deploy_to}/shared/media_storage #{release_path}/media_storage"
-
-
 before 'deploy:restart' do
   ferret_restart
   run "cd #{current_path}; rake mediaclue:ferret:ensure_index"  
