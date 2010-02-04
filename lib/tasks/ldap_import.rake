@@ -52,12 +52,12 @@ namespace :mediaclue do
                 # User an Gruppe befügen
                 user_group.users << user
               else
-                puts "Benutzer nicht valid: #{user.full_name}, mit Fehler: " + user.errors.join(', ')
+                puts "Benutzer nicht valid: #{user.full_name}, mit Fehler: " + user.errors.full_messages.join(', ')
               end
 
             end
           else
-            puts "Gruppe nicht valid: #{user_group.full_name}, mit Fehler: " + user_group.errors.join(', ')
+            puts "Gruppe nicht valid: #{user_group.full_name}, mit Fehler: " + user_group.errors.full_messages.join(', ')
           end
         end
       end      
