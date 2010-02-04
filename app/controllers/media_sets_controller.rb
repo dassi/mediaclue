@@ -209,7 +209,10 @@ class MediaSetsController < ApplicationController
           # Wir probieren es via file-Befehl auf der Shell
           if uploaded_file.is_a?(Tempfile) # Könnte auch StringIO sein
             # TODO: Plattform-Unabhägigkeit?!
-            mime_type = `file --brief --mime #{uploaded_file.path}`.strip
+            # Neuere file Befehle kennen die Option --mime-type und --mime-encoding. Wir brauche nur den typ ohne encoding
+            # Output ist z.B. 'audio/mp4; charset=binary'
+            # Als workaroung nehmen wir nur den Teil vor dem ;-Zeichen
+            mime_type = `file --brief --mime #{uploaded_file.path}`.strip.split(';').first
             uploaded_file.content_type = mime_type
             logger.info "MIME-Typ detektiert durch file-Befehl: #{uploaded_file.content_type}"
           end
