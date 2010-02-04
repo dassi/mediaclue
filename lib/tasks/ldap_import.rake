@@ -29,28 +29,30 @@ namespace :mediaclue do
             UserGroupMembership.delete_all(:user_group_id => user_group.id)
           end
 
-          user_group.save!
+          if user_group.save
 
+            # Für alle Mitglieder in dieser Gruppe
+            ldap_group.members.each do |ldap_user|
+              # user ohne UID gleich überspringen
+              raise "LdapUser ohne UID! #{ldap_user.inspect}" unless ldap_user.uid
 
-          # Für alle Mitglieder in dieser Gruppe
-          ldap_group.members.each do |ldap_user|
-            # user ohne UID gleich überspringen
-            raise "LdapUser ohne UID! #{ldap_user.inspect}" unless ldap_user.uid
+              user = User.find_or_initialize_by_login(ldap_user.uid)
+              user.full_name = ldap_user.display_name
 
-            user = User.find_or_initialize_by_login(ldap_user.uid)
-            user.full_name = ldap_user.display_name
+              if user.new_record?
+                puts "Benutzer neu erstellt: #{user.inspect}"
+              else
+                puts "Benutzer aktualisiert: #{user.inspect}"
+              end
 
-            if user.new_record?
-              puts "Benutzer neu erstellt: #{user.inspect}"
-            else
-              puts "Benutzer aktualisiert: #{user.inspect}"
+              user.save!
+
+              # User an Gruppe befügen
+              user_group.users << user
+
             end
-
-            user.save!
-
-            # User an Gruppe befügen
-            user_group.users << user
-
+          else
+            puts "Gruppe nicht valid: #{user_group.display_name}, mit Fehler: " + user_group.errors.join(', ')
           end
         end
       end      
