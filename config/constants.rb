@@ -83,7 +83,8 @@ LDAP_IMPORTED_USER_GROUPS = [
   'fkph',
   'fkre',
   'fksp']
-  
+LDAP_ADDITIONAL_GROUP_NAME_ATTRIBUTES = ['description', 'apple-group-realname']
+
 # Global gültige Beschränkung der Dateigrösse
 # = nil, falls keine Beschränkung
 MAX_FILE_SIZE = nil # Zum Beispiel 8 * (1024**2)  => 8MB

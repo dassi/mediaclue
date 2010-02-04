@@ -18,7 +18,7 @@ namespace :mediaclue do
         if ldap_group
 
           user_group = UserGroup.find_or_initialize_by_uid(group_uid)
-          user_group.full_name = ldap_group.cn
+          user_group.full_name = ldap_group.display_name
 
           if user_group.new_record?
             puts "Gruppe neu erstellt: #{user_group.inspect}"
@@ -38,7 +38,7 @@ namespace :mediaclue do
             raise "LdapUser ohne UID! #{ldap_user.inspect}" unless ldap_user.uid
 
             user = User.find_or_initialize_by_login(ldap_user.uid)
-            user.full_name = ldap_user.cn
+            user.full_name = ldap_user.display_name
 
             if user.new_record?
               puts "Benutzer neu erstellt: #{user.inspect}"
