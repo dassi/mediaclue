@@ -92,6 +92,7 @@ UNWANTED_EXIF_TAGS = [
   'FileName',
   'FileSize',
   'FileType',
+  'FilePermissions',
   'Directory',
   'ExifToolVersion',
   'MIMEType',
@@ -100,7 +101,8 @@ UNWANTED_EXIF_TAGS = [
   'MatrixStructure',
   /.*Date$/,
   /.*Time$/,
-  /GUID/
+  /GUID/,
+  'NextTrackID'
   ]
 
 # Projekt-Logo im Header  
