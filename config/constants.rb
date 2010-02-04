@@ -106,4 +106,4 @@ UNWANTED_EXIF_TAGS = [
 LOGO_FILENAME = 'schriftzug.png'
 
 # Weitere Pfade für die PATH Variable. Auf OSX mit MacPorts z.B. ['/opt/local/bin']
-ADDITIONAL_ENV_PATHS = []
+ADDITIONAL_ENV_PATHS = ['/opt/local/bin']
