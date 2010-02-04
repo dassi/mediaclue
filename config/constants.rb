@@ -62,8 +62,28 @@ FEATURE_DISLIKE_INTERNET_EXPLORER = true
 LDAP_USERS_DN_PREFIX = 'cn=users'
 LDAP_GROUPS_DN_PREFIX = 'cn=groups'
 LDAP_USERNAME_ATTRIBUTE = 'uid'
-LDAP_IMPORTED_USER_GROUPS = ['lehrer', 'angestellte', 'biologie', 'personal', 'mctestgroup1', 'mctestgroup2']
-
+LDAP_IMPORTED_USER_GROUPS = [
+  'lehrer',
+  'angestellte',
+  'personal',
+  'fkas',
+  'fkbg',
+  'fkbi',
+  'fkch',
+  'fkde',
+  'fken',
+  'fkfr',
+  'fkgg',
+  'fkgs',
+  'fkinstr',
+  'fkis',
+  'fkma',
+  'fkmi',
+  'fkmu',
+  'fkph',
+  'fkre',
+  'fksp']
+  
 # Global gültige Beschränkung der Dateigrösse
 # = nil, falls keine Beschränkung
 MAX_FILE_SIZE = nil # Zum Beispiel 8 * (1024**2)  => 8MB
