@@ -21,9 +21,9 @@ namespace :mediaclue do
           user_group.full_name = ldap_group.display_name
 
           if user_group.new_record?
-            puts "Gruppe neu erstellt: #{user_group.inspect}"
+            puts "Gruppe neu erstellt: #{user_group.full_name}"
           else
-            puts "Gruppe aktualisiert: #{user_group.inspect}"
+            puts "Gruppe aktualisiert: #{user_group.full_name}"
 
             # Gruppenzuordnungen für diese Gruppe erst alle löschen (werden dann wieder erstellt, so können Neuzuordnungen synchronisiert werden)
             UserGroupMembership.delete_all(:user_group_id => user_group.id)
@@ -34,25 +34,30 @@ namespace :mediaclue do
             # Für alle Mitglieder in dieser Gruppe
             ldap_group.members.each do |ldap_user|
               # user ohne UID gleich überspringen
-              raise "LdapUser ohne UID! #{ldap_user.inspect}" unless ldap_user.uid
+              if ldap_user.uid.blank?
+                puts "Fehler: LdapUser ohne UID! #{ldap_user.inspect}" 
+                next
+              end
 
               user = User.find_or_initialize_by_login(ldap_user.uid)
               user.full_name = ldap_user.display_name
 
               if user.new_record?
-                puts "Benutzer neu erstellt: #{user.inspect}"
+                puts "Benutzer neu erstellt: #{user.full_name}"
               else
-                puts "Benutzer aktualisiert: #{user.inspect}"
+                puts "Benutzer aktualisiert: #{user.full_name}"
               end
 
-              user.save!
-
-              # User an Gruppe befügen
-              user_group.users << user
+              if user.save
+                # User an Gruppe befügen
+                user_group.users << user
+              else
+                puts "Benutzer nicht valid: #{user.full_name}, mit Fehler: " + user.errors.join(', ')
+              end
 
             end
           else
-            puts "Gruppe nicht valid: #{user_group.display_name}, mit Fehler: " + user_group.errors.join(', ')
+            puts "Gruppe nicht valid: #{user_group.full_name}, mit Fehler: " + user_group.errors.join(', ')
           end
         end
       end      
