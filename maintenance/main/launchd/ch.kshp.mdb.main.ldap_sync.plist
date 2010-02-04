@@ -14,7 +14,7 @@
   <key>ProgramArguments</key>
   <array>
     <string>rake</string>
-    <string>ldap:sync_users</string>
+    <string>mediaclue:ldap:import</string>
   </array>
   <key>StartCalendarInterval</key>
   <dict>
