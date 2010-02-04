@@ -236,7 +236,7 @@ class Medium < ActiveRecord::Base
 
     if need_to_save_attachment?
       FileUtils.mkdir_p(File.dirname(full_filename))
-      File.cp(temp_path, full_filename)
+      FileUtils.cp(temp_path, full_filename)
       File.chmod(0644, full_filename)
 
       @need_to_save_attachment = false
