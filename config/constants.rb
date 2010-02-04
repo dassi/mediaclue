@@ -63,6 +63,7 @@ LDAP_USERS_DN_PREFIX = 'cn=users'
 LDAP_GROUPS_DN_PREFIX = 'cn=groups'
 LDAP_USERNAME_ATTRIBUTE = 'uid'
 LDAP_IMPORTED_USER_GROUPS = ['lehrer']
+LDAP_ADDITIONAL_GROUP_NAME_ATTRIBUTES = ['description']
 
 # Global gültige Beschränkung der Dateigrösse
 # = nil, falls keine Beschränkung
