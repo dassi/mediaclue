@@ -1,4 +1,4 @@
-# MAIN-specific deployment configuration
+# PREVIEW-specific deployment configuration
 # please put general deployment config in config/deploy.rb
                                                       
 # set :application, "mediendatenbank"
@@ -22,6 +22,15 @@ set :rails_env, 'production'
 #   install_launchd_scripts
 # end
 
+
+# Die PREVIEW-Stage darf den produktiven Medienordner nicht benützen! Verwendet einen Ordner im shared-Pfad
+after 'deploy:update_code' do
+  # Standort der Medien symlinken
+  run "ln -nfs #{deploy_to}/shared/media_storage #{release_path}/media_storage"
+end
+
+# Standort der Medien symlinken
+run "ln -nfs #{deploy_to}/shared/media_storage #{release_path}/media_storage"
 
 
 before 'deploy:restart' do

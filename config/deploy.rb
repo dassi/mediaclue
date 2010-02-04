@@ -107,9 +107,6 @@ after 'deploy:update_code' do
   run "ln -nfs #{deploy_to}/shared/config/database.yml #{release_path}/config/database.yml"
   run "ln -nfs #{deploy_to}/shared/config/ferret_server.yml #{release_path}/config/ferret_server.yml"
   run "ln -nfs #{deploy_to}/shared/config/ldap.yml #{release_path}/config/ldap.yml"
-
-  # Standort der Medien symlinken
-  run "ln -nfs #{deploy_to}/shared/media_storage #{release_path}/media_storage"
 end
 
 # before 'deploy:restart' do
