@@ -38,7 +38,7 @@ module ApplicationHelper
   end
   
   def options_for_user_group_select
-    groups = UserGroup.all.collect {|g| [g.full_name.titlecase, g.id]}
+    groups = UserGroup.all.collect {|g| [g.full_name, g.id]}
 
     groups
   end
