@@ -42,6 +42,11 @@ LOCAL_DEVELOPMENT = LOCAL_DEVELOPMENT_ANDREAS || LOCAL_DEVELOPMENT_WALID
 
 # Applikationsweite Konstanten laden
 require File.join(File.dirname(__FILE__), 'constants')
+
+# Pfad allenfalls anpassen
+if ADDITIONAL_ENV_PATHS.any?
+  ENV['PATH']="#{ADDITIONAL_ENV_PATHS.join(':')}:#{ENV['PATH']}"
+end
                                                                      
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')

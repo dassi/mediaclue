@@ -104,3 +104,6 @@ UNWANTED_EXIF_TAGS = [
 
 # Projekt-Logo im Header  
 LOGO_FILENAME = 'logo_small.png'
+
+# Weitere Pfade für die PATH Variable. Auf OSX mit MacPorts z.B. ['/opt/local/bin']
+ADDITIONAL_ENV_PATHS = []
