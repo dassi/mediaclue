@@ -7,12 +7,13 @@ class LdapGroup < ActiveLdap::Base
   has_many :members, :wrap => "memberUid", :class => 'LdapUser', :primary_key => 'uid'
   
   def display_name
+    base_name = self.cn.titlecase
     additional_name = LDAP_ADDITIONAL_GROUP_NAME_ATTRIBUTES.collect{ |attribute| self[attribute] }.find{ |value| not value.blank? }
 
-    if additional_name
-      "#{self.cn} (#{additional_name})"
+    if additional_name and (base_name.downcase != additional_name.downcase)
+      "#{base_name} (#{additional_name})"
     else
-      self.cn
+      base_name
     end
   end
   
