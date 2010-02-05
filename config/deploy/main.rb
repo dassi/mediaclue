@@ -2,7 +2,7 @@
 # please put general deployment config in config/deploy.rb
 
 # Ein erneutes "Ja" soll der Benutzer angeben, wenn er main deployt
-confirmation = Capistrano::CLI.ui.ask "Sie deployen die Hauptinstanz der Mediendatenbank Kanti Stadelhofen. Sind Sie sicher, dass Sie das wollen? Um weiterzufahren, 'Ja' eintippen:"
+confirmation = Capistrano::CLI.ui.ask "Sie deployen die Hauptinstanz der Mediendatenbank KSHP. Sind Sie sicher, dass Sie das wollen? Um weiterzufahren, 'Ja' eintippen:"
 exit(-1) unless confirmation == 'Ja'
                                                       
 # set :application, "mediendatenbank"
@@ -12,8 +12,8 @@ set :repository, 'git@mindclue.dyndns.org:kshp/mediaclue.git'
 set :local_repository, 'git@mindclue-file:kshp/mediaclue.git'
 set :branch, 'master'
 #set :remote, 'origin'
-# set :deploy_via, :remote_cache
-set :deploy_via, :export
+set :deploy_via, :remote_cache
+# set :deploy_via, :export
 # set :copy_exclude, ['.git', 'tmp', 'log']
 
 

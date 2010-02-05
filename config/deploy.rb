@@ -40,6 +40,10 @@ set :user_group, 'staff'
 # 'RUBYLIB' => '/usr/local/lib/ruby1.8.6/site_ruby/1.8:/usr/local/lib/ruby1.8.6/site_ruby/1.8/i486-linux:/usr/local/lib/ruby1.8.6/site_ruby/1.8/i386-linux:/usr/local/lib/ruby1.8.6/site_ruby'}
 # set :default_environment, shell_environment
 
+# Weiterer Pfad hinzufügen für MacPorts
+shell_environment = {'PATH' => '/opt/local/bin:$PATH'}
+set :default_environment, shell_environment
+
 
 #
 # Servers
