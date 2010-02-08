@@ -1,17 +1,8 @@
 class DestroyOldThumbnails < ActiveRecord::Migration
   def self.up
 
-    Image.destroy_all('parent_id IS NOT NULL')
-    
-    # # Alle Thumbnails kopieren in ImageThumbnail-Objekte
-    # ImageThumbnail.transaction do
-    #   for thumbnail in thumbnails
-    #     ImageThumbnail.create!(thumbnail.attributes)
-    #     thumbnail.destroy
-    #   end
-    # end
-    
     begin
+      Image.destroy_all('parent_id IS NOT NULL')
       remove_column :media, :thumbnail
       remove_column :media, :parent_id
     rescue
