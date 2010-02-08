@@ -33,17 +33,17 @@ end
 #   install_launchd_scripts
 # end
 
-before 'deploy:restart' do
-  ferret_restart
-end
-
-after 'deploy:stop' do
-  ferret_stop
-end
-
-before 'deploy:start' do
-  ferret_start
-end
+# before 'deploy:restart' do
+#   ferret_restart
+# end
+# 
+# after 'deploy:stop' do
+#   ferret_stop
+# end
+# 
+# before 'deploy:start' do
+#   ferret_start
+# end
 
 after 'deploy:update_code' do
   # Ferret Index wird nur einmal geführt für alle relases, da es sehr lange dauert bei produktiven Daten ihn zu erzeugen

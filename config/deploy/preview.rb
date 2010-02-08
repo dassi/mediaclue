@@ -30,17 +30,17 @@ after 'deploy:update_code' do
 end
 
 before 'deploy:restart' do
-  ferret_restart
-  run "cd #{current_path}; rake mediaclue:ferret:ensure_index"  
+  # ferret_restart
+  # run "cd #{current_path}; rake mediaclue:ferret:ensure_index"  
 end
 
-after 'deploy:stop' do
-  ferret_stop
-end
-
-before 'deploy:start' do
-  ferret_start
-end
+# after 'deploy:stop' do
+#   ferret_stop
+# end
+# 
+# before 'deploy:start' do
+#   ferret_start
+# end
 
 # install_launchd_scripts sollte sehr spät erfolgen, da es mitunter auch ferret neu starten würde.
 # Es ergäbe sonst race conditions, wonach ferret dann zweimal laufen würde!

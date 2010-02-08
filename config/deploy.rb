@@ -69,18 +69,18 @@ role :db,  server, :primary => true
 # Helpers
 #
 
-def ferret_start
-  run "cd #{current_path}; script/ferret_server -e production start"
-end
-
-def ferret_stop
-  run "cd #{current_path}; script/ferret_server -e production stop; exit 0" # exit 0, weil wir bei einem Fehler nicht capistrano unterbrechen wollen
-end
-
-def ferret_restart
-  ferret_stop
-  ferret_start
-end
+# def ferret_start
+#   run "cd #{current_path}; script/ferret_server -e production start"
+# end
+# 
+# def ferret_stop
+#   run "cd #{current_path}; script/ferret_server -e production stop; exit 0" # exit 0, weil wir bei einem Fehler nicht capistrano unterbrechen wollen
+# end
+# 
+# def ferret_restart
+#   ferret_stop
+#   ferret_start
+# end
 
 def install_launchd_scripts
   
