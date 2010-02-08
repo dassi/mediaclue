@@ -4,8 +4,8 @@ if ENV['FERRET_USE_LOCAL_INDEX'].blank?
   if ferret_config
     ferret_controller = DaemonController.new(
        :identifier    => 'Ferret Server',
-       :start_command => "#{RAILS_ROOT}/script/ferret_server start -e #{RAILS_ENV}",
-       :stop_command  => "#{RAILS_ROOT}/script/ferret_server stop -e #{RAILS_ENV}",
+       :start_command => "cd #{RAILS_ROOT}; #{RAILS_ROOT}/script/ferret_server start -e #{RAILS_ENV}",
+       :stop_command  => "cd #{RAILS_ROOT}; #{RAILS_ROOT}/script/ferret_server stop -e #{RAILS_ENV}",
        :ping_command  => lambda { TCPSocket.new(ferret_config['host'], ferret_config['port']) },
        :pid_file      => ferret_config['pid_file'],
        :log_file      => ferret_config['log_file'],
