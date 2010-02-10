@@ -85,15 +85,15 @@ class Image < Medium
   end
   
   def longitude
-    self.meta_data['GPSLongitude'] && self.meta_data['GPSLongitude'].gsub(' deg', '°')
+    self.meta_data && self.meta_data['GPSLongitude'] && self.meta_data['GPSLongitude'].gsub(' deg', '°')
   end
 
   def latitude
-    self.meta_data['GPSLatitude'] && self.meta_data['GPSLatitude'].gsub(' deg', '°')
+    self.meta_data && self.meta_data['GPSLatitude'] && self.meta_data['GPSLatitude'].gsub(' deg', '°')
   end
   
   def altitude
-    self.meta_data['GPSAltitude']
+    self.meta_data && self.meta_data['GPSAltitude']
   end
   
   def url_to_google_maps
