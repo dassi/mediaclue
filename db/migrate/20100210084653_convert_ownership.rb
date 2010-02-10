@@ -1,6 +1,5 @@
 class ConvertOwnership < ActiveRecord::Migration
   def self.up
-    self.is_owner_of_what MediaSet, :conditions => {:state => state.to_s}
 
     # Owner umschreiben von der alten roles Tabelle für alle Kollektionen
     for media_set in MediaSet.all
