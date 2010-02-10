@@ -7,7 +7,7 @@ class ConvertOwnership < ActiveRecord::Migration
       data = ActiveRecord::Base.connection.select_one(sql)
       if data
         media_set.owner_id = data['user_id']
-        media_set.save!
+        media_set.save_without_validation!
       end
     end
     
@@ -17,7 +17,7 @@ class ConvertOwnership < ActiveRecord::Migration
       data = ActiveRecord::Base.connection.select_one(sql)
       if data
         medium.owner_id = data['user_id']
-        medium.save!
+        medium.save_without_validation!
       end
     end
     
