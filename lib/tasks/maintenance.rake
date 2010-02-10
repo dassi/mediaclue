@@ -18,5 +18,17 @@ namespace :mediaclue do
         medium.recreate_previews
       end
     end
+
+    desc 'Importiert alle EXIF Meta-Daten neu, ohne zu überschreiben'
+    task :initialize_meta_data => :environment do
+      Medium.all.each do |medium|
+        if medium.meta_data.nil? or medium.meta_data.empty?
+          puts "Importiere EXIF für Medium #{medium.id}"
+          medium.reread_meta_data
+        else
+          puts "Kein erneuter Import von EXIF für Medium #{medium.id}"
+        end
+      end
+    end
   end
 end
