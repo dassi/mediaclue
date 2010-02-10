@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091210165930) do
+ActiveRecord::Schema.define(:version => 20100210161953) do
 
   create_table "bj_config", :primary_key => "bj_config_id", :force => true do |t|
     t.text "hostname"
@@ -121,16 +121,6 @@ ActiveRecord::Schema.define(:version => 20091210165930) do
     t.datetime "updated_at"
   end
 
-  create_table "sessions", :force => true do |t|
-    t.string   "session_id", :default => "", :null => false
-    t.text     "data"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
-  add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
-
   create_table "taggings", :force => true do |t|
     t.integer "tag_id",                        :null => false
     t.integer "taggable_id",                   :null => false
@@ -176,7 +166,6 @@ ActiveRecord::Schema.define(:version => 20091210165930) do
     t.datetime "updated_at"
     t.string   "remember_token"
     t.datetime "remember_token_expires_at"
-    t.boolean  "is_group"
     t.string   "full_name"
     t.integer  "last_search_query_id"
   end
