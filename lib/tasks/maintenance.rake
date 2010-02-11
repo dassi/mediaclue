@@ -11,11 +11,19 @@ namespace :mediaclue do
       end
     end
     
-    desc 'Erzeugt alle Vorschauen neu'
+    desc 'Erzeugt nochmals alle Vorschauen neu'
     task :recreate_previews => :environment do
       Medium.all.each do |medium|
         puts "Erzeuge nebenläufig Vorschauen für Medium #{medium.id}"
         medium.recreate_previews
+      end
+    end
+
+    desc 'Erzeugt alle Vorschauen, die noch nicht existieren'
+    task :create_previews => :environment do
+      Medium.all.each do |medium|
+        puts "Erzeuge nebenläufig Vorschauen für Medium #{medium.id}"
+        medium.recreate_previews if not medium.has_preview?
       end
     end
 
