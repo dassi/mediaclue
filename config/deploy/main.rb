@@ -26,7 +26,9 @@ set :rails_env, 'production'
 # Nur die MAIN-Stage darf den produktiven Medienordner benützen!
 after 'deploy:update_code' do
   # Standort der Medien symlinken
-  run "ln -nfs /Volumes/SharedFolders/mediendatenbank/media_storage #{release_path}/media_storage"
+  
+  # später, wenn produktiv: run "ln -nfs /Volumes/SharedFolders/mediendatenbank/media_storage #{release_path}/media_storage"
+  run "ln -nfs #{deploy_to}/shared/media_storage #{release_path}/media_storage"
 end
 
 # after 'deploy:update_code' do
