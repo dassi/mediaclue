@@ -110,3 +110,6 @@ LOGO_FILENAME = 'logo_small.png'
 
 # Weitere Pfade für die PATH Variable. Auf OSX mit MacPorts z.B. ['/opt/local/bin']
 ADDITIONAL_ENV_PATHS = []
+
+# Default-Wert für die Rechte-Einstellung eines Mediums. Wählbar ist 'owner' oder 'all'
+DEFAULT_PERMISSION_TYPE = 'all'

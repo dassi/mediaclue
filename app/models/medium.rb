@@ -55,6 +55,9 @@ class Medium < ActiveRecord::Base
     # Setzt default Flag, ob Metadaten aus dem File importiert werden sollen
     self.is_importing_metadata = true if self.is_importing_metadata.nil?
     
+    # Default Rechte vergeben
+    self.permission_type = DEFAULT_PERMISSION_TYPE if self.permission_type.nil?
+    
   end
   
   # Taggt das Medium, sofern das Pseudo-Attribut tag_names gesetzt wurde
