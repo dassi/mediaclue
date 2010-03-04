@@ -281,8 +281,10 @@ class MediaSetsController < ApplicationController
       end
       @enable_ordering = true
       
-      action = params[:style] ? "show_#{params[:style]}" : 'show'
+      @style = params[:style]
       @size = params[:size]
+
+      action = ['show', @style, @size].compact.join('_')
 
       render :action => action
     end

@@ -43,6 +43,10 @@ describe Medium do
     @medium.stub!(:valid?).and_return(true)
     @medium.save!
   end
+  
+  it 'should set the default permission_type' do
+    @medium.permission_type.should == DEFAULT_PERMISSION_TYPE
+  end
 
 end
 
