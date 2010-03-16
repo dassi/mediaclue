@@ -1,6 +1,6 @@
 class RemoveObsoleteFields < ActiveRecord::Migration
   def self.up
-    remove_column :users, :is_group
+    remove_column :users, :is_group rescue nil
     remove_column :users, :ldap_uid rescue nil
     remove_column :user_groups, :ldap_uid rescue nil
   end
