@@ -73,7 +73,7 @@ LDAP_IMPORTED_USER_GROUPS = [
   'fkde',
   'fken',
   'fkfr',
-  'fkgg',
+  'fkgg1',
   'fkgs',
   'fkinstr',
   'fkis',
@@ -83,7 +83,8 @@ LDAP_IMPORTED_USER_GROUPS = [
   'fkph',
   'fkre',
   'fksp']
-LDAP_ADDITIONAL_GROUP_NAME_ATTRIBUTES = ['description', 'apple-group-realname']
+  
+LDAP_ADDITIONAL_GROUP_NAME_ATTRIBUTES = ['apple-group-realname', 'description']
 
 # Global gültige Beschränkung der Dateigrösse
 # = nil, falls keine Beschränkung
