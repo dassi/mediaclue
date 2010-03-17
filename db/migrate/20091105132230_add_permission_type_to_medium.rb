@@ -1,6 +1,6 @@
 class AddPermissionTypeToMedium < ActiveRecord::Migration
   def self.up
-    add_column :media, :permission_type, :string
+    add_column :media, :permission_type, :string, :default => DEFAULT_PERMISSION_TYPE
     remove_column :media, :is_public
   end
 
