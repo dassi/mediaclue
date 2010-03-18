@@ -88,7 +88,7 @@ LDAP_ADDITIONAL_GROUP_NAME_ATTRIBUTES = ['apple-group-realname', 'description']
 
 # Global gültige Beschränkung der Dateigrösse
 # = nil, falls keine Beschränkung
-MAX_FILE_SIZE = nil # Zum Beispiel 8 * (1024**2)  => 8MB
+MAX_FILE_SIZE = 100 * (1024**2)  # Zum Beispiel 8 * (1024**2)  => 8MB
                   
 # Maximale Anzahl Suchergebnisse
 # Zahl oder nil für unbeschränkt
