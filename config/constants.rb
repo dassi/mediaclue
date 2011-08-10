@@ -31,6 +31,7 @@ SUBJECT_SELECTIONS = [
 'Philosophie', 
 'Religion', 
 'Russisch', 
+'Schulanlass', # Pseudo-Fach-Tag, gemäss Abmachung mit Simon Küpfer, August 2011
 'Spanisch', 
 'Sport', 
 'Theater'
