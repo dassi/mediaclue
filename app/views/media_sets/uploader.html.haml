@@ -48,9 +48,20 @@
 -#   %param{:name => 'mayscript', :value => 'true' }/
 
 -# mayscript ist sehr wichtig! Das ist die Aktivierung von LiveConnect (Java/JavaScript Bridge). Funktioniert nicht auf allen Browsern ganz gleich. Best aber mit "true"
-%applet{:name => 'jumpLoaderApplet', :id => 'jumpLoaderApplet', :code => 'jmaster.jumploader.app.JumpLoaderApplet.class', :width => '100%', :height => 440, :archive => "/applets/#{JUMPLOADER_TRANSLATIONS_ZIP},/applets/#{jar_file}", :mayscript => 'true'}
+- applet_height = JUMPLOADER_IN_SEPARATE_WINDOW ? 60 : 440
 
-  %param{:name => 'ac_mode', :value => 'embedded' }/
+- if JUMPLOADER_IN_SEPARATE_WINDOW
+  %h2 Schritt 1: Hochladen
+  %p Öffnen Sie den Jumploader durch Klick auf den untenstehenden Knopf. Nach dem Hochladen fahren Sie hier bei Punkt 2 weiter.
+  %p.smalltext (Hinweis: Aufgrund von technischen Limiten in neueren Browsern, sind Drag&Drop Funktionalitäten leider nur noch möglich, wenn Jumploader als eigenständiges Fenster geöffnet wird. Deshalb ist hier leider der Jumploader nicht mehr direkt eingebettet.)
+  
+%applet{:name => 'jumpLoaderApplet', :id => 'jumpLoaderApplet', :code => 'jmaster.jumploader.app.JumpLoaderApplet.class', :width => '100%', :height => applet_height, :archive => "/applets/#{JUMPLOADER_TRANSLATIONS_ZIP},/applets/#{jar_file}", :mayscript => 'true'}
+
+  - if JUMPLOADER_IN_SEPARATE_WINDOW
+    %param{:name => 'ac_mode', :value => 'framed' }/
+  - else
+    %param{:name => 'ac_mode', :value => 'embedded' }/
+    
   %param{:name => 'ac_fireAppletInitialized', :value => 'true' }/
   -#%param{:name => 'ac_fireUploaderFileStatusChanged', :value => 'true' }/
   -#%param{:name => 'ac_fireUploaderFileAdded', :value => 'true' }/
@@ -82,7 +93,12 @@
   -#%param{:name => 'uc_sendImageMetadata', :value => 'true' }/
 
   %param{:name => 'vc_lookAndFeel', :value => 'system' }/           
-  %param{:name => 'vc_uploadViewStartUploadButtonText', :value => 'Schritt 1: Dateien hochladen...' }/
+
+  - if JUMPLOADER_IN_SEPARATE_WINDOW
+    %param{:name => 'vc_uploadViewStartUploadButtonText', :value => 'Dateien hochladen...' }/
+  - else
+    %param{:name => 'vc_uploadViewStartUploadButtonText', :value => 'Schritt 1: Dateien hochladen...' }/
+    
   %param{:name => 'vc_uploadViewStopUploadButtonText', :value => 'Abbrechen' }/
   -#%param{:name => 'vc_thumbHeight', :value => '30' }/
   -#%param{:name => 'vc_mainViewFileTreeViewWidthPercent', :value => "33" }/
@@ -145,13 +161,14 @@
 %br
 %br
 
+%h2 Schritt 2: Kollektion bearbeiten
 -if @media_set.defined?
-  %h2
+  %p
     Medien werden in bestehende Kollektion hochgeladen:
     = @media_set.caption
   =# render :partial => 'media_sets/collection_box', :object => @media_set
   = button_to "Schritt 2: Kollektion #{@media_set.caption} bearbeiten...", edit_media_set_path(@media_set), :method => :get
 -elsif @media_set.uploading?
-  %h2 Medien werden in eine neue Kollektion hochgeladen
+  %p Medien werden in eine neue Kollektion hochgeladen
   =# render :partial => 'media_sets/collection_box', :object => @media_set
   = button_to "Schritt 2: Neue Kollektion bearbeiten...", edit_media_set_path(@media_set), :method => :get
