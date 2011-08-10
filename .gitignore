@@ -20,6 +20,7 @@ media_storage/**/*
 public/m/*
 
 .DS_Store
+.rvmrc
 
 doc/app
      
