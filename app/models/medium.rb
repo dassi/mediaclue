@@ -105,6 +105,17 @@ class Medium < ActiveRecord::Base
     self.preprocess_meta_data(exif_data)
     
     self.meta_data = exif_data
+    
+    #
+    # Schlagwörter setzen aus IPTC-Feld "Keywords"
+    #
+    
+    keywords = exif_data.delete('Keywords')
+    if keywords
+      keyword_tags = keywords.collect { |keyword| Tag.new(:name => keyword) }.select(&:tag_name_valid?)
+      self.tag_names = Tag.tags_to_tag_names(keyword_tags)
+    end
+    
   rescue MiniExiftool::Error => e
     logger.error('Fehler beim Metadaten-Import: ' + e.message)
   end

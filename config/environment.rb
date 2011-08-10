@@ -128,6 +128,9 @@ require 'tagging_extensions'
 require 'rails_extensions'
 require 'ruport_extensions'
 
+# Aufgrund von Problemen auf einer Debian-Maschine, wurde dies hier gefunden:
+require 'image_science'
+
 autoload(:PreviewGenerator, 'support/preview_generator.rb')
 
 # gems nach rails initialize
