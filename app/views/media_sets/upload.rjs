@@ -1,1 +1,4 @@
-# page.insert_html :bottom, 'collected_media', :partial => "media/#{@medium.template_path}/collection_item", :object => @medium, :locals => {:media_set => @media_set}
+if JUMPLOADER_IN_SEPARATE_WINDOW
+  sleep(1) # Krasser Workaround! Wir warten ein bisschen, bis die Vorschau erzeugt wurde. Ist natürlich nicht elegant, aber effektiv.
+  page.insert_html :bottom, 'collected_media', :partial => "media/#{@medium.template_path}/collection_item", :object => @medium, :locals => {:media_set => @media_set}
+end

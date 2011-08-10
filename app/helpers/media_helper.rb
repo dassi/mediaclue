@@ -5,7 +5,7 @@ module MediaHelper
     if thumbnail && thumbnail.available?
       image_tag(medium.image_thumbnail(size.to_s).public_filename, options)
     else
-      no_preview_text
+      no_preview_yet_text
     end
   end
   
