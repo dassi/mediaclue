@@ -122,15 +122,15 @@ ActiveRecord::Schema.define(:version => 20100304101818) do
   end
 
   create_table "taggings", :force => true do |t|
-    t.integer "tag_id",                        :null => false
-    t.integer "taggable_id",                   :null => false
-    t.string  "taggable_type", :default => "", :null => false
+    t.integer "tag_id",        :null => false
+    t.integer "taggable_id",   :null => false
+    t.string  "taggable_type", :null => false
   end
 
   add_index "taggings", ["tag_id", "taggable_id", "taggable_type"], :name => "index_taggings_on_tag_id_and_taggable_id_and_taggable_type", :unique => true
 
   create_table "tags", :force => true do |t|
-    t.string "name", :default => "", :null => false
+    t.string "name", :null => false
   end
 
   add_index "tags", ["name"], :name => "index_tags_on_name", :unique => true
