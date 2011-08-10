@@ -25,7 +25,7 @@ class Tag < ActiveRecord::Base
     :parent_extend => proc {
       # Defined on the taggable models, not on Tag itself. Return the tagnames associated with this record as a string.
       def to_s
-        self.map { |e| tag_name = e.name; tag_name.include?(" ")  ? "\"#{tag_name}\"" : tag_name}.sort.join(' ')
+        Tag.tags_to_tag_names(self)
       end
     },
     :extend => proc {
@@ -46,6 +46,10 @@ class Tag < ActiveRecord::Base
 
   def tag_name_valid?
     not (name =~ /^[a-zäöüèéàßçA-ZÄÖÜÈÉÀ0-9\_\-" ]+$/).nil?
+  end
+  
+  def self.tags_to_tag_names(tags)
+    tags.map { |e| tag_name = e.name; tag_name.include?(" ")  ? "\"#{tag_name}\"" : tag_name}.sort.join(' ')
   end
 
 end
