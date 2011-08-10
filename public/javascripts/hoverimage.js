@@ -5,7 +5,6 @@ This notice must stay intact
 */
 
 var offsetfrommouse=[10,10]; //image x,y offsets from cursor position in pixels. Enter 0,0 for no offset
-var displayduration=0; //duration in seconds image should remain visible. 0 for always.
 var currentimageheight = 400;	// maximum image size.
 
 if (document.getElementById || document.all){
@@ -27,11 +26,6 @@ function gettrailobjnostyle(){
         return document.all.trailimagid
 }
 
-
-function truebody(){
-    return document.body;
-    // geht nicht für Safari return (!window.opera && document.compatMode && document.compatMode!="BackCompat")? document.documentElement : document.body
-}
 
 function showtrail(imagename,title,description,showthumb,height){
     if (height > 0) {
@@ -67,38 +61,38 @@ function followmouse(e){
     var xcoord=offsetfrommouse[0]
     var ycoord=offsetfrommouse[1]
     
-    var docwidth=document.all? truebody().scrollLeft+truebody().clientWidth : pageXOffset+window.innerWidth-15
-    var docheight=document.all? Math.min(truebody().scrollHeight, truebody().clientHeight) : Math.min(window.innerHeight)
     
-    var padding_bottom = 50
-    
-    //if (document.all){
-    //	gettrailobjnostyle().innerHTML = 'A = ' + truebody().scrollHeight + '<br>B = ' + truebody().clientHeight;
-    //} else {
-    //	gettrailobjnostyle().innerHTML = 'C = ' + document.body.offsetHeight + '<br>D = ' + window.innerHeight;
-    //}
+    var padding_bottom = 0
     
     if (typeof e != "undefined"){
+        var body = document.body
+        var docwidth = body.scrollLeft+body.clientWidth
+        var docheight = Math.min(body.scrollHeight, body.clientHeight)
+      
         if (docwidth - e.pageX < 380){
             xcoord = e.pageX - xcoord - 400; // Move to the left side of the cursor
         } else {
             xcoord += e.pageX;
         }
-        if (docheight - e.pageY < (currentimageheight + padding_bottom)){
-            ycoord += e.pageY - Math.max(0,(padding_bottom + currentimageheight + e.pageY - docheight - truebody().scrollTop));
+        if (docheight - e.pageY < currentimageheight){
+            ycoord += e.pageY - currentimageheight;
         } else {
             ycoord += e.pageY;
         }
-    } else if (typeof window.event != "undefined"){
+    } else if (typeof window.event != "undefined"){ // IE
+        var body = document.documentElement
+        var docwidth = body.scrollLeft+body.clientWidth
+        var docheight = Math.min(body.scrollHeight, body.clientHeight)
+
         if (docwidth - event.clientX < 380){
-            xcoord = event.clientX + truebody().scrollLeft - xcoord - 400; // Move to the left side of the cursor
+            xcoord = event.clientX + body.scrollLeft - xcoord - 400; // Move to the left side of the cursor
         } else {
-            xcoord += truebody().scrollLeft+event.clientX
+            xcoord += body.scrollLeft+event.clientX
         }
-        if (docheight - event.clientY < (currentimageheight + padding_bottom)){
-            ycoord += event.clientY + truebody().scrollTop - Math.max(0,(padding_bottom + currentimageheight + event.clientY - docheight));
+        if (docheight - (event.clientY) < currentimageheight){
+            ycoord += body.scrollTop + event.clientY - currentimageheight;
         } else {
-            ycoord += truebody().scrollTop + event.clientY;
+            ycoord += body.scrollTop + event.clientY;
         }
     }
 
@@ -107,45 +101,3 @@ function followmouse(e){
     gettrailobj().top=ycoord+"px"
 }
 
-function followmouseBatch(e){
-    var xcoord=offsetfrommouse[0]
-    var ycoord=offsetfrommouse[1]
-    
-    var docwidth=document.all? truebody().scrollLeft+truebody().clientWidth : pageXOffset+window.innerWidth-15
-    var docheight=document.all? Math.min(truebody().scrollHeight, truebody().clientHeight) : Math.min(window.innerHeight)
-    
-    var trailInnerDiv = $('trailInnerDiv');
-    var currentimageheight = trailInnerDiv.offsetHeight;
-    var currentimagewidth = trailInnerDiv.offsetWidth;
-    
-    scrollPos = Position.realOffset(truebody());
-    
-    if (typeof e != "undefined"){
-        if (docwidth - e.pageX < 380){
-            xcoord = e.pageX - xcoord - 400; // Move to the left side of the cursor
-        } else {
-            xcoord += e.pageX;
-        }
-        if ((e.pageY - scrollPos[1]) + currentimageheight > docheight){
-            ycoord = -ycoord + (e.pageY - currentimageheight);
-        } else {
-            ycoord += e.pageY;
-        }
-    } else if (typeof window.event != "undefined"){
-        if (event.clientX + currentimagewidth > docwidth){
-            xcoord = -xcoord + ((event.clientX + scrollPos[0]) - currentimagewidth); // Move to the left side of the cursor
-        } else {
-            xcoord += (event.clientX + scrollPos[0]);
-        }
-        if (event.clientY + currentimageheight > docheight){
-            ycoord = -ycoord + ((event.clientY + scrollPos[1]) - currentimageheight);
-        } else {
-            ycoord += (event.clientY + scrollPos[1]);
-        }
-    }
-
-    if(ycoord < 0) { ycoord = ycoord*-1; }
-
-    gettrailobj().left=xcoord+"px"
-    gettrailobj().top=ycoord+"px"
-}
