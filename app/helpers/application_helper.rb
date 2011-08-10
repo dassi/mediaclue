@@ -33,6 +33,10 @@ module ApplicationHelper
     content_tag('em', '[Vorschau nicht verfügbar]')
   end
   
+  def no_preview_yet_text
+    content_tag('em', '[Vorschau wird erstellt...]')
+  end
+  
   def no_flash_text
     content_tag('em', '[Flash nicht installiert, Ansicht nicht verfügbar]')
   end

@@ -63,7 +63,9 @@
     %param{:name => 'ac_mode', :value => 'embedded' }/
     
   %param{:name => 'ac_fireAppletInitialized', :value => 'true' }/
-  -#%param{:name => 'ac_fireUploaderFileStatusChanged', :value => 'true' }/
+  - if JUMPLOADER_IN_SEPARATE_WINDOW
+    %param{:name => 'ac_fireUploaderFileStatusChanged', :value => 'true' }/
+  
   -#%param{:name => 'ac_fireUploaderFileAdded', :value => 'true' }/
   -#%param{:name => 'ac_fireUploaderStatusChanged', :value => 'true' }/
 
@@ -123,14 +125,14 @@
     initializeJumploader();
   } */
 
-  /* function uploaderFileStatusChanged( uploader, file )
+  function uploaderFileStatusChanged( uploader, file )
   {
     var response = file.getResponseContent();
     if (response)
     {
       window.eval(String.interpret(response));
     }
-  } */
+  }
 
   function setAuthenticityToken(authenticity_token)
   {
@@ -166,9 +168,11 @@
   %p
     Medien werden in bestehende Kollektion hochgeladen:
     = @media_set.caption
-  =# render :partial => 'media_sets/collection_box', :object => @media_set
+  - if JUMPLOADER_IN_SEPARATE_WINDOW
+    = render :partial => 'media_sets/collection_box', :object => @media_set
   = button_to "Schritt 2: Kollektion #{@media_set.caption} bearbeiten...", edit_media_set_path(@media_set), :method => :get
 -elsif @media_set.uploading?
   %p Medien werden in eine neue Kollektion hochgeladen
-  =# render :partial => 'media_sets/collection_box', :object => @media_set
+  - if JUMPLOADER_IN_SEPARATE_WINDOW
+    = render :partial => 'media_sets/collection_box', :object => @media_set
   = button_to "Schritt 2: Neue Kollektion bearbeiten...", edit_media_set_path(@media_set), :method => :get
