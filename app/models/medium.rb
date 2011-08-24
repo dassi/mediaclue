@@ -110,6 +110,7 @@ class Medium < ActiveRecord::Base
     # Schlagwörter setzen aus IPTC-Feld "Keywords"
     #
     
+    exif_data.delete('Subject') # Remove also second keyword tag. We don't want to have the tags in the meta data anymore
     keywords = exif_data.delete('Keywords')
     if keywords
       keyword_tags = keywords.collect { |keyword| Tag.new(:name => keyword) }.select(&:tag_name_valid?)

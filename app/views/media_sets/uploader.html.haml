@@ -52,7 +52,7 @@
 
 - if JUMPLOADER_IN_SEPARATE_WINDOW
   %h2 Schritt 1: Hochladen
-  %p Öffnen Sie den Jumploader durch Klick auf den untenstehenden Knopf. Nach dem Hochladen fahren Sie hier bei Punkt 2 weiter.
+  %p Öffnen Sie den Jumploader durch Klick auf den untenstehenden Knopf. Nachdem Sie dort auf "Dateien hochladen" geklickt haben, fahren Sie hier bei Schritt 2 weiter.
   %p.smalltext (Hinweis: Aufgrund von technischen Limiten in neueren Browsern, sind Drag&Drop Funktionalitäten leider nur noch möglich, wenn Jumploader als eigenständiges Fenster geöffnet wird. Deshalb ist hier leider der Jumploader nicht mehr direkt eingebettet.)
   
 %applet{:name => 'jumpLoaderApplet', :id => 'jumpLoaderApplet', :code => 'jmaster.jumploader.app.JumpLoaderApplet.class', :width => '100%', :height => applet_height, :archive => "/applets/#{JUMPLOADER_TRANSLATIONS_ZIP},/applets/#{jar_file}", :mayscript => 'true'}

@@ -81,7 +81,7 @@ class Image < Medium
   end
 
   def has_geo_information
-    not ((longitude && latitude) || altitude).nil?
+    self.meta_data.present? && (not ((longitude && latitude) || altitude).nil?)
   end
   
   def longitude
