@@ -52,6 +52,11 @@ module Authorization
         raise NotImplementedError
       end
       
+      def is_public?
+        self.permission_type == 'public'
+      end
+      
+      
     end
   
     def self.included(receiver)

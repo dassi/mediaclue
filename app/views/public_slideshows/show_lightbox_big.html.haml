@@ -1,0 +1,9 @@
+%h1.left= @media_set.caption
+.right
+  = link_to('Zur Übersicht ...', public_slideshows_path)
+  &nbsp;
+  = link_to('Zur Kleinansicht ...', public_slideshow_path(@media_set, :style => 'lightbox', :size => 'small'))
+.clear
+
+#media_list
+  =render :partial => "slide_#{@size}", :locals => {:member_media_set => @media_set, :composing_media_set => nil}, :collection => @media
