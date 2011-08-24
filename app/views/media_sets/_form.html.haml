@@ -65,6 +65,9 @@
           = radio_button_tag('media_set[permission_type]', 'all')
           Alle
           &nbsp;&nbsp;
+          = radio_button_tag('media_set[permission_type]', 'public')
+          Alle & Öffentlich
+          &nbsp;&nbsp;
           = radio_button_tag('media_set[permission_type]', 'groups', false, :id => 'media_set_group_permission_radio_button')
           Diese Gruppen:
           - options = options_for_user_group_select

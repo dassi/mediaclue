@@ -71,8 +71,10 @@ module Authorization
 
       def can_view?(user)
         case self.permission_type
-        when 'all'
+        when 'public'
           true
+        when 'all'
+          (not user.nil?)
         when 'owner'
           (self.owner == user)
         when 'groups'
@@ -89,8 +91,10 @@ module Authorization
       # Gibt in lesbarer Form die Leserechte zurück
       def read_permissions_description
         case self.permission_type
+        when 'public'
+          'Alle & öffentlich'
         when 'all'
-          'Alle'
+          'Alle Benutzer'
         when 'owner'
           'Nur Besitzer'
         when 'groups'
