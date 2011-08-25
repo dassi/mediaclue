@@ -3,6 +3,7 @@ class PublicSlideshowsController < ApplicationController
   MEDIA_SET_STYLES = ['lightbox', 'slideshow']
   
   skip_before_filter :login_required
+
   layout 'public_slideshow'
   
   public ##########################################################################################
@@ -10,6 +11,7 @@ class PublicSlideshowsController < ApplicationController
   # Übersicht der Diashows
   def index
     @media_sets = MediaSet.published
+    render :layout => 'application'
   end
 
   def show

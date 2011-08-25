@@ -1,12 +1,18 @@
 %h1 Unsere öffentlichen Bildergalerien
 %br
-%br
 - if @media_sets.empty?
   = no_data_text
 - else
   %table.list
     - for media_set in @media_sets
       %tr
-        %td{:style => 'width:400px'}
-          %strong= link_to media_set.caption, public_slideshow_path(media_set)
-          ="(#{media_set.media.count} Medien)"
+        %td
+          %strong= link_to h(media_set.caption), public_slideshow_path(media_set)
+        %td.nowrap
+          ="#{media_set.media.count} Medien"
+        %td
+          =h media_set.desc
+        %td.nowrap
+          = media_set.updated_at.to_date.to_formatted_s(:german)
+%br
+%br
