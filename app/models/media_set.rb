@@ -91,6 +91,8 @@ class MediaSet < ActiveRecord::Base
   end
 
 
+  named_scope :published, :conditions => {:permission_type => 'public'}, :order => 'updated_at DESC'
+
   protected #######################################################################################
   
   # Hinweis: Kein Fall für neues Feature von Rails 2.3, welches Assoziationen mitspeichern kann mit :autosave => true! (Das würde IMMER speichern)
@@ -299,4 +301,5 @@ class MediaSet < ActiveRecord::Base
   def clear
     self.media_set_memberships.clear
   end
+  
 end
