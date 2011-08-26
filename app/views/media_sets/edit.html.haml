@@ -13,7 +13,9 @@
   = submit_tag 'Alles speichern', :name => "confirm", :disable_with => 'Bitte warten...'
   = submit_tag "Abbrechen", :name => "cancel"
   #media_set_items_edit
-    - unless @media.empty?
+    - if @media.empty?
+      %p In dieser Kollektion sind nur Medien enthalten, welche Sie nicht bearbeiten sondern nur betrachten dürfen.
+    - else
       = render :partial => 'form_list'
       %br
       = submit_tag 'Alles speichern', :name => "confirm", :disable_with => 'Bitte warten...'

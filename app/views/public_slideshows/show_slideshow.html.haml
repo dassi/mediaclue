@@ -1,7 +1,14 @@
-%h3
-  Diashow von Bildern der Kollektion
-  =h @media_set.caption
-  %span.explanation (Leertaste = Play/Pause&nbsp;&nbsp;&nbsp;Pfeiltasten = Vor/Zurück)
+%h1.left=h @media_set.caption
+.right
+  = link_to('Zur Übersicht ...', public_slideshows_path)
+  &nbsp;
+  = link_to('Zur Kleinansicht ...', public_slideshow_path(@media_set, :style => 'lightbox', :size => 'small'))
+  &nbsp;
+  = link_to('Zur Grossansicht ...', public_slideshow_path(@media_set, :style => 'lightbox', :size => 'big'))
+.clear
+
+%span.explanation (Leertaste = Play/Pause&nbsp;&nbsp;&nbsp;Pfeiltasten = Vor/Zurück)
+
 - div_id = "mediaplayer"
 %div{:id => div_id}
   = no_flash_text

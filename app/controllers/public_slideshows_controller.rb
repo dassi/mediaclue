@@ -27,10 +27,10 @@ class PublicSlideshowsController < ApplicationController
       
       case @style
       when 'slideshow'
-          @media = @media_set.images_for_user_as_viewer(nil)
+          @media = @media_set.images_for_user_as_viewer(current_user)
       when 'lightbox'
         @size ||= 'small'
-        @media = @media_set.images_for_user_as_viewer(nil)
+        @media = @media_set.images_for_user_as_viewer(current_user)
       end
 
       action = ['show', @style, @size].compact.join('_')
