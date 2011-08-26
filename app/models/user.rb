@@ -134,6 +134,12 @@ class User < ActiveRecord::Base
     
   end
   
+  # Prüft, ob dem Benutzer die Hochladen-Funktion zu Verfügung steht
+  def can_upload?
+    self.user_groups.any? { |ug| ug.can_upload? }
+  end
+  
+  
   protected #######################################################################################
 
   # Liefert die "Singleton-Instanz" eines MediaSets dieses Users mit einem bestimmten State

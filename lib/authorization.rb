@@ -79,7 +79,7 @@ module Authorization
         when 'public'
           true
         when 'all'
-          (not user.nil?)
+          user.is_a?(User)
         when 'owner'
           (self.owner == user)
         when 'groups'

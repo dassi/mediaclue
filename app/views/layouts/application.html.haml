@@ -28,7 +28,9 @@
       #menu
         - menu_items = []
         - if logged_in?
-          -  menu_items.concat([ link_to('Suchen', search_path), link_to('Meine Übersicht', media_sets_path), link_to('Hochladen', uploader_media_set_path(current_user.uploading_media_set))])
+          -  menu_items.concat([ link_to('Suchen', search_path), link_to('Meine Übersicht', media_sets_path)])
+          - if current_user.can_upload?
+            -  menu_items.concat([ link_to('Hochladen', uploader_media_set_path(current_user.uploading_media_set))])
 
         - menu_items.concat([link_to('Gallerien', public_slideshows_path)])
         - if not logged_in?

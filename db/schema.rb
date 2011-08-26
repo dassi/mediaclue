@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100304101818) do
+ActiveRecord::Schema.define(:version => 20110825160722) do
 
   create_table "bj_config", :primary_key => "bj_config_id", :force => true do |t|
     t.text "hostname"
@@ -153,8 +153,9 @@ ActiveRecord::Schema.define(:version => 20100304101818) do
   end
 
   create_table "user_groups", :force => true do |t|
-    t.string "full_name"
-    t.string "uid"
+    t.string  "full_name"
+    t.string  "uid"
+    t.boolean "can_upload", :default => true
   end
 
   create_table "users", :force => true do |t|

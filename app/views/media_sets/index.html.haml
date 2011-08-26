@@ -38,7 +38,10 @@
   %h2 
     Automatische Kollektionen 
     %span.explanation  (Werden vom System generisch erstellt)
-  %table.list= render :partial => 'list_item', :collection => [current_user.owner_media_set, clipboard_media_set, current_user.uploading_media_set]
+  - if current_user.can_upload?
+    %table.list= render :partial => 'list_item', :collection => [current_user.owner_media_set, clipboard_media_set, current_user.uploading_media_set]
+  - else
+    %table.list= render :partial => 'list_item', :collection => [clipboard_media_set]
 
   - media_sets = current_user.media_sets_to_define
   -if not media_sets.empty?
