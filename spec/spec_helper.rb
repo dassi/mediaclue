@@ -150,6 +150,7 @@ def mock_user(attributes = {})
   
   mock.stub!(:can_edit?).and_return(true)
   mock.stub!(:can_view?).and_return(true)
+  mock.stub!(:can_upload?).and_return(true)
   
   mock
 end
