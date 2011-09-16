@@ -232,17 +232,14 @@ class MediaSet < ActiveRecord::Base
     # Kollektionen suchen. Kollektionen entfernen für die keine Leseberechtigung da ist
     all_found_media_sets = self.find_with_ferret(query, options, find_options).reject { |ms| !(user.can_view?(ms)) }
     
-    # all_found_media = all_found_media_sets.collect(&:media).flatten.uniq
-    
     media_sets_and_media = {}
     all_found_media_sets.each do |ms|
-      media_sets_and_media[ms] = ms.media_for_user_as_viewer(user)
+      if SEARCH_RESULT_SHOWS_MEDIA_FROM_SETS
+        media_sets_and_media[ms] = ms.media_for_user_as_viewer(user)
+      else
+        media_sets_and_media[ms] = []
+      end
     end
-    
-    # Rechte prüfen, auf jedem gefundenen Medium
-    # viewable_media = all_found_media.select { |m| m.can_view?(user) }
-    
-    # viewable_media
     
     media_sets_and_media
   end
@@ -255,17 +252,14 @@ class MediaSet < ActiveRecord::Base
     # Kollektionen suchen. Kollektionen entfernen für die keine Leseberechtigung da ist
     all_found_media_sets = self.find(:all, find_options).reject { |ms| !(user.can_view?(ms)) }
 
-    # all_found_media = all_found_media_sets.collect(&:media).flatten.uniq
-
     media_sets_and_media = {}
     all_found_media_sets.each do |ms|
-      media_sets_and_media[ms] = ms.media_for_user_as_viewer(user)
+      if SEARCH_RESULT_SHOWS_MEDIA_FROM_SETS
+        media_sets_and_media[ms] = ms.media_for_user_as_viewer(user)
+      else
+        media_sets_and_media[ms] = []
+      end
     end
-    
-    # # Rechte prüfen, auf jedem gefundenen Medium
-    # viewable_media = all_found_media.select { |m| m.can_view?(user) }
-    # 
-    # viewable_media
     
     media_sets_and_media
   end

@@ -27,7 +27,7 @@ class SearchController < ApplicationController
 
       # Allenfalls als SearchQuery abspeichern
       if (params[:save_query] == '1') && (not params[:saved_query_name].blank?)
-        new_query = query.dup
+        new_query = query.clone
         # new_query.user = current_user
         new_query.name = params[:saved_query_name]
         new_query.save!
