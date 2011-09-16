@@ -17,7 +17,7 @@
   var so = new SWFObject('/imagerotator/imagerotator.swf','ply','900','800','9','#000000');
   so.addParam('allowfullscreen','true');
   so.addParam('allowscriptaccess','always');
-  so.addVariable('file',encodeURIComponent('#{media_set_url(@media_set, :format => :xspf, :style => 'slideshow', :selected_media => params[:selected_media], :escape => false)}'));
+  so.addVariable('file',encodeURIComponent('#{public_slideshow_url(@media_set, :format => :xspf, :style => 'slideshow', :selected_media => params[:selected_media], :escape => false)}'));
   so.addVariable('linkfromdisplay', 'false');
   so.addVariable('rotatetime', '5');
   so.addVariable('shuffle', 'false');
