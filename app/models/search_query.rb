@@ -67,18 +67,18 @@ class SearchQuery < ActiveRecord::Base
       
     end
     
-    if @younger_than
-      # In Text umwandeln, damit wir den SQL-Datumsvergleich einfügen können. (Ach! Ich liebe ActiveRecord...)
-      sql = self.class.sql_hash_to_string(find_options[:conditions])
-      sql = nil if sql.blank?
-      find_options[:conditions] = [sql, "media.updated_at > '#{@younger_than.to_formatted_s(:db)}'"].compact.join(' AND ')
-      # find_options[:conditions][:updated_at_gt] = @younger_than
-    end
-    
     search_with_ferret = (not self.ferret_query.blank?)
 
     find_options_for_medium = find_options.dup
     find_options_for_media_set = find_options.dup
+
+    if @younger_than
+      # In Text umwandeln, damit wir den SQL-Datumsvergleich einfügen können. (Ach! Ich liebe ActiveRecord...)
+      sql = self.class.sql_hash_to_string(find_options[:conditions])
+      sql = nil if sql.blank?
+      find_options_for_medium[:conditions]    = [sql, "media.updated_at > '#{@younger_than.to_formatted_s(:db)}'"].compact.join(' AND ')
+      find_options_for_media_set[:conditions] = [sql, "media_sets.updated_at > '#{@younger_than.to_formatted_s(:db)}'"].compact.join(' AND ')
+    end
     
     # Suche per ferret, oder direkt in der DB
     if search_with_ferret
