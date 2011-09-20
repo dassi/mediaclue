@@ -1,4 +1,10 @@
 %tr
-  %td{:style => 'width:400px'}
+  %td{:style => 'width:300px'}
     %strong= link_to h(list_item.name), search_result_path(:query_id => list_item)
-  %td= "&nbsp;&rsaquo;&nbsp;#{link_to 'Löschen...', search_query_path(list_item), :method => :delete, :confirm => 'Wirklich löschen?'}"
+  %td{:style => 'width:100px'}
+    - if list_item.notifications_enabled
+      = image_tag('tick.png', :class => 'icon')
+    - else
+      = image_tag('delete_out.png', :class => 'icon')
+    = link_to 'Email', toggle_notifications_search_query_path(list_item), :method => :post
+  %td= "&rsaquo;&nbsp;#{link_to 'Löschen...', search_query_path(list_item), :method => :delete, :confirm => 'Wirklich löschen?'}"

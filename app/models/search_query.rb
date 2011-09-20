@@ -89,4 +89,9 @@ class SearchQuery < ActiveRecord::Base
     search_result
   end
   
+  def toggle_notifications
+    self.notifications_enabled = (not self.notifications_enabled)
+    self.save!
+  end
+  
 end
