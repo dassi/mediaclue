@@ -33,7 +33,7 @@ class LdapUser < ActiveLdap::Base
   
   def email
     if self.has_attribute?(:mail)
-      email_from_ldap = ldap_user.mail.to_a.first
+      email_from_ldap = self.mail.to_a.first
       return email_from_ldap if email_from_ldap.present?
     end
 
