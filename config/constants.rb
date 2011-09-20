@@ -145,7 +145,7 @@ ADDITIONAL_ENV_PATHS = ['/opt/local/bin']
 DEFAULT_PERMISSION_TYPE = 'all'
 
 # Administrator-Email
-ADMIN_EMAIL = 'admin@your.domain.com'
+ADMIN_EMAIL = 'andreas.brodbeck@mindclue.ch'
 
 # Domain-Name der Applikation. Verwendet in Links in Emails.
-APPLICATION_DOMAIN = 'your.domain.com'
+APPLICATION_DOMAIN = 'mdb.kshp.ch'
