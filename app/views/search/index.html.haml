@@ -77,7 +77,7 @@
   - if current_user.search_queries.empty?
     = no_data_text
   - else
-    %table.list= render :partial => 'search_queries/list_item', :collection => current_user.search_queries
+    %table.list= render :partial => 'search_queries/list_item', :collection => current_user.search_queries, :locals => {:simple => true}
 
 :javascript
   $('search_fulltext').focus()

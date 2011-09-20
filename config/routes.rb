@@ -10,7 +10,7 @@ ActionController::Routing::Routes.draw do |map|
                             :remove_all_media => :post}
   map.resources :public_slideshows, :as => 'galleries'
   
-  map.resources :search_queries
+  map.resources :search_queries, :member => {:toggle_notifications => :post}
 
   
   # The priority is based upon order of creation: first created -> highest priority.

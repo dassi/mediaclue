@@ -1,10 +1,22 @@
 class SearchQuery < ActiveRecord::Base
 
+  attr_accessor :younger_than # Schwellen-Datum, um nur nach neueren Medien zu suchen
+
   include Authorization::ModelMethods
 
   belongs_to :user
   
   acts_as_list :scope => :user
+
+  named_scope :with_notifications_enabled, :conditions => {:notifications_enabled => true}
+
+  protected #######################################################################################
+  
+  def self.sql_hash_to_string(a_hash)
+    sanitize_sql_hash_for_conditions(a_hash)
+  end
+  
+  public ##########################################################################################
   
   # Liefert true, wenn nach *allen* Medium-Typen gesucht wird
   def all_media_types?
@@ -59,6 +71,14 @@ class SearchQuery < ActiveRecord::Base
 
     find_options_for_medium = find_options.dup
     find_options_for_media_set = find_options.dup
+
+    if @younger_than
+      # In Text umwandeln, damit wir den SQL-Datumsvergleich einfügen können. (Ach! Ich liebe ActiveRecord...)
+      sql = self.class.sql_hash_to_string(find_options[:conditions])
+      sql = nil if sql.blank?
+      find_options_for_medium[:conditions]    = [sql, "media.updated_at > '#{@younger_than.to_formatted_s(:db)}'"].compact.join(' AND ')
+      find_options_for_media_set[:conditions] = [sql, "media_sets.updated_at > '#{@younger_than.to_formatted_s(:db)}'"].compact.join(' AND ')
+    end
     
     # Suche per ferret, oder direkt in der DB
     if search_with_ferret
@@ -87,6 +107,12 @@ class SearchQuery < ActiveRecord::Base
     search_result.media_set = media_set
 
     search_result
+  end
+  
+  def toggle_notifications
+    self.notifications_enabled = (not self.notifications_enabled)
+    self.last_notification_datetime = DateTime.now
+    self.save!
   end
   
 end

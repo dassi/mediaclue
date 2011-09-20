@@ -143,3 +143,9 @@ ADDITIONAL_ENV_PATHS = ['/opt/local/bin']
 
 # Default-Wert für die Rechte-Einstellung eines Mediums. Wählbar ist 'owner' oder 'all'
 DEFAULT_PERMISSION_TYPE = 'all'
+
+# Administrator-Email
+ADMIN_EMAIL = 'admin@your.domain.com'
+
+# Domain-Name der Applikation. Verwendet in Links in Emails.
+APPLICATION_DOMAIN = 'your.domain.com'

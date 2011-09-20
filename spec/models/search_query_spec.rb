@@ -10,4 +10,10 @@ describe SearchQuery do
   it "should create a new instance given valid attributes" do
     SearchQuery.create!(@valid_attributes)
   end
+  
+  describe 'finding media with younger_than attribute' do
+    it 'should find the correct media'
+    
+  end
+  
 end

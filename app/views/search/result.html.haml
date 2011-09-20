@@ -4,18 +4,19 @@
     #media_list.media
       - form_tag(nil, :id => 'multi_action_form') do
         = render :partial => 'list_item', :locals => {:size => :small}, :collection => @search_result.media
-    %h2
-      Gefundene Kollektionen
-      - if SEARCH_RESULT_SHOWS_MEDIA_FROM_SETS
-        %span.explanation und darin enthaltene Medien
-    - for media_set, media in @search_result.media_sets_and_media
-      %h3
-        = link_to(media_set.caption, media_set_path(media_set))
-        = render_rating(media_set, false)
-      %p= formatted_desc(media_set)
-      #media_list.media
-        - form_tag(nil, :id => 'multi_action_form') do
-          = render :partial => 'list_item', :locals => {:size => :small}, :collection => media
+    - if not @search_result.media_sets_and_media.empty?
+      %h2
+        Gefundene Kollektionen
+        - if SEARCH_RESULT_SHOWS_MEDIA_FROM_SETS
+          %span.explanation und darin enthaltene Medien
+      - for media_set, media in @search_result.media_sets_and_media
+        %h3
+          = link_to(media_set.caption, media_set_path(media_set))
+          = render_rating(media_set, false)
+        %p= formatted_desc(media_set)
+        #media_list.media
+          - form_tag(nil, :id => 'multi_action_form') do
+            = render :partial => 'list_item', :locals => {:size => :small}, :collection => media
   - else
     %p Keine Medien
 
