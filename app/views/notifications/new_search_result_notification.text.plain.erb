@@ -1,0 +1,24 @@
+Geschätzte(r) <%= @user.full_name %>
+
+Zu Ihrer Suchabfrage "<%= @search_result.search_query.name -%>" wurden neue Medien gefunden:
+
+<%- if not @search_result.media.empty? %>
+MEDIEN
+<%- for medium in @search_result.media -%>
+<%= medium_url(medium) %>
+<%- end -%>
+<%- end -%>
+
+<%- if not @search_result.media_sets_and_media.empty? %>
+KOLLEKTIONEN
+<%- for media_set, media in @search_result.media_sets_and_media -%>
+<%= media_set_url(media_set) %>
+<%- end -%>
+<%- end -%>
+
+--
+Sie erhalten diese Email, weil Sie den automatischen Emailversand
+in Ihrer Suchabfrage aktiviert haben. Sollten Sie solche Emails nicht
+mehr erhalten wollen, deaktivieren Sie dies in der Mediendatenbank.
+
+Dies ist eine automatisch versendete Email. Bitte nicht darauf antworten.
