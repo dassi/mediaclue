@@ -15,12 +15,13 @@
           = link_to(image_tag(LOGO_FILENAME, :style => 'vertical-align:text-bottom'), root_url)
         #service
           = link_to image_tag('home.gif'), root_url
-          Mediendatenbank
-          - if logged_in?
-            &nbsp;&mdash;&nbsp;
-            Angemeldet als:&nbsp;
-            = current_user.full_name
-          &nbsp;&nbsp;
+          %span
+            Mediendatenbank
+            - if logged_in?
+              &nbsp;&mdash;&nbsp;
+              Angemeldet als:&nbsp;
+              = current_user.full_name
+            &nbsp;&nbsp;
           - if logged_in?
             = link_to('Abmelden', :controller => 'account', :action => 'logout')
         .clear
