@@ -41,7 +41,11 @@ namespace :mediaclue do
 
               user = User.find_or_initialize_by_login(ldap_user.uid)
               user.full_name = ldap_user.display_name
-              user.email = ldap_user.email
+
+              if ldap_user.mail
+                email_from_ldap = ldap_user.mail.to_a.first
+                user.email = email_from_ldap if email_from_ldap.present?
+              end
 
               if user.new_record?
                 puts "Benutzer neu erstellt: #{user.full_name}"
