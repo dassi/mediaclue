@@ -6,7 +6,8 @@
         = render :partial => 'list_item', :locals => {:size => :small}, :collection => @search_result.media
     %h2
       Gefundene Kollektionen
-      %span.explanation und darin enthaltene Medien
+      - if SEARCH_RESULT_SHOWS_MEDIA_FROM_SETS
+        %span.explanation und darin enthaltene Medien
     - for media_set, media in @search_result.media_sets_and_media
       %h3
         = link_to(media_set.caption, media_set_path(media_set))

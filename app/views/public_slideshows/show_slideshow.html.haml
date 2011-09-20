@@ -1,0 +1,29 @@
+%h1.left=h @media_set.caption
+.right
+  = link_to('Zur Übersicht ...', public_slideshows_path)
+  &nbsp;
+  = link_to('Zur Kleinansicht ...', public_slideshow_path(@media_set, :style => 'lightbox', :size => 'small'))
+  &nbsp;
+  = link_to('Zur Grossansicht ...', public_slideshow_path(@media_set, :style => 'lightbox', :size => 'big'))
+.clear
+
+%span.explanation (Leertaste = Play/Pause&nbsp;&nbsp;&nbsp;Pfeiltasten = Vor/Zurück)
+
+- div_id = "mediaplayer"
+%div{:id => div_id}
+  = no_flash_text
+
+:javascript
+  var so = new SWFObject('/imagerotator/imagerotator.swf','ply','900','800','9','#000000');
+  so.addParam('allowfullscreen','true');
+  so.addParam('allowscriptaccess','always');
+  so.addVariable('file',encodeURIComponent('#{public_slideshow_url(@media_set, :format => :xspf, :style => 'slideshow', :selected_media => params[:selected_media], :escape => false)}'));
+  so.addVariable('linkfromdisplay', 'false');
+  so.addVariable('rotatetime', '5');
+  so.addVariable('shuffle', 'false');
+  so.addVariable('repeat', 'list');
+  so.addVariable('transition', 'slowfade');
+  so.addVariable('showicons', 'false');
+  so.addVariable('shownavigation', 'true');
+  // so.addVariable('overstretch', 'true');
+  so.write('#{div_id}');

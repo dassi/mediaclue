@@ -100,6 +100,9 @@ MAX_FILE_SIZE = 100 * (1024**2)  # Zum Beispiel 8 * (1024**2)  => 8MB
 # Zahl oder nil für unbeschränkt
 MAX_SEARCH_RESULTS = 100
 
+# Ob in der Suchresultat-Ansicht auch gleich alle Medien der gefundenen Kollektionen angezeigt werden, oder nicht.
+SEARCH_RESULT_SHOWS_MEDIA_FROM_SETS = false
+
 # Pfad zum temporären Ordner
 # Standard Rails: TEMP_PATH = File.join(RAILS_ROOT, 'tmp')
 # Warnung! RAILS_ROOT ist hier nicht immer definiert! Bei Webserver schon, aber in Konsole nicht?

@@ -71,6 +71,9 @@
     %li= per_page_select(@media_set, @per_page)
     %li= link_to 'Zeige Bilder in Ansicht "Leuchtpult klein"', media_set_path(@media_set, :style => 'lightbox', :size => 'small')
     %li= link_to 'Zeige Bilder in Ansicht "Leuchtpult gross"', media_set_path(@media_set, :style => 'lightbox', :size => 'big')
+    -if @media_set.is_public?
+      %li= link_to('Zeige Bilder in Ansicht "öffentlich"', public_slideshow_path(@media_set, :style => 'lightbox', :size => 'small'))
+
     -# %li= link_to 'Zeige Bilder als Diashow', media_set_path(@media_set, :style => 'slideshow')
 
   %h3 Selektierte oder alle Medien...

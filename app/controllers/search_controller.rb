@@ -27,7 +27,7 @@ class SearchController < ApplicationController
 
       # Allenfalls als SearchQuery abspeichern
       if (params[:save_query] == '1') && (not params[:saved_query_name].blank?)
-        new_query = query.dup
+        new_query = query.clone
         # new_query.user = current_user
         new_query.name = params[:saved_query_name]
         new_query.save!
@@ -42,7 +42,7 @@ class SearchController < ApplicationController
     @search_result = query.execute
     
     if @search_result.empty?
-      flash[:error] = 'Keine Medien gefunden'
+      flash[:error] = 'Keine Medien gefunden (Oder möglicherweise haben Sie nicht die erforderlichen Leserechte)'
       redirect_to search_path
     end
   end

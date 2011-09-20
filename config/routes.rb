@@ -8,6 +8,7 @@ ActionController::Routing::Routes.draw do |map|
                             :order => :get, :update_positions => :post,
                             :add_media => [:put, :post], :remove_media => [:put, :post], :move_media => [:post], :merge => :get,
                             :remove_all_media => :post}
+  map.resources :public_slideshows, :as => 'galleries'
   
   map.resources :search_queries
 

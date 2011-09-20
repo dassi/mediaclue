@@ -1,6 +1,8 @@
 class MediaSetsController < ApplicationController
 
   MEDIA_SET_STYLES = ['lightbox', 'slideshow']
+
+  before_filter :upload_feature_required, :only => [:uploader, :upload]
   
   protected #######################################################################################
   
@@ -36,6 +38,14 @@ class MediaSetsController < ApplicationController
 
       added_media
   end
+  
+  # Filter. Prüft ob der User das Uploaden Feature hat
+  def upload_feature_required
+    if not self.current_user.can_upload?
+      access_denied
+    end
+  end
+  
 
   public ##########################################################################################
   
@@ -196,7 +206,7 @@ class MediaSetsController < ApplicationController
   # Medium aus Uploader in ein bestimmtes Set heraufladen
   def upload    
     @media_set = MediaSet.find(params[:id])
-    
+
     # Sicherheitsabfrage: Nur der Besitzer des MediaSets kann darin hochladen
     permit :edit, @media_set do
       uploaded_file = params[:medium][:uploaded_data]
