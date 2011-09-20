@@ -34,10 +34,5 @@ namespace :mediaclue do
         
     end
     
-    
-    task :create_schulanlass_search_for_all => :environment do
-      
-      
-    end
   end
 end
