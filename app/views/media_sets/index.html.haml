@@ -55,3 +55,13 @@
     = no_data_text
   - else
     %table.list= render :partial => 'search_queries/list_item', :collection => current_user.search_queries
+
+  %h2 Meine Mitgliedschaften in Gruppen
+  - if current_user.user_groups.empty?
+    = no_data_text
+  - else
+    %table.list
+      - for user_group in current_user.user_groups
+        %tr.media_set_list
+          %td{:style => 'width:400px'}
+            %strong= user_group.full_name
