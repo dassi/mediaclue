@@ -1,9 +1,5 @@
 #left
   - if not @search_result.empty?
-    %h2 Gefundene Medien
-    #media_list.media
-      - form_tag(nil, :id => 'multi_action_form') do
-        = render :partial => 'list_item', :locals => {:size => :small}, :collection => @search_result.media
     - if not @search_result.media_sets_and_media.empty?
       %h2
         Gefundene Kollektionen
@@ -17,6 +13,10 @@
         #media_list.media
           - form_tag(nil, :id => 'multi_action_form') do
             = render :partial => 'list_item', :locals => {:size => :small}, :collection => media
+    %h2 Gefundene Medien
+    #media_list.media
+      - form_tag(nil, :id => 'multi_action_form') do
+        = render :partial => 'list_item', :locals => {:size => :small}, :collection => @search_result.media
   - else
     %p Keine Medien
 
