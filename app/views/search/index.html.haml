@@ -78,6 +78,11 @@
     = no_data_text
   - else
     %table.list= render :partial => 'search_queries/list_item', :collection => current_user.search_queries, :locals => {:simple => true}
+    %p.smalltext
+      Suchanfragen können Sie in
+      =link_to 'Meine Übersicht', media_sets_path
+      verwalten
+
 
 :javascript
   $('search_fulltext').focus()
