@@ -90,6 +90,7 @@ LDAP_IMPORTED_USER_GROUPS = [
   'fkre',
   'fksp']
   
+LDAP_USER_GROUPS_WITH_UPLOAD_FEATURE = LDAP_IMPORTED_USER_GROUPS
 LDAP_ADDITIONAL_GROUP_NAME_ATTRIBUTES = ['apple-group-realname', 'description']
 
 # Global gültige Beschränkung der Dateigrösse

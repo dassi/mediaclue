@@ -19,6 +19,7 @@ namespace :mediaclue do
 
           user_group = UserGroup.find_or_initialize_by_uid(group_uid)
           user_group.full_name = ldap_group.display_name
+          user_group.can_upload = LDAP_USER_GROUPS_WITH_UPLOAD_FEATURE.include?(group_uid)
 
           if user_group.new_record?
             puts "Gruppe neu erstellt: #{user_group.full_name}"
