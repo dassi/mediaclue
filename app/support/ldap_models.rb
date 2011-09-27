@@ -1,5 +1,27 @@
+
+
+class LdapModelBase < ActiveLdap::Base
+
+  protected #######################################################################################
+  
+  def check(ldap_collection)
+    ldap_collection.select{ |item| item.exists? }
+  end
+
+  public ##########################################################################################
+  
+  def display_name
+    raise NotImplementedError
+  end
+
+  def apple_guid
+    self['apple-generateduid']
+  end
+end
+
+
 # ActiveLdap Hilfsklasse
-class LdapGroup < ActiveLdap::Base
+class LdapGroup < LdapModelBase
   ldap_mapping :dn_attribute => 'cn',
                :prefix => LDAP_GROUPS_DN_PREFIX,
                :classes => ['top', 'posixGroup', 'apple-group', 'extensibleObject']
@@ -27,9 +49,6 @@ class LdapGroup < ActiveLdap::Base
     end
   end
   
-  def check(ldap_collection)
-    ldap_collection.select{ |item| item.exists? }
-  end
 
   public ##########################################################################################
 
@@ -73,7 +92,7 @@ end
 
 
 # ActiveLdap Hilfsklasse
-class LdapUser < ActiveLdap::Base
+class LdapUser < LdapModelBase
   ldap_mapping :dn_attribute => LDAP_USERNAME_ATTRIBUTE,
                :prefix => LDAP_USERS_DN_PREFIX,
                :classes => ['top', 'posixAccount', 'extensibleObject']
@@ -83,10 +102,6 @@ class LdapUser < ActiveLdap::Base
   belongs_to :unchecked_groups, :class => 'LdapGroup', :many => 'apple-group-memberguid', :primary_key => 'apple-generateduid'
 
   protected #######################################################################################
-  
-  def check(ldap_collection)
-    ldap_collection.select{ |item| item.exists? }
-  end
   
   public #########################################################################################
 
