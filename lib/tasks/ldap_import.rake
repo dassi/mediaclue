@@ -40,9 +40,6 @@ namespace :mediaclue do
                 next
               end
 
-              user = User.find_or_initialize_by_ldap_id(ldap_user['apple-generateduid'])
-
-
               user = User.find_by_ldap_guid(ldap_user.apple_guid) or User.find_or_initialize_by_login(ldap_user.uid)
 
               user.login = ldap_user.uid
