@@ -32,8 +32,8 @@ namespace :mediaclue do
 
           if user_group.save
 
-            # Für alle Mitglieder in dieser Gruppe
-            ldap_group.members.each do |ldap_user|
+            # Für alle Mitglieder in dieser Gruppe und Subgruppen
+            ldap_group.all_members.each do |ldap_user|
               # user ohne UID gleich überspringen
               if ldap_user.uid.blank?
                 puts "Fehler: LdapUser ohne UID! #{ldap_user.inspect}" 
