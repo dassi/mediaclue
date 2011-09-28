@@ -90,19 +90,17 @@ class SearchQuery < ActiveRecord::Base
       media_sets_and_media = MediaSet.find_all_media_for_user(self.user, find_options_for_media_set)
     end
 
-    # Suchresultat zusammenfassen
-    # found_media = (media + media_from_sets).uniq
-
     # Gefundene Medien in Suchresultat abspeichern
     search_result.add_media(media)
     search_result.add_media_sets_and_media(media_sets_and_media)
     
     # Gefundene Medien auch in das spezielle Suchresultat-Set des Users abspeichern (welches einfach alle )
-    media_from_sets = media_sets_and_media.collect { |media_set, media| media }.flatten.uniq
+    media_from_sets = media_sets_and_media.collect { |media_set, media_in_set| media_in_set }.flatten.uniq
     found_media = (media + media_from_sets).uniq
     media_set = self.user.search_result_media_set
     media_set.clear
     media_set.media << found_media
+    media_set.save_without_validation
     
     search_result.media_set = media_set
 
