@@ -54,7 +54,8 @@
       -if @media_set.defined? or @media_set.defining?
         %li= link_to 'Kollektion bearbeiten', edit_media_set_path(@media_set) 
         %li= link_to 'Kollektion löschen', media_set_path(@media_set), :confirm => 'Sind Sie sicher? Die Kollektion wird gelöscht. Die enthaltenen Medien werden jedoch nicht gelöscht.', :method => :delete
-        %li= link_to 'Weitere Medien in diese Kollektion hochladen', uploader_media_set_path(@media_set) 
+        - if current_user.can_upload?
+          %li= link_to 'Weitere Medien in diese Kollektion hochladen', uploader_media_set_path(@media_set)
       -elsif @media_set.composing? or @media_set.uploading?
         %li= link_to 'Als neue Kollektion speichern', edit_media_set_path(@media_set)
 
