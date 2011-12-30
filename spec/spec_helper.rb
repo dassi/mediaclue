@@ -144,7 +144,8 @@ def mock_user(attributes = {})
                             :search_queries => [],
                             :full_name => 'Ed Min',
                             :media_sets => [],
-                            :media => [])
+                            :media => [],
+                            :user_groups => [])
   
   mock = mock_model(User, attributes)
   
