@@ -125,6 +125,8 @@ class MediaSetsController < ApplicationController
   # GET /media_sets/1/edit
   def edit(media_set = nil)
     @media_set = media_set || MediaSet.find(params[:id])
+    @no_media = params[:no_media].present?
+    
     permit :edit, @media_set do
       @media_set.define! unless @media_set.media.empty?
       @media = @media_set.media_for_user_as_editor(current_user)

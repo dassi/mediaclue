@@ -52,7 +52,8 @@
     %h3.first Bearbeitung
     %ul
       -if @media_set.defined? or @media_set.defining?
-        %li= link_to 'Kollektion bearbeiten', edit_media_set_path(@media_set) 
+        %li= link_to 'Kollektion bearbeiten', edit_media_set_path(@media_set)
+        %li= link_to 'Kollektion bearbeiten ohne Medien', edit_media_set_path(@media_set, :no_media => true)
         %li= link_to 'Kollektion löschen', media_set_path(@media_set), :confirm => 'Sind Sie sicher? Die Kollektion wird gelöscht. Die enthaltenen Medien werden jedoch nicht gelöscht.', :method => :delete
         - if current_user.can_upload?
           %li= link_to 'Weitere Medien in diese Kollektion hochladen', uploader_media_set_path(@media_set)
