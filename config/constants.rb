@@ -48,7 +48,7 @@ MEDIUM_SOURCES = [
 
 
 # Jumploader-Version
-JUMPLOADER_VERSION = [2, 19, 4]
+JUMPLOADER_VERSION = [2, 22, 0]
 
 # Jumploader-Erscheinung: Neuste Browsers verhindern, dass die Drag&Drop Funktionen an das Java Applet gesendet werden, und fangen dies selbst ab.
 # Deshalb verwenden wir als Default den Jumploader in einem eigenen Java-Fenster, dann funktioniert Drag&Drop
@@ -128,3 +128,6 @@ ADMIN_EMAIL = 'admin@your.domain.com'
 
 # Domain-Name der Applikation. Verwendet in Links in Emails.
 APPLICATION_DOMAIN = 'your.domain.com'
+
+# Anzahl der Listeneinträge in der Übersicht, ab der eine zugeklappte Darstellung gewählt wird
+OVERVIEW_COMPACT_MIN_ENTRIES = 5

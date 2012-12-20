@@ -5,33 +5,43 @@
     Meine Kollektionen
     %span.explanation (Manuell gruppiert nach persönlicher Einsortierung)
   - media_sets = current_user.defined_media_sets
+  - is_compact_view = media_sets.size > OVERVIEW_COMPACT_MIN_ENTRIES
   - if media_sets.empty?
     = no_data_text
   - else
-    %table.list
-      - depth = 0
-      - grouped_media_sets = media_sets.group_by { |ms| ms.sort_path_array }.sort { |a1, a2| a1.first <=> a2.first }
-      - for group_key, media_set_group in grouped_media_sets
-        - if not group_key.empty?
-          %tr.group_title
-            %td{:colspan => 3}
-              %strong= group_key.join(' / ')
-        = render :partial => 'list_item', :collection => media_set_group.sort
+    - grouped_media_sets = media_sets.group_by { |ms| ms.sort_path_array }.sort { |a1, a2| a1.first <=> a2.first }
+    - for group_key, media_set_group in grouped_media_sets
+      - group_div_id = group_key.join
+      - if not group_key.empty?
+        %div.group_title
+          - if is_compact_view
+            %strong= link_to_function(group_key.join(' / '), "$('#{group_div_id}').toggle()")
+            %span= "(#{media_set_group.size} Kollektionen)"
+          - else
+            %strong= group_key.join(' / ')
+      %div{:id => group_div_id, :style => ((is_compact_view and not group_key.empty?) ? 'display:none' : nil)}
+        %table.list
+          = render :partial => 'list_item', :collection => media_set_group.sort
 
   - if not media_sets.empty?
     %h2
       Meine Kollektionen
       %span.explanation (Automatisch gruppiert nach Schlagworten)
-    %table.list
-      - tagging_ids = current_user.media_sets.collect(&:tagging_ids).flatten
-      - top_tags = MediaSet.tag_counts(:at_least => 2, :conditions => ['taggings.id IN (?)', tagging_ids])
-      - for tag in top_tags
-        - media_sets = tag.media_sets.for_user(current_user)
-        - if not media_sets.empty?
-          %tr.group_title
-            %td{:colspan => 3}
-              %strong= tag.name
-          = render :partial => 'list_item', :collection => media_sets.sort
+    - tagging_ids = current_user.media_sets.collect(&:tagging_ids).flatten
+    - top_tags = MediaSet.tag_counts(:at_least => 2, :conditions => ['taggings.id IN (?)', tagging_ids])
+    - for tag in top_tags
+      - media_sets = tag.media_sets.for_user(current_user)
+      - if not media_sets.empty?
+        - group_div_id = "tag#{tag.id}"
+        %div.group_title
+          - if is_compact_view
+            %strong= link_to_function(tag.name, "$('#{group_div_id}').toggle()")
+            %span= "(#{media_sets.size} Kollektionen)"
+          - else
+            %strong= tag.name
+        %div{:id => group_div_id, :style => ((is_compact_view and not group_key.empty?) ? 'display:none' : nil)}
+          %table.list
+            = render :partial => 'list_item', :collection => media_sets.sort
 
 
 #column2
