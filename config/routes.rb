@@ -1,7 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
 
   map.resources :media,
-                :member => {:generate_previews => :get, :read_meta_data => :get}
+                :member => {:generate_previews => :get, :read_meta_data => :get, :report_misuse => [:get, :post]}
   map.resources :media_sets,
                 :collection => {:browse => :get},
                 :member => {:uploader => :get, :uploader_window => :get, :upload => :post,

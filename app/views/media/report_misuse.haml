@@ -1,0 +1,29 @@
+- if @email_sent
+  %h1 Löschung beantragt
+  %p Ihr Löschantrag wurde gesendet. Sie erhalten per Email eine Kopie. Die Entscheidung Ihres Antrags obliegt dem Eigentümer. Die Mediendatenbank nimmt von selbst keine Löschung vor.
+  = link_to 'Zurück zum Medium ...', medium_path(@medium)
+- else
+  %h1 Löschung beantragen
+  %p Hiermit beantragen Sie, dass folgendes Medium gelöscht wird:
+  %br
+  =render :partial => "media/#{@medium.template_path}/preview", :object => @medium, :locals => {:small_preview => true}
+  %br
+  %br
+
+  - form_tag do
+    %table.list
+      %tr
+        %td Geht per Email an:
+        %td
+          = @medium.owner.full_name
+          = "(#{@medium.owner.email})"
+      %tr
+        %td Beantragt von:
+        %td
+          = current_user.full_name
+          = "(#{current_user.email})"
+      %tr
+        %td Antrag:
+        %td= text_area_tag 'note', "Ich beantrage die Löschung des Mediums mit ID #{@medium.id}.", :style => 'width:300px;height:100px'
+    = submit_tag 'Löschantrag senden!'
+    = link_to 'Abbrechen', medium_path(@medium)

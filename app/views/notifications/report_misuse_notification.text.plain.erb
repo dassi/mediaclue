@@ -1,0 +1,21 @@
+Geschätzte(r) <%= @owner.full_name %>
+
+Für eines Ihrer Medien wurde ein Löschantrag gestellt.
+Bitte beantworten Sie diese Email (geht an den Antragssteller)
+und löschen Sie das Medium, sofern Sie den Antrag gutheissen können.
+
+MEDIUM
+<%= medium_url(@medium) %>
+
+ANTRAGSTELLER
+<%= @reporting_user.full_name %>
+<%= @reporting_user.email %>
+
+ANTRAG
+<%= @note %>
+
+--
+<%= PROJECT_NAME %>
+
+Sie erhalten diese Email, weil ein Benutzer der Mediendatenbank
+das betroffene Medium angesehen hat und dabei eine Löschung beantragt.

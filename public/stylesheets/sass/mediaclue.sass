@@ -447,6 +447,10 @@ div.draggable
 
   div.remove_button
     padding-top: 1px
+    
+  div.actions
+    visibility: hidden
+
 
 .media_lightbox_big
   width: 380px
@@ -459,6 +463,15 @@ div.draggable
 
   div.remove_button
     padding-top: 2px
+
+  div.actions
+    visibility: hidden
+
+
+.media_lightbox_big:hover,
+.media_lightbox_small:hover
+  div.actions
+    visibility: visible
 
 
 input.media_name
