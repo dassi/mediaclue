@@ -49,7 +49,7 @@ MEDIUM_SOURCES = [
 
 
 # Jumploader-Version
-JUMPLOADER_VERSION = [2, 19, 4]
+JUMPLOADER_VERSION = [2, 22, 0]
 
 # Jumploader-Erscheinung: Neuste Browsers verhindern, dass die Drag&Drop Funktionen an das Java Applet gesendet werden, und fangen dies selbst ab.
 # Deshalb verwenden wir als Default den Jumploader in einem eigenen Java-Fenster, dann funktioniert Drag&Drop
@@ -90,6 +90,8 @@ LDAP_IMPORTED_USER_GROUPS = [
   'fkph',
   'fkre',
   'fksp']
+
+LDAP_IMPORTED_USER_GROUPS_REGEXP = [/^g\d\d\d\d.$/]
   
 LDAP_USER_GROUPS_WITH_UPLOAD_FEATURE = [
   'lehrer',
@@ -155,3 +157,6 @@ ADMIN_EMAIL = 'andreas.brodbeck@mindclue.ch'
 
 # Domain-Name der Applikation. Verwendet in Links in Emails.
 APPLICATION_DOMAIN = 'mdb.kshp.ch'
+
+# Anzahl der Listeneinträge in der Übersicht, ab der eine zugeklappte Darstellung gewählt wird
+OVERVIEW_COMPACT_MIN_ENTRIES = 15

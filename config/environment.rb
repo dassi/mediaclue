@@ -80,7 +80,7 @@ Rails::Initializer.run do |config|
   config.gem 'bj', :version => '~>1.0.1'
   config.gem 'main', :version => '~>2.8.0' # BJ braucht main 2.8.0!!! Die neueren führen zu Exception!
   config.gem 'daemon_controller', :lib => 'daemon_controller', :version => '~>0.2.1'
-  config.gem 'image_science', :version => '~>1.2.1'
+  config.gem 'image_science', :version => '~>1.2.4'
   config.gem 'haml', :version => '~>2.2.5'
   
   if FEATURE_LDAP_AUTHENTICATION

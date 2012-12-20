@@ -55,7 +55,7 @@
   %p Öffnen Sie den Jumploader durch Klick auf den untenstehenden Knopf. Nachdem Sie dort auf "Dateien hochladen" geklickt haben, fahren Sie hier bei Schritt 2 weiter.
   %p.smalltext (Hinweis: Aufgrund von technischen Limiten in neueren Browsern, sind Drag&Drop Funktionalitäten leider nur noch möglich, wenn Jumploader als eigenständiges Fenster geöffnet wird. Deshalb ist hier leider der Jumploader nicht mehr direkt eingebettet.)
   
-%applet{:name => 'jumpLoaderApplet', :id => 'jumpLoaderApplet', :code => 'jmaster.jumploader.app.JumpLoaderApplet.class', :width => '100%', :height => applet_height, :archive => "/applets/#{JUMPLOADER_TRANSLATIONS_ZIP},/applets/#{jar_file}", :mayscript => 'true'}
+%applet{:name => 'jumpLoaderApplet', :id => 'jumpLoaderApplet', :code => 'jmaster.jumploader.app.JumpLoaderApplet.class', :width => '100%', :height => applet_height, :archive => "/applets/#{jar_file}", :mayscript => 'true'}
 
   - if JUMPLOADER_IN_SEPARATE_WINDOW
     %param{:name => 'ac_mode', :value => 'framed' }/
@@ -63,6 +63,7 @@
     %param{:name => 'ac_mode', :value => 'embedded' }/
     
   %param{:name => 'ac_fireAppletInitialized', :value => 'true' }/
+  %param{:name => 'ac_messagesZipUrl', :value => "/applets/#{JUMPLOADER_TRANSLATIONS_ZIP}" }/
   - if JUMPLOADER_IN_SEPARATE_WINDOW
     %param{:name => 'ac_fireUploaderFileStatusChanged', :value => 'true' }/
   
