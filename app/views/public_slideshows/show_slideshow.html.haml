@@ -5,6 +5,8 @@
   = link_to('Zur Kleinansicht ...', public_slideshow_path(@media_set, :style => 'lightbox', :size => 'small'))
   &nbsp;
   = link_to('Zur Grossansicht ...', public_slideshow_path(@media_set, :style => 'lightbox', :size => 'big'))
+  &nbsp;
+  = link_to('Zur Mobile-Ansicht ...', public_slideshow_path(@media_set, :style => 'mobile'))
 .clear
 
 %span.explanation (Leertaste = Play/Pause&nbsp;&nbsp;&nbsp;Pfeiltasten = Vor/Zurück)

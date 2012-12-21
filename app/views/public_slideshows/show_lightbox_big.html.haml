@@ -5,6 +5,8 @@
   = link_to('Zur Kleinansicht ...', public_slideshow_path(@media_set, :style => 'lightbox', :size => 'small'))
   &nbsp;
   = link_to('Zur Diashow ...', public_slideshow_path(@media_set, :style => 'slideshow'))
+  &nbsp;
+  = link_to('Zur Mobile-Ansicht ...', public_slideshow_path(@media_set, :style => 'mobile'))
 
 .clear
 %p=h @media_set.desc

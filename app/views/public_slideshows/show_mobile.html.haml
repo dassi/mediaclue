@@ -1,0 +1,13 @@
+#slider.swipe
+  %ul
+    - first = true
+    - for medium in @media
+      %li{:style => first ? 'display:block' : 'display:none'}
+        %div= medium_image_tag(medium, :big, :class => 'picture')
+      - if first then first = false end
+
+#navigation{:style => ''}
+= link_to('Zur Übersicht ...', public_slideshows_path)
+
+:javascript
+  window.mySwipe = new Swipe(document.getElementById('slider'));
