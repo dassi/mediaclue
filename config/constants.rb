@@ -80,7 +80,7 @@ LDAP_IMPORTED_USER_GROUPS = [
   'fkde',
   'fken',
   'fkfr',
-  'fkgg1',
+  'fkgg',
   'fkgs',
   'fkinstr',
   'fkis',
