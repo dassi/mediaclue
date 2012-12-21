@@ -67,7 +67,7 @@ namespace :mediaclue do
 
       # Alle Gruppen importieren
       LDAP_IMPORTED_USER_GROUPS.each do |group_uid|
-        ldap_group = LdapGroup.find(group_uid)
+        ldap_group = LdapGroup.find(group_uid) rescue nil
 
         if ldap_group
           import_ldap_group(ldap_group)
