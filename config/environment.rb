@@ -73,7 +73,7 @@ Rails::Initializer.run do |config|
   # config.gem "aws-s3", :lib => "aws/s3"
   config.gem 'ferret', :version => '~>0.11.6'
   config.gem 'acts_as_ferret', :version => ACTS_AS_FERRET_VERSION
-  config.gem 'mime-types', :version => '~>1.16', :lib => 'mime/types'
+  config.gem 'mime-types', :version => '~>1.19', :lib => 'mime/types'
   config.gem 'mini_exiftool', :version => '~>1.0.1'
   config.gem 'rubyzip', :lib => 'zip/zip', :version => '~>0.9.1'
   config.gem 'ruport', :version => '~>1.6.1'

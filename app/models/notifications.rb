@@ -23,5 +23,19 @@ class Notifications < ActionMailer::Base
     tweak
   end
   
+  def report_misuse_notification(medium, reporting_user, note)
+    owner = medium.owner
+    
+    recipients    owner.email
+    cc           [reporting_user.email]
+    from          'KSHP Mediendatenbank <mdb@kshp.ch>'
+    reply_to      reporting_user.email
+    subject       "[KSHP MDB] Antrag auf Löschung!"
+    # content_type  'text/html'
+    body          :reporting_user => reporting_user, :medium => medium, :owner => owner, :note => note
+    
+    tweak
+  end
+  
 
 end

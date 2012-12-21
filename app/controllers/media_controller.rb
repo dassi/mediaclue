@@ -102,4 +102,15 @@ class MediaController < ApplicationController
     redirect_to :action => 'show'
   end
   
+  def report_misuse
+    @medium = Medium.find(params[:id])
+
+    @email_sent = false
+
+    if params[:commit]
+      @email_sent = true
+      Notifications.deliver_report_misuse_notification(@medium, current_user, params[:note])
+    end
+  end
+  
 end

@@ -54,6 +54,7 @@
       - if FEATURE_METADATA
         %li= link_to 'Meta-Daten erneut von Original einlesen', read_meta_data_medium_path(@medium), :confirm => 'Sind Sie sicher? Die aktuellen Meta-Daten und Schlagwörter werden dabei überschrieben!'
     %li= medium_download_link(@medium)
+    %li= link_to 'Löschung beantragen', report_misuse_medium_path(@medium)
     
 
 

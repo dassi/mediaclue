@@ -26,8 +26,8 @@ class AccountController < ApplicationController
         cookies[:auth_token] = { :value => self.current_user.remember_token , :expires => self.current_user.remember_token_expires_at }
       end
       flash[:notice] = "Anmeldung erfolgreich."
-      
-      redirect_to(root_url)
+
+      redirect_back_or_default(root_url)
     else
       flash[:error] = "Login/Passwort falsch!"      
     end

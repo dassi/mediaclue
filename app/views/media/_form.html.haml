@@ -59,15 +59,12 @@
               = media_form.radio_button('permission_type', 'owner', :onclick => "$('#{groups_select_id}').hide()")
               Nur Besitzer
               &nbsp;
-              &nbsp;
               = media_form.radio_button('permission_type', 'all', :onclick => "$('#{groups_select_id}').hide()")
-              Alle
-              &nbsp;
+              Schulangehörige
               &nbsp;
               = media_form.radio_button('permission_type', 'public', :onclick => "$('#{groups_select_id}').hide()")
-              Alle & Öffentlich
-              &nbsp;
-              &nbsp;
+              Schulangehörige & Öffentlich
+              %br
               = media_form.radio_button('permission_type', 'groups', :id => group_permission_radio_button_id, :onclick => "$('#{groups_select_id}').show()")
               Diese Gruppen:
               =# media_form.select :read_permitted_user_group_ids, options_for_user_group_select, {}, {:multiple => true, :style => 'vertical-align:top'}

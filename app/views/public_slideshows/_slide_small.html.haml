@@ -7,5 +7,7 @@
     - js_onmouseover = "showtrail('#{slide_small.image_thumbnail(:big).public_filename}','#{escape_javascript(slide_small.name)}','#{escape_javascript(truncate(slide_small.desc,150))}',true,351);"
     -# =link_to medium_image_tag(slide_small, :small, :style => "margin-top:#{margin_top}px", :onmouseover => js_onmouseover, :onmouseout => "hidetrail();"), medium_path(slide_small)
     =medium_image_tag(slide_small, :small, :style => "margin-top:#{margin_top}px", :onmouseover => js_onmouseover, :onmouseout => "hidetrail();")
+  .actions= link_to 'Löschung beantragen ...', report_misuse_medium_path(slide_small)
+    
       
   =#spiffy_bottom 'slide'

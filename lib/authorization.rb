@@ -97,9 +97,9 @@ module Authorization
       def read_permissions_description
         case self.permission_type
         when 'public'
-          'Alle & öffentlich'
+          'Schulangehörige & öffentlich'
         when 'all'
-          'Alle Benutzer'
+          'Schulangehörige'
         when 'owner'
           'Nur Besitzer'
         when 'groups'
