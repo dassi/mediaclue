@@ -57,8 +57,8 @@ set :default_environment, shell_environment
 # set :gateway, "#{gateway_user}@mindclue.nine.ch"
 
 # set :gateway, "mindclue@mindclue1.nine.ch"
-# server = 'mdb.kshp.ch'
-server = '212.117.123.187'
+server = 'mdb.kshp.ch'
+# server = '212.117.123.187'
 
 role :app, server
 role :web, server
