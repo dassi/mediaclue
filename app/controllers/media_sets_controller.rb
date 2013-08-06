@@ -3,7 +3,9 @@ class MediaSetsController < ApplicationController
   MEDIA_SET_STYLES = ['lightbox', 'slideshow']
 
   before_filter :upload_feature_required, :only => [:uploader, :upload]
-  
+
+  skip_before_filter :verify_authenticity_token, :only => :upload
+
   protected #######################################################################################
   
   # Medien aus Set entfernen

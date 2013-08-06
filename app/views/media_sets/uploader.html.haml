@@ -114,7 +114,8 @@
 :javascript
   function appletInitialized(applet) {
     /* Hier darf nicht direkt mit applet kommuniziert werden, Safari mag das nicht!!! Deshalb auslagern mit Timeout! */
-    setTimeout('initializeJumploader()', 2000);
+    setTimeout('initializeJumploader()', 1000);
+    setTimeout('initializeJumploader()', 5000);
   }
   
   function initializeJumploader() {
@@ -122,9 +123,6 @@
     setPostAttribute("importMetadata", "1");
   }
 
-  /* function uploaderFileAdded(uploader, file) {
-    initializeJumploader();
-  } */
 
   function uploaderFileStatusChanged( uploader, file )
   {
