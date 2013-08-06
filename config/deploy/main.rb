@@ -8,8 +8,8 @@ exit(-1) unless confirmation == 'Ja'
 # set :application, "mediendatenbank"
 
 set :scm, :git
-set :repository, 'git@mindclue.dyndns.org:kshp/mediaclue.git'
-set :local_repository, 'git@mindclue-file:kshp/mediaclue.git'
+set :repository, 'gitolite@mindclue.dyndns.org:kshp/mediaclue.git'
+set :local_repository, 'gitolite@mindclue-file:kshp/mediaclue.git'
 set :branch, 'master'
 #set :remote, 'origin'
 set :deploy_via, :remote_cache
