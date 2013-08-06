@@ -89,14 +89,16 @@ LDAP_IMPORTED_USER_GROUPS = [
   'fkmu',
   'fkph',
   'fkre',
-  'fksp']
+  'fksp',
+  'webmaster_intranet']
 
 LDAP_IMPORTED_USER_GROUPS_REGEXP = [/^g\d\d\d\d.$/]
   
 LDAP_USER_GROUPS_WITH_UPLOAD_FEATURE = [
   'lehrer',
   'angestellte',
-  'personal']
+  'personal',
+  'webmaster_intranet']
 
 LDAP_ADDITIONAL_GROUP_NAME_ATTRIBUTES = ['apple-group-realname', 'description']
 
