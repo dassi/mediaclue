@@ -114,7 +114,7 @@
 :javascript
   function appletInitialized(applet) {
     /* Hier darf nicht direkt mit applet kommuniziert werden, Safari mag das nicht!!! Deshalb auslagern mit Timeout! */
-    setTimeout('initializeJumploader()', 1000);
+    setTimeout('initializeJumploader()', 2000);
   }
   
   function initializeJumploader() {

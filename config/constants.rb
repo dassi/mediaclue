@@ -48,7 +48,7 @@ MEDIUM_SOURCES = [
 
 
 # Jumploader-Version
-JUMPLOADER_VERSION = [2, 22, 0]
+JUMPLOADER_VERSION = [2, 27, 0]
 
 # Jumploader-Erscheinung: Neuste Browsers verhindern, dass die Drag&Drop Funktionen an das Java Applet gesendet werden, und fangen dies selbst ab.
 # Deshalb verwenden wir als Default den Jumploader in einem eigenen Java-Fenster, dann funktioniert Drag&Drop
