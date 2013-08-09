@@ -5,6 +5,6 @@ begin
 rescue LoadError
   # try the gem
   require 'rubygems'
-  gem 'acts_as_ferret'
+  gem 'acts_as_ferret', '=0.4.3'
   require 'server_manager'
 end
