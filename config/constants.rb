@@ -162,3 +162,6 @@ APPLICATION_DOMAIN = 'mdb.kshp.ch'
 
 # Anzahl der Listeneinträge in der Übersicht, ab der eine zugeklappte Darstellung gewählt wird
 OVERVIEW_COMPACT_MIN_ENTRIES = 10
+
+# Uploader Komponente
+UPLOADER_TYPE = 'plupload' # Oder veraltet: "jumploader", möglich: (plupload, jumploader)
