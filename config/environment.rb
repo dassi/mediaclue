@@ -85,7 +85,7 @@ Rails::Initializer.run do |config|
   
   if FEATURE_LDAP_AUTHENTICATION
     config.gem 'ruby-ldap', :version => '=0.9.9', :lib => false
-    config.gem 'activeldap', :version => '~>1.2.1', :lib => 'active_ldap'
+    config.gem 'activeldap', :version => '~>1.2.2', :lib => 'active_ldap'
   end    
 
   # Only load the plugins named here, in the order given. By default, all plugins
