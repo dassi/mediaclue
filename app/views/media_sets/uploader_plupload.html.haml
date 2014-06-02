@@ -1,0 +1,146 @@
+#uploader_wait{:style=>'display:none'}
+  = image_tag 'loader.gif'
+  Dateien werden hochgeladen ... Bitte Browser nicht schliessen bis dieser Vorgang abgeschlossen ist!
+
+
+%h1
+  Medien hochladen
+  - if @media_set.defined?
+    in Kollektion
+    =h @media_set.caption
+
+- post_url = "#{public_url}#{upload_media_set_path(@media_set, :format => :js)}"
+- file_extensions = @allowed_upload_extensions.collect {|e| [e.to_s, e.to_s.upcase] }.flatten.join(',')
+
+%h2 Schritt 1: Dateien auswählen
+%br 
+#pluploader_container
+  #upload_drop
+    %h3
+      = image_tag('nuvola/tool_drop_target.png')
+      Drag & drop
+    %p
+      Dateien hierhin ablegen
+      %br
+      (Mit dem Chrome Browser sind auch Ordner möglich)
+  &hellip; oder
+  %button{:id=>'upload_browse', :href=>'javascript:;'}
+    Dateien suchen &hellip;
+
+  %pre{:id=>"uploader_console", :style=>'display:none'} Fehlermeldungen des Uploaders:
+
+  #uploader_filelist_container{:style=>'display:none'}
+    %strong Ausgewählte Dateien:
+    %ul{:id=>"uploader_filelist"}
+    .clear
+  %br
+  
+  %h2 Schritt 2: Hochladen
+  
+  %br
+
+  - if FEATURE_METADATA
+    = check_box_tag 'metadata_import', '1', true, :onclick => 'uploader.setOption({multipart_params: {importMetadata: (this.checked ? "1" : "0")}})'
+    Metadaten (EXIF etc.) importieren
+    %br
+
+  %button{:id=>'start_upload', :href=>'javascript:;'}
+    Upload starten ...
+
+
+:javascript
+  var uploader = new plupload.Uploader({
+    browse_button: 'upload_browse',
+    url: '#{post_url}',
+    file_data_name: 'medium[uploaded_data]',
+    drop_element: 'upload_drop',
+    flash_swf_url: '/javascripts/plupload/Moxie.swf',
+    silverlight_xap_url: '/javascripts/plupload/Moxie.xap',
+    multipart_params: {
+      importMetadata: '1'
+    },
+    filters: {
+      max_file_size: #{MAX_FILE_SIZE || 0},
+      prevent_duplicates: true,
+      mime_types : [
+        { title : "Media files", extensions : "#{file_extensions}" }
+      ]
+    }    
+  });
+ 
+  uploader.init();
+
+  uploader.bind('FilesAdded', function(up, files) {
+    var html = '';
+    plupload.each(files, function(file) {
+      html += '<li id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></li>';
+    });
+    $('uploader_filelist_container').show()
+    $('uploader_filelist').show().innerHTML += html;
+  });
+
+
+  uploader.bind('UploadFile', function(up, file) {
+    var tag = $(file.id).getElementsByTagName('b')[0];
+    tag.innerHTML = '<span>...</span>';
+  });
+
+  uploader.bind('UploadProgress', function(up, file) {
+    var tag = $(file.id).getElementsByTagName('b')[0];
+    if (file.percent==100) {
+      tag.innerHTML = '<span class="uploaded_success">OK</span>';
+    } else {
+      tag.innerHTML = '<span>' + file.percent + '%</span>';
+    }
+  });
+
+  uploader.bind('FileUploaded', function(up, file, responseObject) {
+    if (responseObject.response)
+    {
+      window.eval(String.interpret(responseObject.response));
+    }
+  });
+
+
+  uploader.bind('UploadComplete', function(up) {
+    $('uploader_wait').hide();
+  });
+
+  uploader.bind('Error', function(up, err) {
+    var text = '';
+    text = err.message;
+
+    if (err.file) {
+      text += ' ' + err.file.name;
+    }
+
+    $('uploader_console').show().innerHTML += "\n" + text;
+  });
+
+  uploader.bind('PostInit', function(up) {
+    if (!up.features.dragdrop) {
+      $('upload_drop').hide()
+    }
+  });
+
+
+  $('start_upload').onclick = function() {
+    uploader.start();
+    $('uploader_wait').show();
+  };
+
+
+
+%br
+
+%h2 Schritt 3: Kollektion bearbeiten
+-if @media_set.defined?
+  %p
+    Medien werden in bestehende Kollektion hochgeladen:
+    = @media_set.caption
+  = render :partial => 'media_sets/collection_box', :object => @media_set
+  = button_to "Schritt 3: Kollektion #{@media_set.caption} bearbeiten ...", edit_media_set_path(@media_set), :method => :get
+-elsif @media_set.uploading?
+  %p Medien werden in eine neue Kollektion hochgeladen
+  = render :partial => 'media_sets/collection_box', :object => @media_set
+  = button_to "Schritt 3: Neue Kollektion bearbeiten ...", edit_media_set_path(@media_set), :method => :get

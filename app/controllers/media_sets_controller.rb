@@ -201,6 +201,11 @@ class MediaSetsController < ApplicationController
       @allowed_upload_extensions = Medium.all_media_file_extensions
       @authenticity_token = form_authenticity_token
     end
+    
+    # Choose the uploader
+    if UPLOADER_TYPE == 'plupload'
+      render :action => 'uploader_plupload'
+    end
   end
   
   

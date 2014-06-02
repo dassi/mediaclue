@@ -132,3 +132,6 @@ APPLICATION_DOMAIN = 'your.domain.com'
 
 # Anzahl der Listeneinträge in der Übersicht, ab der eine zugeklappte Darstellung gewählt wird
 OVERVIEW_COMPACT_MIN_ENTRIES = 5
+
+# Uploader Komponente
+UPLOADER_TYPE = 'plupload' # Oder veraltet: "jumploader", möglich: (plupload, jumploader)

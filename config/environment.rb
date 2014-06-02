@@ -30,7 +30,7 @@
 SUPRESS_EARLY_DB_CONNECTION = ENV['SUPRESS_EARLY_DB_CONNECTION'] || false
 
 # Specifies gem version of Rails to use when vendor/rails is not present
-RAILS_GEM_VERSION = '2.3.5' unless defined? RAILS_GEM_VERSION
+RAILS_GEM_VERSION = '2.3.8' unless defined? RAILS_GEM_VERSION
                          
 ###################################################################################################
 # Applikations-Konstanten
@@ -85,7 +85,7 @@ Rails::Initializer.run do |config|
   
   if FEATURE_LDAP_AUTHENTICATION
     config.gem 'ruby-ldap', :version => '=0.9.9', :lib => false
-    config.gem 'activeldap', :version => '=1.2.1', :lib => 'active_ldap'
+    config.gem 'activeldap', :version => '~>1.2.2', :lib => 'active_ldap'
   end    
 
   # Only load the plugins named here, in the order given. By default, all plugins
