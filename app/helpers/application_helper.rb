@@ -57,11 +57,11 @@ module ApplicationHelper
   end
   
   def subjects_link_list(dom_id)
-    SUBJECT_SELECTIONS.collect{ |s| link_to_textfield_append_function(s, dom_id) }.join('<span> <span/>')    
+    SUBJECT_SELECTIONS.collect{ |s| link_to_textfield_append_function(s, dom_id) }.join('<span> </span>')
   end
   
-  # Liefert eine Link-Liste von den häufigsten Tags. Fach-Tags werden rausgenommen.
-  def top_tags_link_list(dom_id, options = {})
+  # Liefert eine Liste von den häufigsten Tags. Fach-Tags werden rausgenommen.
+  def top_tags(options = {})
     
     # Hole die häufigsten Tags (relativ zum Typ des getaggten Objektes)
     tags_from_media = Medium.tag_counts(options)
@@ -75,11 +75,17 @@ module ApplicationHelper
     # TODO: Das Limit (z.B. 30) stimmt hier danach nicht mehr, ist aber nicht so tragisch, aber unkorrekt.
     tag_names -= SUBJECT_SELECTIONS
 
-    tag_names.collect{ |t| link_to_textfield_append_function(t, dom_id) }.join('&nbsp; ')    
+    tag_names
   end
 
   # Liefert eine Link-Liste von den häufigsten Tags. Fach-Tags werden rausgenommen.
-  def my_top_tags_link_list(dom_id, options = {})
+  def top_tags_link_list(dom_id, options = {})
+    tags = options[:tags] || top_tags(options)
+    tags.collect{ |t| link_to_textfield_append_function(t, dom_id) }.join('<span> </span>')
+  end
+
+  # Liefert eine Link-Liste von den häufigsten Tags. Fach-Tags werden rausgenommen.
+  def my_top_tags(options = {})
 
     tagging_ids = (current_user.media_sets.collect(&:tagging_ids) + current_user.media.collect(&:tagging_ids)).flatten
 
@@ -97,7 +103,13 @@ module ApplicationHelper
     # TODO: Das Limit (z.B. 30) stimmt hier danach nicht mehr, ist aber nicht so tragisch, aber unkorrekt.
     tag_names -= SUBJECT_SELECTIONS
 
-    tag_names.collect{ |t| link_to_textfield_append_function(t, dom_id) }.join('&nbsp; ')    
+    tag_names
+  end
+
+  # Liefert eine Link-Liste von den häufigsten Tags. Fach-Tags werden rausgenommen.
+  def my_top_tags_link_list(dom_id, options = {})
+    tags = options[:tags] || my_top_tags(options)
+    tags.collect{ |t| link_to_textfield_append_function(t, dom_id) }.join('<span> </span>')
   end
 
   # Liefert eine Link-Liste mit Tags, die am meisten in Kombination mit den given_tag_names vorkommen
@@ -124,7 +136,7 @@ module ApplicationHelper
     suggested_tag_names -= given_tag_names
 
     if suggested_tag_names.any?
-      suggested_tag_names.collect{ |t| link_to_textfield_append_function(t, dom_id) }.join('&nbsp; ')
+      suggested_tag_names.collect{ |t| link_to_textfield_append_function(t, dom_id) }.join('<span> </span>')
     else
       no_data_text
     end
@@ -138,7 +150,7 @@ module ApplicationHelper
     else
       value = name
     end
-    link_to_function(name, "append_link_value('#{field_id}', '#{value}')")
+    link_to_function(name, "append_link_value('#{field_id}', '#{value}')", :class => 'nowrap')
   end
   
   def close_tag_link_list(dom_id)
