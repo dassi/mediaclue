@@ -8,7 +8,9 @@ function open_tag_list (dom_id) {
 }
 
 function trigger_search_lookahead () {
-  Event.fire('search_fulltext', 'mediaclue:search_lookahead');
+  if ($('search_fulltext')) {
+    Event.fire('search_fulltext', 'mediaclue:search_lookahead');
+  }
 }
 
 function append_link_value(dom_id, value) {

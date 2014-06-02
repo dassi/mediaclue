@@ -1,5 +1,4 @@
 %h3
   Enthaltene Medien
   %span.explanation für die Sie Schreibrechte haben
-=render :partial => 'media/form', :collection => @media
-
+=render :partial => 'media/form', :collection => @media, :locals => {:top_tags_collection => top_tags(:limit => 30), :my_top_tags_collection => my_top_tags(:limit => 30)}

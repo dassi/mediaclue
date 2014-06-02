@@ -1,3 +1,8 @@
+- # Wir erhalten aus Performancegründen evt. diese Tag-Listen bereits gecacht
+- top_tags_collection ||= top_tags(:limit => 30)
+- my_top_tags_collection ||= my_top_tags(:limit => 30)
+
+
 %p
   =error_messages_for 'medium', :object => form
 
@@ -37,11 +42,11 @@
             %br
             Top-Schlagworte
             %br
-            = top_tags_link_list(m_dom_id, {:limit => 30})
+            = top_tags_link_list(m_dom_id, {:tags => top_tags_collection})
             %br
             Meine Top-Schlagworte
             %br
-            = my_top_tags_link_list(m_dom_id, {:limit => 30})
+            = my_top_tags_link_list(m_dom_id, {:tags => my_top_tags_collection})
 
         .edit_media_source
           Quelle/Copyright

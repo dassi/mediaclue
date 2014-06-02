@@ -131,7 +131,7 @@ class MediaSetsController < ApplicationController
     
     permit :edit, @media_set do
       @media_set.define! unless @media_set.media.empty?
-      @media = @media_set.media_for_user_as_editor(current_user)
+      @media = @media_set.media_for_user_as_editor(current_user) unless @no_media
 
       # Explizit rendern, weil wir auch von update hierher kommen
       render :action => 'edit'
