@@ -12,7 +12,7 @@ Mediaclue is licensed under the open source GPL license. See file LICENSE.
 
 == Features
 
-* Very sophisticated, user friendly upload process, suitable for uploading multiple files and folders at once. Made possible through the integration of the Jumploader java applet (www.jumploader.com).
+* Very sophisticated, user friendly upload process, suitable for uploading multiple files and folders at once. Made possible through the integration of http://plupload.com.
 * Suitable for many document types. Images, office documents, movies, zip packages, raw data files etc.
 * Let users organize their collected media in collections. A media can be in more than one collection. You can even add media from other users to your collections (given that you have access permission to it).
 * Generates previews of a number of widely used document formats: Virtually all image formats, Word, Excel, PowerPoint, OpenOffice documents, flash movies, quicktime movies, etc.
@@ -58,5 +58,5 @@ Further reading for more technical stuff concerning the soure code, see the file
 == Third party software
 
 * Uses JWPlayer for video: http://www.longtailvideo.com
-* Uses Jumploader Java applet for uploads: http://www.jumploader.com
+* Uses either http://plupload.com (HTML/JS only) or Jumploader Java applet for uploads (http://www.jumploader.com)
 * Uses swipe.js for the touch sensitive gallery: http://swipejs.com
