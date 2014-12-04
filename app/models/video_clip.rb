@@ -11,11 +11,11 @@ class VideoClip < Medium
     "Video Clips"
   end
   
-  # Liefert weitere erlaubte Dateiendungen. 
-  def self.additional_file_extensions
-    # M4V wird von der MIME-Library nicht richtig erkannt
-    {'video/mp4' => ['m4v']}
-  end
+  # # Liefert weitere erlaubte Dateiendungen. 
+  # def self.additional_file_extensions
+  #   # M4V wird von der MIME-Library nicht richtig erkannt
+  #   {'video/mp4' => ['m4v']}
+  # end
   
   
 end
