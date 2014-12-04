@@ -6,12 +6,12 @@ unless SUPRESS_EARLY_DB_CONNECTION
     if ferret_config
       ferret_controller = DaemonController.new(
          :identifier    => 'Ferret Server',
-         :start_command => "cd #{RAILS_ROOT}; #{RAILS_ROOT}/script/ferret_server start -e #{RAILS_ENV}",
-         :stop_command  => "cd #{RAILS_ROOT}; #{RAILS_ROOT}/script/ferret_server stop -e #{RAILS_ENV}",
+         :start_command => "cd #{RAILS_ROOT}; bash -c \"./script/ferret_server start -e #{RAILS_ENV} \" ",
+         :stop_command  => "cd #{RAILS_ROOT}; bash -c \"./script/ferret_server stop -e #{RAILS_ENV} \" ",
          :ping_command  => lambda { TCPSocket.new(ferret_config['host'], ferret_config['port']) },
          :pid_file      => ferret_config['pid_file'],
          :log_file      => ferret_config['log_file'],
-         :timeout       => 25
+         :ping_interval => 1 # nicht zu oft, default ist alle 0.1 Sekunden
       )
 
       if not ferret_controller.running?
