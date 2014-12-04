@@ -1,3 +1,6 @@
+# Hack, wegen Versionskonflikten mit Rails etc. Anscheinend muss das hier früh drin sein.
+require 'thread'
+
 # Don't change this file!
 # Configure your app in config/environment.rb and config/environments/*.rb
 
