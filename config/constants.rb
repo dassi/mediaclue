@@ -135,3 +135,6 @@ OVERVIEW_COMPACT_MIN_ENTRIES = 5
 
 # Uploader Komponente
 UPLOADER_TYPE = 'plupload' # Oder veraltet: "jumploader", möglich: (plupload, jumploader)
+
+# Kürzel der Schule
+SCHOOL_SHORT_NAME = 'SCHULE'
