@@ -1,7 +1,7 @@
 class VideoClip < Medium
 
   # Remarks: video/vnd.objectvideo = .m4v
-  CONTENT_TYPES = ['video/quicktime', 'video/x-flv', 'video/mpeg', 'video/mp4', 'video/vnd.objectvideo']
+  CONTENT_TYPES = ['video/quicktime', 'video/x-flv', 'video/mpeg', 'video/mp4', 'video/x-m4v', 'video/vnd.objectvideo']
 
   def self.type_display_name
     "Video Clip"
