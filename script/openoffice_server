@@ -1,7 +1,7 @@
 #!/bin/bash
 # openoffice headless server script
 #
-OOO_HOME=/Applications/office/OpenOffice.org.app/Contents
+OOO_HOME=/Applications/OpenOffice.org.app/Contents
 THIS_PATH=`pwd`
 PIDFILE=$THIS_PATH/tmp/pids/openoffice-headless.pid
 LOGFILE=$THIS_PATH/log/openoffice-headless.log

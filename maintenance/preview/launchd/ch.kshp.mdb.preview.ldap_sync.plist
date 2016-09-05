@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>ch.kshp.mdb.preview.ldap_sync</string>
+  <key>WorkingDirectory</key>
+  <string>/Library/WebServer/Documents/mediendatenbank/preview/current</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>RAILS_ENV</key>
+    <string>production</string>
+  </dict>
+  <key>ProgramArguments</key>
+  <array>
+    <string>rake</string>
+    <string>mediaclue:ldap:import</string>
+  </array>
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key>
+    <integer>3</integer>
+    <key>Minute</key>
+    <integer>5</integer>
+  </dict>
+  <key>UserName</key>
+  <string>mindclue</string>
+</dict>
+</plist>

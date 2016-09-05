@@ -1,8 +1,8 @@
 # Name des mediaclue-Projektes. Titel der Applikation.
-PROJECT_NAME = 'Digitale Sammlung XY'
+PROJECT_NAME = 'Mediendatenbank KSHP'
 
 # Generiert ein Link im Menu zu einer externen Hilfe-Seite (FAQ etc.)
-URL_TO_EXTERNAL_HELP = 'http://www.mediaclue.ch/'
+URL_TO_EXTERNAL_HELP = 'https://intranet.kshp.ch/info/mediaclue.html'
 
 MEDIA_STORAGE_PATH_PREFIX = 'public/m/files/'
 PREVIEWS_STORAGE_PATH_PREFIX = 'public/m/previews/'
@@ -31,6 +31,7 @@ SUBJECT_SELECTIONS = [
 'Philosophie', 
 'Religion', 
 'Russisch', 
+'Schulanlass', # Pseudo-Fach-Tag, gemäss Abmachung mit Simon Küpfer, August 2011
 'Spanisch', 
 'Sport', 
 'Theater'
@@ -67,14 +68,43 @@ FEATURE_DISLIKE_INTERNET_EXPLORER = true
 LDAP_USERS_DN_PREFIX = 'cn=users'
 LDAP_GROUPS_DN_PREFIX = 'cn=groups'
 LDAP_USERNAME_ATTRIBUTE = 'uid'
-LDAP_IMPORTED_USER_GROUPS = ['lehrer']
-LDAP_IMPORTED_USER_GROUPS_REGEXP = [/^klass_.*$/]
-LDAP_USER_GROUPS_WITH_UPLOAD_FEATURE = ['lehrer']
-LDAP_ADDITIONAL_GROUP_NAME_ATTRIBUTES = ['description']
+LDAP_IMPORTED_USER_GROUPS = [
+  'lehrer',
+  'angestellte',
+  'personal',
+  'schueler',
+  'fkas',
+  'fkbg',
+  'fkbi',
+  'fkch',
+  'fkde',
+  'fken',
+  'fkfr',
+  'fkgg',
+  'fkgs',
+  'fkinstr',
+  'fkis',
+  'fkma',
+  'fkmi',
+  'fkmu',
+  'fkph',
+  'fkre',
+  'fksp',
+  'webmaster_intranet']
+
+LDAP_IMPORTED_USER_GROUPS_REGEXP = [/^g\d\d\d\d.$/]
+  
+LDAP_USER_GROUPS_WITH_UPLOAD_FEATURE = [
+  'lehrer',
+  'angestellte',
+  'personal',
+  'webmaster_intranet']
+
+LDAP_ADDITIONAL_GROUP_NAME_ATTRIBUTES = ['apple-group-realname', 'description']
 
 # Global gültige Beschränkung der Dateigrösse
 # = nil, falls keine Beschränkung
-MAX_FILE_SIZE = nil # Zum Beispiel 8 * (1024**2)  => 8MB
+MAX_FILE_SIZE = 100 * (1024**2)  # Zum Beispiel 8 * (1024**2)  => 8MB
                   
 # Maximale Anzahl Suchergebnisse
 # Zahl oder nil für unbeschränkt
@@ -92,7 +122,7 @@ TEMP_PATH = './tmp'
 MAX_PAGES_DOCUMENT_PREVIEW = 5
 
 # Ort wo das soffice-binary von OpenOffice liegt
-OOO_HOME='/Applications/office/OpenOffice.org.app/Contents'
+OOO_HOME='/Applications/OpenOffice.org.app/Contents'
                      
 # Login nur via HTTPS
 LOGIN_WITH_HTTPS_ONLY = false
@@ -116,22 +146,22 @@ UNWANTED_EXIF_TAGS = [
   ]
 
 # Projekt-Logo im Header  
-LOGO_FILENAME = 'logo_small.png'
+LOGO_FILENAME = 'schriftzug.png'
 
 # Weitere Pfade für die PATH Variable. Auf OSX mit MacPorts z.B. ['/opt/local/bin']
-ADDITIONAL_ENV_PATHS = []
+ADDITIONAL_ENV_PATHS = ['/opt/local/bin']
 
 # Default-Wert für die Rechte-Einstellung eines Mediums. Wählbar ist 'owner' oder 'all'
 DEFAULT_PERMISSION_TYPE = 'all'
 
 # Administrator-Email
-ADMIN_EMAIL = 'admin@your.domain.com'
+ADMIN_EMAIL = 'andreas.brodbeck@mindclue.ch'
 
 # Domain-Name der Applikation. Verwendet in Links in Emails.
-APPLICATION_DOMAIN = 'your.domain.com'
+APPLICATION_DOMAIN = 'mdb.kshp.ch'
 
 # Anzahl der Listeneinträge in der Übersicht, ab der eine zugeklappte Darstellung gewählt wird
-OVERVIEW_COMPACT_MIN_ENTRIES = 5
+OVERVIEW_COMPACT_MIN_ENTRIES = 10
 
 # Uploader Komponente
 UPLOADER_TYPE = 'plupload' # Oder veraltet: "jumploader", möglich: (plupload, jumploader)

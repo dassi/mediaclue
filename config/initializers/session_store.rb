@@ -8,7 +8,7 @@ ActionController::Base.session = {
   :key         => "#{PROJECT_NAME.gsub(' ', '_')}_mediaclue_session",
   
   # Ändere dies für Dein Projekt!
-  :secret      => 'c21ab8779fe5af133a72d063d6a888b66fd57d555ed84af55de22289615e38f3b39fc1ed440e02d96def0a0b014d623328c00ac4e7078e60a7f1e6cae683e2f6',
+  :secret      => '8973459dwfhu3498weifuhasdfuh4t98zer98745zejhsuigfdtrsr56uitdr77eughr9gisudfgh3iuwergiuzd7uh4g0olop',
 
   # Wow! Das hat mich einen halben Tag gekostet, um rauszufinden, warum es bei allen Browsern ausser Safari mit dem JumpLoader ein Problem gibt,
   # weil er die Session verliert (nicht eingeloggt ist). Man muss dem JavaApplet die Möglichkeit erlauben, das Session-Cookie zu lesen und zu senden.
