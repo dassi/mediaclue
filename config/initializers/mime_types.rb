@@ -1,7 +1,11 @@
 unless SUPRESS_EARLY_DB_CONNECTION
 
-  # Playlist-Format, www.xspf.org
-  Mime::Type.register('application/xspf+xml', :xspf)
+  # Register MIME types bei Rails
+  Mime::Type.register('application/xspf+xml', :xspf) # Playlist-Format, www.xspf.org
+  Mime::Type.register('video/x-m4v', :m4v) # Apple m4v
+  
+  # Register MIME types beim MIME::Type gem 
+  MIME::Types.add(MIME::Type.from_array("video/x-m4v", %(m4v)))
   
   # Aus allen content_types der Medien über MIME::Types die Rails-eigenen Mime::Type registrieren
   # damit die respond_to handler funktionieren.

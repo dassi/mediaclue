@@ -28,7 +28,7 @@ config.action_mailer.logger = Logger.new("#{RAILS_ROOT}/log/mailing.log")
 config.action_mailer.delivery_method = :sendmail
 config.action_mailer.sendmail_settings = {
   :location => '/usr/sbin/sendmail',
-  :arguments => '-i -t -f mdb@kshp.ch'
+  :arguments => "-i -t -f mdb@#{APPLICATION_DOMAIN}"
 }
 
 # Enable threaded mode

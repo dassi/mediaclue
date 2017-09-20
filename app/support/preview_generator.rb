@@ -155,7 +155,7 @@ class PreviewGenerator
   def image_resize_command(source_file, generated_file, max_dimension)
     size_string = "#{max_dimension}x#{max_dimension}>"
 
-    "convert #{source_file} -resize \"#{size_string}\" #{generated_file}"
+    "convert #{source_file} -resize \"#{size_string}\" -background white -flatten #{generated_file}"
   end
 
 
