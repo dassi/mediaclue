@@ -1,3 +1,4 @@
+# coding: utf-8
 class MediaSetsController < ApplicationController
 
   MEDIA_SET_STYLES = ['lightbox', 'slideshow']
@@ -128,7 +129,7 @@ class MediaSetsController < ApplicationController
   def edit(media_set = nil)
     @media_set = media_set || MediaSet.find(params[:id])
     @no_media = params[:no_media].present?
-    
+
     permit :edit, @media_set do
       @media_set.define! unless @media_set.media.empty?
       @media = @media_set.media_for_user_as_editor(current_user) unless @no_media
@@ -187,7 +188,19 @@ class MediaSetsController < ApplicationController
   def destroy
     @media_set = MediaSet.find(params[:id])
     permit :edit, @media_set do
+
+      @delete_media = params[:delete_media].present?
+
+      if @delete_media
+        @media_set.media.each do | medium |
+          permit :edit, medium do
+            medium.destroy
+          end
+        end
+      end
+
       @media_set.destroy
+
       flash[:notice] = 'Kollektion gelöscht'
       redirect_to(media_sets_url)
     end

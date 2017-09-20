@@ -2,4 +2,7 @@
 .media_lightbox_big
   .slidefg
     = medium_image_tag(slide_big, :medium, :style => "margin-top:#{(380 - height) / 2}px")
-  .actions= link_to 'Löschung beantragen ...', report_misuse_medium_path(slide_big)
+  .actions
+    = link_to 'Löschung beantragen', report_misuse_medium_path(slide_big)
+    &nbsp;&nbsp;
+    = medium_download_link(slide_big)

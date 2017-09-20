@@ -10,6 +10,9 @@
   %br
   %br
 
+  - if @error_message
+    .error= @error_message
+  
   - form_tag do
     %table.list
       %tr
@@ -18,12 +21,17 @@
           = @medium.owner.full_name
           = "(#{@medium.owner.email})"
       %tr
-        %td Beantragt von:
+        %td Ihr Name:
         %td
-          = current_user.full_name
-          = "(#{current_user.email})"
+          - sender = logged_in? ? current_user.full_name : params[:sender_name]
+          = text_field_tag 'sender_name', sender, :style => 'width:300px'
+      %tr
+        %td Ihre E-Mail:
+        %td
+          - email = logged_in? ? current_user.email : params[:sender_email]
+          = text_field_tag 'sender_email', email, :style => 'width:300px'
       %tr
         %td Antrag:
-        %td= text_area_tag 'note', "Ich beantrage die Löschung des Mediums mit ID #{@medium.id}.", :style => 'width:300px;height:100px'
+        %td= text_area_tag 'note', params[:note] || "Ich beantrage die Löschung des Mediums mit ID #{@medium.id}.", :style => 'width:300px;height:100px'
     = submit_tag 'Löschantrag senden!'
     = link_to 'Abbrechen', medium_path(@medium)

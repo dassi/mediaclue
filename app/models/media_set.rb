@@ -1,3 +1,4 @@
+# coding: utf-8
 if LOCAL_DEVELOPMENT
   require_dependency 'ruport_extensions'
 end
@@ -91,7 +92,7 @@ class MediaSet < ActiveRecord::Base
   end
 
 
-  named_scope :published, :conditions => {:permission_type => 'public'}, :order => 'updated_at DESC'
+  named_scope :published, :conditions => {:permission_type => 'public'}, :order => 'name ASC'
 
   protected #######################################################################################
   

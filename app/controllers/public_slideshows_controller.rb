@@ -1,3 +1,4 @@
+# coding: utf-8
 class PublicSlideshowsController < ApplicationController
 
   MEDIA_SET_STYLES = ['lightbox', 'slideshow', 'mobile']

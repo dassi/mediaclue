@@ -1,3 +1,4 @@
+# coding: utf-8
 class Notifications < ActionMailer::Base
 
   protected #######################################################################################
@@ -23,16 +24,16 @@ class Notifications < ActionMailer::Base
     tweak
   end
   
-  def report_misuse_notification(medium, reporting_user, note)
+  def report_misuse_notification(medium, reporting_user_name, reporting_user_email, note)
     owner = medium.owner
     
     recipients    owner.email
-    cc           [reporting_user.email]
+    cc           [reporting_user_email]
     from          'KSHP Mediendatenbank <mdb@kshp.ch>'
-    reply_to      reporting_user.email
+    reply_to      reporting_user_email
     subject       "[KSHP MDB] Antrag auf Löschung!"
     # content_type  'text/html'
-    body          :reporting_user => reporting_user, :medium => medium, :owner => owner, :note => note
+    body          :reporting_user_name => reporting_user_name, :reporting_user_email => reporting_user_email, :medium => medium, :owner => owner, :note => note
     
     tweak
   end

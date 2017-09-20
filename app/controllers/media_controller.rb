@@ -1,5 +1,8 @@
+# coding: utf-8
 class MediaController < ApplicationController
-  
+
+  skip_before_filter :login_required, :only => :report_misuse
+
   protected #######################################################################################
   
   
@@ -107,9 +110,17 @@ class MediaController < ApplicationController
 
     @email_sent = false
 
+    @sender_name = params[:sender_name]
+    @sender_email = params[:sender_email]
+    @note = params[:note]
+
     if params[:commit]
-      @email_sent = true
-      Notifications.deliver_report_misuse_notification(@medium, current_user, params[:note])
+      if !@sender_name.blank? && !@sender_email.blank?
+        @email_sent = true
+        Notifications.deliver_report_misuse_notification(@medium, @sender_name, @sender_email, @note)
+      else
+        @error_message = 'Bitte alle Felder ausfüllen!'
+      end
     end
   end
   
