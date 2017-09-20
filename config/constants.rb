@@ -1,3 +1,4 @@
+# coding: utf-8
 # Name des mediaclue-Projektes. Titel der Applikation.
 PROJECT_NAME = 'Mediendatenbank KSHP'
 
@@ -167,4 +168,4 @@ OVERVIEW_COMPACT_MIN_ENTRIES = 10
 UPLOADER_TYPE = 'plupload' # Oder veraltet: "jumploader", möglich: (plupload, jumploader)
 
 # Kürzel der Schule
-SCHOOL_SHORT_NAME = 'SCHULE'
+SCHOOL_SHORT_NAME = 'KSHP'
