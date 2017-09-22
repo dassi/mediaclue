@@ -1,7 +1,7 @@
 # coding: utf-8
 class MediaController < ApplicationController
 
-  skip_before_filter :login_required, :only => :report_misuse
+  skip_before_filter :login_required, :only => [:report_misuse, :show]
 
   protected #######################################################################################
   
