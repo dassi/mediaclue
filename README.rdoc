@@ -1,3 +1,11 @@
+== NEW VERSION HERE
+
+This repository is archived, the new version of mediaclue is here:
+
+https://github.com/talk-small-be-open/mediaclue
+
+
+
 == mediaclue
 
 Mediaclue is an open source digital assets management application. It is mainly targeted for schools.

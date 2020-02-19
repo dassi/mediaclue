@@ -62,6 +62,10 @@ FEATURE_METADATA = true
 # An einem LDAP-Server authentifizieren
 FEATURE_LDAP_AUTHENTICATION = true
 
+if LOCAL_DEVELOPMENT
+  FEATURE_LDAP_AUTHENTICATION = false
+end
+
 # Zeigt einen Hinweis an, dass der Internet Explorer keine gute Wahl ist
 FEATURE_DISLIKE_INTERNET_EXPLORER = true
 
