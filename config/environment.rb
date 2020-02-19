@@ -1,3 +1,4 @@
+# coding: utf-8
 # Mediaclue, webbasierte Mediendatenbank
 # Copyright (C) 2009 Andreas Brodbeck, mindclue GmbH
 # 
